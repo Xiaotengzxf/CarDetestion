@@ -15,6 +15,26 @@
 		895307D01E6D18D9007AF459 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 895307CE1E6D18D9007AF459 /* LaunchScreen.storyboard */; };
 		895307DB1E6D18D9007AF459 /* CarDetecionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307DA1E6D18D9007AF459 /* CarDetecionTests.swift */; };
 		895307E61E6D18D9007AF459 /* CarDetecionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307E51E6D18D9007AF459 /* CarDetecionUITests.swift */; };
+		895308091E6D7A67007AF459 /* CameraGlobals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307F41E6D7A67007AF459 /* CameraGlobals.swift */; };
+		8953080A1E6D7A67007AF459 /* CameraShot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307F51E6D7A67007AF459 /* CameraShot.swift */; };
+		8953080B1E6D7A67007AF459 /* ImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307F61E6D7A67007AF459 /* ImageFetcher.swift */; };
+		8953080C1E6D7A67007AF459 /* PhotoLibraryAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307F71E6D7A67007AF459 /* PhotoLibraryAuthorizer.swift */; };
+		8953080D1E6D7A67007AF459 /* SingleImageFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307F81E6D7A67007AF459 /* SingleImageFetcher.swift */; };
+		8953080E1E6D7A67007AF459 /* SingleImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307F91E6D7A67007AF459 /* SingleImageSaver.swift */; };
+		8953080F1E6D7A67007AF459 /* UIButtonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307FA1E6D7A67007AF459 /* UIButtonExtensions.swift */; };
+		895308101E6D7A67007AF459 /* UIViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307FB1E6D7A67007AF459 /* UIViewExtensions.swift */; };
+		895308111E6D7A67007AF459 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307FC1E6D7A67007AF459 /* Utilities.swift */; };
+		895308121E6D7A67007AF459 /* VolumeControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307FD1E6D7A67007AF459 /* VolumeControl.swift */; };
+		895308131E6D7A67007AF459 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307FF1E6D7A67007AF459 /* CameraViewController.swift */; };
+		895308141E6D7A67007AF459 /* CameraViewControllerConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308001E6D7A67007AF459 /* CameraViewControllerConstraint.swift */; };
+		895308151E6D7A67007AF459 /* ConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308011E6D7A67007AF459 /* ConfirmViewController.swift */; };
+		895308161E6D7A67007AF459 /* ConfirmViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 895308021E6D7A67007AF459 /* ConfirmViewController.xib */; };
+		895308171E6D7A67007AF459 /* PhotoLibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308031E6D7A67007AF459 /* PhotoLibraryViewController.swift */; };
+		895308181E6D7A67007AF459 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308051E6D7A67007AF459 /* CameraView.swift */; };
+		895308191E6D7A67007AF459 /* CropOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308061E6D7A67007AF459 /* CropOverlay.swift */; };
+		8953081A1E6D7A67007AF459 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308071E6D7A67007AF459 /* ImageCell.swift */; };
+		8953081B1E6D7A67007AF459 /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308081E6D7A67007AF459 /* PermissionsView.swift */; };
+		8953081F1E6D7CEC007AF459 /* CameraView.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8953081E1E6D7CEC007AF459 /* CameraView.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +69,26 @@
 		895307E11E6D18D9007AF459 /* CarDetecionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarDetecionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		895307E51E6D18D9007AF459 /* CarDetecionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarDetecionUITests.swift; sourceTree = "<group>"; };
 		895307E71E6D18D9007AF459 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		895307F41E6D7A67007AF459 /* CameraGlobals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraGlobals.swift; sourceTree = "<group>"; };
+		895307F51E6D7A67007AF459 /* CameraShot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraShot.swift; sourceTree = "<group>"; };
+		895307F61E6D7A67007AF459 /* ImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageFetcher.swift; sourceTree = "<group>"; };
+		895307F71E6D7A67007AF459 /* PhotoLibraryAuthorizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoLibraryAuthorizer.swift; sourceTree = "<group>"; };
+		895307F81E6D7A67007AF459 /* SingleImageFetcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleImageFetcher.swift; sourceTree = "<group>"; };
+		895307F91E6D7A67007AF459 /* SingleImageSaver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleImageSaver.swift; sourceTree = "<group>"; };
+		895307FA1E6D7A67007AF459 /* UIButtonExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIButtonExtensions.swift; sourceTree = "<group>"; };
+		895307FB1E6D7A67007AF459 /* UIViewExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtensions.swift; sourceTree = "<group>"; };
+		895307FC1E6D7A67007AF459 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		895307FD1E6D7A67007AF459 /* VolumeControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeControl.swift; sourceTree = "<group>"; };
+		895307FF1E6D7A67007AF459 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		895308001E6D7A67007AF459 /* CameraViewControllerConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewControllerConstraint.swift; sourceTree = "<group>"; };
+		895308011E6D7A67007AF459 /* ConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmViewController.swift; sourceTree = "<group>"; };
+		895308021E6D7A67007AF459 /* ConfirmViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfirmViewController.xib; sourceTree = "<group>"; };
+		895308031E6D7A67007AF459 /* PhotoLibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoLibraryViewController.swift; sourceTree = "<group>"; };
+		895308051E6D7A67007AF459 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		895308061E6D7A67007AF459 /* CropOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CropOverlay.swift; sourceTree = "<group>"; };
+		895308071E6D7A67007AF459 /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
+		895308081E6D7A67007AF459 /* PermissionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
+		8953081E1E6D7CEC007AF459 /* CameraView.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = CameraView.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,12 +139,16 @@
 		895307C11E6D18D9007AF459 /* CarDetecion */ = {
 			isa = PBXGroup;
 			children = (
+				895307F31E6D7A67007AF459 /* Utilities */,
+				895307FE1E6D7A67007AF459 /* ViewController */,
+				895308041E6D7A67007AF459 /* Views */,
 				895307C21E6D18D9007AF459 /* AppDelegate.swift */,
 				895307C41E6D18D9007AF459 /* ViewController.swift */,
 				895307C61E6D18D9007AF459 /* Main.storyboard */,
 				895307CC1E6D18D9007AF459 /* Assets.xcassets */,
 				895307CE1E6D18D9007AF459 /* LaunchScreen.storyboard */,
 				895307D11E6D18D9007AF459 /* Info.plist */,
+				8953081E1E6D7CEC007AF459 /* CameraView.strings */,
 				895307C91E6D18D9007AF459 /* CarDetecion.xcdatamodeld */,
 			);
 			path = CarDetecion;
@@ -126,6 +170,46 @@
 				895307E71E6D18D9007AF459 /* Info.plist */,
 			);
 			path = CarDetecionUITests;
+			sourceTree = "<group>";
+		};
+		895307F31E6D7A67007AF459 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				895307F41E6D7A67007AF459 /* CameraGlobals.swift */,
+				895307F51E6D7A67007AF459 /* CameraShot.swift */,
+				895307F61E6D7A67007AF459 /* ImageFetcher.swift */,
+				895307F71E6D7A67007AF459 /* PhotoLibraryAuthorizer.swift */,
+				895307F81E6D7A67007AF459 /* SingleImageFetcher.swift */,
+				895307F91E6D7A67007AF459 /* SingleImageSaver.swift */,
+				895307FA1E6D7A67007AF459 /* UIButtonExtensions.swift */,
+				895307FB1E6D7A67007AF459 /* UIViewExtensions.swift */,
+				895307FC1E6D7A67007AF459 /* Utilities.swift */,
+				895307FD1E6D7A67007AF459 /* VolumeControl.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		895307FE1E6D7A67007AF459 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				895307FF1E6D7A67007AF459 /* CameraViewController.swift */,
+				895308001E6D7A67007AF459 /* CameraViewControllerConstraint.swift */,
+				895308011E6D7A67007AF459 /* ConfirmViewController.swift */,
+				895308021E6D7A67007AF459 /* ConfirmViewController.xib */,
+				895308031E6D7A67007AF459 /* PhotoLibraryViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		895308041E6D7A67007AF459 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				895308051E6D7A67007AF459 /* CameraView.swift */,
+				895308061E6D7A67007AF459 /* CropOverlay.swift */,
+				895308071E6D7A67007AF459 /* ImageCell.swift */,
+				895308081E6D7A67007AF459 /* PermissionsView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -196,6 +280,7 @@
 				TargetAttributes = {
 					895307BE1E6D18D9007AF459 = {
 						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = JEAT759X2K;
 						ProvisioningStyle = Automatic;
 					};
 					895307D51E6D18D9007AF459 = {
@@ -237,7 +322,9 @@
 			files = (
 				895307D01E6D18D9007AF459 /* LaunchScreen.storyboard in Resources */,
 				895307CD1E6D18D9007AF459 /* Assets.xcassets in Resources */,
+				8953081F1E6D7CEC007AF459 /* CameraView.strings in Resources */,
 				895307C81E6D18D9007AF459 /* Main.storyboard in Resources */,
+				895308161E6D7A67007AF459 /* ConfirmViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,9 +349,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				895308101E6D7A67007AF459 /* UIViewExtensions.swift in Sources */,
+				8953080C1E6D7A67007AF459 /* PhotoLibraryAuthorizer.swift in Sources */,
+				8953080D1E6D7A67007AF459 /* SingleImageFetcher.swift in Sources */,
+				895308181E6D7A67007AF459 /* CameraView.swift in Sources */,
+				895308151E6D7A67007AF459 /* ConfirmViewController.swift in Sources */,
+				8953080E1E6D7A67007AF459 /* SingleImageSaver.swift in Sources */,
+				895308191E6D7A67007AF459 /* CropOverlay.swift in Sources */,
+				8953080A1E6D7A67007AF459 /* CameraShot.swift in Sources */,
 				895307C51E6D18D9007AF459 /* ViewController.swift in Sources */,
+				8953081A1E6D7A67007AF459 /* ImageCell.swift in Sources */,
+				895308171E6D7A67007AF459 /* PhotoLibraryViewController.swift in Sources */,
+				895308121E6D7A67007AF459 /* VolumeControl.swift in Sources */,
+				895308111E6D7A67007AF459 /* Utilities.swift in Sources */,
+				8953080F1E6D7A67007AF459 /* UIButtonExtensions.swift in Sources */,
 				895307CB1E6D18D9007AF459 /* CarDetecion.xcdatamodeld in Sources */,
+				8953080B1E6D7A67007AF459 /* ImageFetcher.swift in Sources */,
+				895308131E6D7A67007AF459 /* CameraViewController.swift in Sources */,
 				895307C31E6D18D9007AF459 /* AppDelegate.swift in Sources */,
+				895308091E6D7A67007AF459 /* CameraGlobals.swift in Sources */,
+				8953081B1E6D7A67007AF459 /* PermissionsView.swift in Sources */,
+				895308141E6D7A67007AF459 /* CameraViewControllerConstraint.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,6 +521,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = JEAT759X2K;
 				INFOPLIST_FILE = CarDetecion/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.inewhome.CarDetecion;
@@ -428,6 +534,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = JEAT759X2K;
 				INFOPLIST_FILE = CarDetecion/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.inewhome.CarDetecion;
@@ -509,6 +616,7 @@
 				895307EC1E6D18D9007AF459 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		895307ED1E6D18D9007AF459 /* Build configuration list for PBXNativeTarget "CarDetecionTests" */ = {
 			isa = XCConfigurationList;
@@ -517,6 +625,7 @@
 				895307EF1E6D18D9007AF459 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		895307F01E6D18D9007AF459 /* Build configuration list for PBXNativeTarget "CarDetecionUITests" */ = {
 			isa = XCConfigurationList;
@@ -525,6 +634,7 @@
 				895307F21E6D18D9007AF459 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
