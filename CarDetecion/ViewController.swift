@@ -75,7 +75,8 @@ class ViewController: UIViewController , UIViewControllerTransitioningDelegate ,
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
+        let viewController = segue.destination
+        viewController.transitioningDelegate = self
     }
     
     //UIViewControllerTransitioningDelegate
