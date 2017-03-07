@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		894B4BF21E6EDCE600FE9D90 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */; };
 		895307C31E6D18D9007AF459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C21E6D18D9007AF459 /* AppDelegate.swift */; };
 		895307C51E6D18D9007AF459 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C41E6D18D9007AF459 /* ViewController.swift */; };
 		895307C81E6D18D9007AF459 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 895307C61E6D18D9007AF459 /* Main.storyboard */; };
@@ -55,6 +56,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		895307BF1E6D18D9007AF459 /* CarDetecion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarDetecion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		895307C21E6D18D9007AF459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		895307C41E6D18D9007AF459 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				895308011E6D7A67007AF459 /* ConfirmViewController.swift */,
 				895308021E6D7A67007AF459 /* ConfirmViewController.xib */,
 				895308031E6D7A67007AF459 /* PhotoLibraryViewController.swift */,
+				894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -351,6 +354,7 @@
 			files = (
 				895308101E6D7A67007AF459 /* UIViewExtensions.swift in Sources */,
 				8953080C1E6D7A67007AF459 /* PhotoLibraryAuthorizer.swift in Sources */,
+				894B4BF21E6EDCE600FE9D90 /* TestViewController.swift in Sources */,
 				8953080D1E6D7A67007AF459 /* SingleImageFetcher.swift in Sources */,
 				895308181E6D7A67007AF459 /* CameraView.swift in Sources */,
 				895308151E6D7A67007AF459 /* ConfirmViewController.swift in Sources */,

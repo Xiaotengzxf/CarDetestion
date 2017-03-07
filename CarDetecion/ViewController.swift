@@ -27,18 +27,22 @@ class ViewController: UIViewController , UIViewControllerTransitioningDelegate ,
     }
 
     @IBAction func test(_ sender: Any) {
-        let cameraViewController = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) { [weak self] image, asset in
-            
-            self?.dismiss(animated: true, completion: nil)
-        }
-        present(cameraViewController, animated: true, completion: nil)
+//        let cameraViewController = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) { [weak self] image, asset in
+//            
+//            self?.dismiss(animated: true, completion: nil)
+//        }
+//        cameraViewController.transitioningDelegate = self
+//        self.present(cameraViewController, animated: true) { 
+//            
+//        }
+        
     }
     
     // 转场动画
     
     
     public func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.5
+        return 1
     }
     
     public func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -71,8 +75,7 @@ class ViewController: UIViewController , UIViewControllerTransitioningDelegate ,
     // MARK: - Navigation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let modal = segue.destination
-        modal.transitioningDelegate = self
+        
     }
     
     //UIViewControllerTransitioningDelegate

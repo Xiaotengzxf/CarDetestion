@@ -250,19 +250,20 @@ public class CameraViewController: UIViewController {
         super.updateViewConstraints()
     }
     
-    public override var shouldAutorotate: Bool{
-        return true
-    }
-    
-    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation
-    {
-        return .landscapeLeft
-    }
-    
-    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask
-    {
-        return .landscape
-    }
+    // 屏幕方向不限定
+//    public override var shouldAutorotate: Bool{
+//        return true
+//    }
+//    
+//    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation
+//    {
+//        return .landscapeLeft
+//    }
+//    
+//    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask
+//    {
+//        return .landscape
+//    }
     
     
     public override func viewDidLoad() {
