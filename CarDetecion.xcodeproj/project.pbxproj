@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		893F5F6B1E76EE3100834FA1 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893F5F6A1E76EE3100834FA1 /* NetworkManager.swift */; };
 		894B4BF21E6EDCE600FE9D90 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */; };
 		895307C31E6D18D9007AF459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C21E6D18D9007AF459 /* AppDelegate.swift */; };
 		895307C51E6D18D9007AF459 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C41E6D18D9007AF459 /* ViewController.swift */; };
@@ -64,6 +65,7 @@
 		8985C7D61E73024F0075B6F8 /* ThreadHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7C01E73024F0075B6F8 /* ThreadHelper.swift */; };
 		8985C7D71E73024F0075B6F8 /* UIButton+Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7C11E73024F0075B6F8 /* UIButton+Kingfisher.swift */; };
 		8985C7D91E7309D60075B6F8 /* DetectionNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */; };
+		927BA23DC90FCA9C2D177731 /* Pods_CarDetecion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +86,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CarDetecion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		559B80C1EF4266A3585E999D /* Pods-CarDetecion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarDetecion.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CarDetecion/Pods-CarDetecion.debug.xcconfig"; sourceTree = "<group>"; };
+		7FA2B127C77D69B2B4084750 /* Pods-CarDetecion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarDetecion.release.xcconfig"; path = "Pods/Target Support Files/Pods-CarDetecion/Pods-CarDetecion.release.xcconfig"; sourceTree = "<group>"; };
+		893F5F6A1E76EE3100834FA1 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		895307BF1E6D18D9007AF459 /* CarDetecion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarDetecion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		895307C21E6D18D9007AF459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -155,6 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				927BA23DC90FCA9C2D177731 /* Pods_CarDetecion.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,6 +182,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7E65099CCE598AEFCF1D5905 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				559B80C1EF4266A3585E999D /* Pods-CarDetecion.debug.xcconfig */,
+				7FA2B127C77D69B2B4084750 /* Pods-CarDetecion.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		895307B61E6D18D9007AF459 = {
 			isa = PBXGroup;
 			children = (
@@ -182,6 +198,8 @@
 				895307D91E6D18D9007AF459 /* CarDetecionTests */,
 				895307E41E6D18D9007AF459 /* CarDetecionUITests */,
 				895307C01E6D18D9007AF459 /* Products */,
+				7E65099CCE598AEFCF1D5905 /* Pods */,
+				CE73A5DE25C4A173E5A2BDC5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -284,6 +302,7 @@
 			children = (
 				8985C7A11E72E7BC0075B6F8 /* Macro.swift */,
 				8985C7A31E72ED850075B6F8 /* Extension.swift */,
+				893F5F6A1E76EE3100834FA1 /* NetworkManager.swift */,
 			);
 			path = Kit;
 			sourceTree = "<group>";
@@ -325,6 +344,14 @@
 			path = Kingfisher;
 			sourceTree = "<group>";
 		};
+		CE73A5DE25C4A173E5A2BDC5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -332,9 +359,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 895307EA1E6D18D9007AF459 /* Build configuration list for PBXNativeTarget "CarDetecion" */;
 			buildPhases = (
+				5B8D72B1EC84C8BB099A8937 /* [CP] Check Pods Manifest.lock */,
 				895307BB1E6D18D9007AF459 /* Sources */,
 				895307BC1E6D18D9007AF459 /* Frameworks */,
 				895307BD1E6D18D9007AF459 /* Resources */,
+				6CA38B7F20E2CB71024844D4 /* [CP] Embed Pods Frameworks */,
+				D360B67D7AE642A4B8248198 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -457,6 +487,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5B8D72B1EC84C8BB099A8937 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		6CA38B7F20E2CB71024844D4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CarDetecion/Pods-CarDetecion-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D360B67D7AE642A4B8248198 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CarDetecion/Pods-CarDetecion-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		895307BB1E6D18D9007AF459 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -489,6 +567,7 @@
 				895308171E6D7A67007AF459 /* PhotoLibraryViewController.swift in Sources */,
 				8985C7A61E72EECA0075B6F8 /* DetectionViewController.swift in Sources */,
 				895308121E6D7A67007AF459 /* VolumeControl.swift in Sources */,
+				893F5F6B1E76EE3100834FA1 /* NetworkManager.swift in Sources */,
 				8985C7C41E73024F0075B6F8 /* AnimatedImageView.swift in Sources */,
 				8985C7C21E73024F0075B6F8 /* KCScrollingDisplayCollectionViewCell.swift in Sources */,
 				8985C7D11E73024F0075B6F8 /* KingfisherManager.swift in Sources */,
@@ -661,6 +740,7 @@
 		};
 		895307EB1E6D18D9007AF459 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 559B80C1EF4266A3585E999D /* Pods-CarDetecion.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = YQ94G6GXWQ;
@@ -674,6 +754,7 @@
 		};
 		895307EC1E6D18D9007AF459 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7FA2B127C77D69B2B4084750 /* Pods-CarDetecion.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = YQ94G6GXWQ;
