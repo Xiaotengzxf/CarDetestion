@@ -10,10 +10,17 @@ import UIKit
 
 class RecordTableViewController: UITableViewController {
 
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    @IBOutlet weak var ivDivide: UIImageView!
+    @IBOutlet weak var lcDivideLeft: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: 44)
+        segmentedControl.setBackgroundImage(UIImage(), for: .normal, barMetrics: .default)
+        segmentedControl.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.darkGray], for: .normal)
+        segmentedControl.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.black], for: .selected)
+        segmentedControl.setDividerImage(UIImage(), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,6 +28,9 @@ class RecordTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    @IBAction func changeSegmentControl(_ sender: Any) {
+        lcDivideLeft.constant = segmentedControl.bounds.width / 4 * CGFloat(segmentedControl.selectedSegmentIndex)
+    }
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

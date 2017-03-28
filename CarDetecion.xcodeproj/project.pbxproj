@@ -13,7 +13,6 @@
 		895307C51E6D18D9007AF459 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C41E6D18D9007AF459 /* ViewController.swift */; };
 		895307C81E6D18D9007AF459 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 895307C61E6D18D9007AF459 /* Main.storyboard */; };
 		895307CB1E6D18D9007AF459 /* CarDetecion.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 895307C91E6D18D9007AF459 /* CarDetecion.xcdatamodeld */; };
-		895307CD1E6D18D9007AF459 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 895307CC1E6D18D9007AF459 /* Assets.xcassets */; };
 		895307D01E6D18D9007AF459 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 895307CE1E6D18D9007AF459 /* LaunchScreen.storyboard */; };
 		895307DB1E6D18D9007AF459 /* CarDetecionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307DA1E6D18D9007AF459 /* CarDetecionTests.swift */; };
 		895307E61E6D18D9007AF459 /* CarDetecionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307E51E6D18D9007AF459 /* CarDetecionUITests.swift */; };
@@ -65,6 +64,8 @@
 		8985C7D61E73024F0075B6F8 /* ThreadHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7C01E73024F0075B6F8 /* ThreadHelper.swift */; };
 		8985C7D71E73024F0075B6F8 /* UIButton+Kingfisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7C11E73024F0075B6F8 /* UIButton+Kingfisher.swift */; };
 		8985C7D91E7309D60075B6F8 /* DetectionNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */; };
+		898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 898916E41E7E8EBE00BE6848 /* Assets.xcassets */; };
+		898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */; };
 		927BA23DC90FCA9C2D177731 /* Pods_CarDetecion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */; };
 /* End PBXBuildFile section */
 
@@ -96,7 +97,6 @@
 		895307C41E6D18D9007AF459 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		895307C71E6D18D9007AF459 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		895307CA1E6D18D9007AF459 /* CarDetecion.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CarDetecion.xcdatamodel; sourceTree = "<group>"; };
-		895307CC1E6D18D9007AF459 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		895307CF1E6D18D9007AF459 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		895307D11E6D18D9007AF459 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		895307D61E6D18D9007AF459 /* CarDetecionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarDetecionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +154,8 @@
 		8985C7C01E73024F0075B6F8 /* ThreadHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadHelper.swift; sourceTree = "<group>"; };
 		8985C7C11E73024F0075B6F8 /* UIButton+Kingfisher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIButton+Kingfisher.swift"; sourceTree = "<group>"; };
 		8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionNewViewController.swift; sourceTree = "<group>"; };
+		898916E41E7E8EBE00BE6848 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,8 +227,8 @@
 				895307C21E6D18D9007AF459 /* AppDelegate.swift */,
 				895307C41E6D18D9007AF459 /* ViewController.swift */,
 				895307C61E6D18D9007AF459 /* Main.storyboard */,
-				895307CC1E6D18D9007AF459 /* Assets.xcassets */,
 				895307CE1E6D18D9007AF459 /* LaunchScreen.storyboard */,
+				898916E41E7E8EBE00BE6848 /* Assets.xcassets */,
 				895307D11E6D18D9007AF459 /* Info.plist */,
 				8953081E1E6D7CEC007AF459 /* CameraView.strings */,
 				895307C91E6D18D9007AF459 /* CarDetecion.xcdatamodeld */,
@@ -272,6 +274,8 @@
 		895307FE1E6D7A67007AF459 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				898916E71E7ECF9100BE6848 /* Record */,
+				898916E61E7ECF7B00BE6848 /* Detection */,
 				895307FF1E6D7A67007AF459 /* CameraViewController.swift */,
 				895308001E6D7A67007AF459 /* CameraViewControllerConstraint.swift */,
 				895308011E6D7A67007AF459 /* ConfirmViewController.swift */,
@@ -279,9 +283,6 @@
 				895308031E6D7A67007AF459 /* PhotoLibraryViewController.swift */,
 				894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */,
 				8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */,
-				8985C7A51E72EECA0075B6F8 /* DetectionViewController.swift */,
-				8985C7A71E72FCE80075B6F8 /* RecordTableViewController.swift */,
-				8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -289,6 +290,7 @@
 		895308041E6D7A67007AF459 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */,
 				895308051E6D7A67007AF459 /* CameraView.swift */,
 				895308061E6D7A67007AF459 /* CropOverlay.swift */,
 				895308071E6D7A67007AF459 /* ImageCell.swift */,
@@ -342,6 +344,23 @@
 				8985C7C11E73024F0075B6F8 /* UIButton+Kingfisher.swift */,
 			);
 			path = Kingfisher;
+			sourceTree = "<group>";
+		};
+		898916E61E7ECF7B00BE6848 /* Detection */ = {
+			isa = PBXGroup;
+			children = (
+				8985C7A51E72EECA0075B6F8 /* DetectionViewController.swift */,
+				8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */,
+			);
+			name = Detection;
+			sourceTree = "<group>";
+		};
+		898916E71E7ECF9100BE6848 /* Record */ = {
+			isa = PBXGroup;
+			children = (
+				8985C7A71E72FCE80075B6F8 /* RecordTableViewController.swift */,
+			);
+			name = Record;
 			sourceTree = "<group>";
 		};
 		CE73A5DE25C4A173E5A2BDC5 /* Frameworks */ = {
@@ -464,10 +483,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				895307D01E6D18D9007AF459 /* LaunchScreen.storyboard in Resources */,
-				895307CD1E6D18D9007AF459 /* Assets.xcassets in Resources */,
 				8953081F1E6D7CEC007AF459 /* CameraView.strings in Resources */,
 				895307C81E6D18D9007AF459 /* Main.storyboard in Resources */,
 				895308161E6D7A67007AF459 /* ConfirmViewController.xib in Resources */,
+				898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -500,7 +519,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		6CA38B7F20E2CB71024844D4 /* [CP] Embed Pods Frameworks */ = {
@@ -551,6 +570,7 @@
 				895308151E6D7A67007AF459 /* ConfirmViewController.swift in Sources */,
 				8953080E1E6D7A67007AF459 /* SingleImageSaver.swift in Sources */,
 				8985C7D01E73024F0075B6F8 /* Kingfisher.swift in Sources */,
+				898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */,
 				8985C7A81E72FCE80075B6F8 /* RecordTableViewController.swift in Sources */,
 				8985C7CD1E73024F0075B6F8 /* ImageTransition.swift in Sources */,
 				895308191E6D7A67007AF459 /* CropOverlay.swift in Sources */,
@@ -685,7 +705,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -729,7 +749,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -745,6 +765,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = YQ94G6GXWQ;
 				INFOPLIST_FILE = CarDetecion/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.inewhome.CarDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -759,6 +780,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = YQ94G6GXWQ;
 				INFOPLIST_FILE = CarDetecion/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.inewhome.CarDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";

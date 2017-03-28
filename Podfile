@@ -4,5 +4,11 @@ use_frameworks!
 
 target 'CarDetecion' do
     pod 'Alamofire'
+    pod 'SwiftyJSON'
+    pod 'Toaster'
+    pod 'IQKeyboardManagerSwift'
+    pod 'MJRefresh'
+    pod 'MBProgressHUD'
+    pod 'SKPhotoBrowser'
 end
 
