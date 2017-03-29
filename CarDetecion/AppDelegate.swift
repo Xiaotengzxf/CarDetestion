@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,6 +20,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName : UIColor(red: 66/255.0, green: 83/255.0, blue: 90/255.0, alpha: 1)], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName : UIColor(red: 23/255.0, green: 177/255.0, blue: 140/255.0, alpha: 1)], for: .selected)
         application.setStatusBarStyle(.lightContent, animated: true)
+        
+        IQKeyboardManager.sharedManager().enable = true
+        
+        if let username = UserDefaults.standard.object(forKey: "username") as? String {
+            print("当前登录用户：\(username)")
+        }else{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let login = storyboard.instantiateViewController(withIdentifier: "login")
+            window?.rootViewController = login
+        }
+        
         return true
     }
 

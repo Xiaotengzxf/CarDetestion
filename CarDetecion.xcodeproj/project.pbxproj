@@ -36,6 +36,9 @@
 		8953081A1E6D7A67007AF459 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308071E6D7A67007AF459 /* ImageCell.swift */; };
 		8953081B1E6D7A67007AF459 /* PermissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308081E6D7A67007AF459 /* PermissionsView.swift */; };
 		8953081F1E6D7CEC007AF459 /* CameraView.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8953081E1E6D7CEC007AF459 /* CameraView.strings */; };
+		896AFA701E8B694E008DE6F5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA6F1E8B694E008DE6F5 /* LoginViewController.swift */; };
+		896AFA731E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA721E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift */; };
+		896AFA751E8BC283008DE6F5 /* ReUseHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 896AFA741E8BC283008DE6F5 /* ReUseHeaderFooterView.xib */; };
 		8985C79F1E72E63A0075B6F8 /* MineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */; };
 		8985C7A21E72E7BC0075B6F8 /* Macro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A11E72E7BC0075B6F8 /* Macro.swift */; };
 		8985C7A41E72ED850075B6F8 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A31E72ED850075B6F8 /* Extension.swift */; };
@@ -125,6 +128,9 @@
 		895308071E6D7A67007AF459 /* ImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		895308081E6D7A67007AF459 /* PermissionsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermissionsView.swift; sourceTree = "<group>"; };
 		8953081E1E6D7CEC007AF459 /* CameraView.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = CameraView.strings; sourceTree = "<group>"; };
+		896AFA6F1E8B694E008DE6F5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		896AFA721E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReUseHeaderFooterView.swift; sourceTree = "<group>"; };
+		896AFA741E8BC283008DE6F5 /* ReUseHeaderFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReUseHeaderFooterView.xib; sourceTree = "<group>"; };
 		8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MineTableViewController.swift; sourceTree = "<group>"; };
 		8985C7A11E72E7BC0075B6F8 /* Macro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Macro.swift; sourceTree = "<group>"; };
 		8985C7A31E72ED850075B6F8 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -274,6 +280,7 @@
 		895307FE1E6D7A67007AF459 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				896AFA711E8B6957008DE6F5 /* Login */,
 				898916E71E7ECF9100BE6848 /* Record */,
 				898916E61E7ECF7B00BE6848 /* Detection */,
 				895307FF1E6D7A67007AF459 /* CameraViewController.swift */,
@@ -295,8 +302,18 @@
 				895308061E6D7A67007AF459 /* CropOverlay.swift */,
 				895308071E6D7A67007AF459 /* ImageCell.swift */,
 				895308081E6D7A67007AF459 /* PermissionsView.swift */,
+				896AFA721E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift */,
+				896AFA741E8BC283008DE6F5 /* ReUseHeaderFooterView.xib */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		896AFA711E8B6957008DE6F5 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				896AFA6F1E8B694E008DE6F5 /* LoginViewController.swift */,
+			);
+			name = Login;
 			sourceTree = "<group>";
 		};
 		8985C7A01E72E7800075B6F8 /* Kit */ = {
@@ -487,6 +504,7 @@
 				895307C81E6D18D9007AF459 /* Main.storyboard in Resources */,
 				895308161E6D7A67007AF459 /* ConfirmViewController.xib in Resources */,
 				898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */,
+				896AFA751E8BC283008DE6F5 /* ReUseHeaderFooterView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,6 +586,7 @@
 				895308181E6D7A67007AF459 /* CameraView.swift in Sources */,
 				8985C7C91E73024F0075B6F8 /* ImageCache.swift in Sources */,
 				895308151E6D7A67007AF459 /* ConfirmViewController.swift in Sources */,
+				896AFA731E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift in Sources */,
 				8953080E1E6D7A67007AF459 /* SingleImageSaver.swift in Sources */,
 				8985C7D01E73024F0075B6F8 /* Kingfisher.swift in Sources */,
 				898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */,
@@ -584,6 +603,7 @@
 				8985C7C71E73024F0075B6F8 /* Filter.swift in Sources */,
 				8985C7C51E73024F0075B6F8 /* Box.swift in Sources */,
 				8953081A1E6D7A67007AF459 /* ImageCell.swift in Sources */,
+				896AFA701E8B694E008DE6F5 /* LoginViewController.swift in Sources */,
 				895308171E6D7A67007AF459 /* PhotoLibraryViewController.swift in Sources */,
 				8985C7A61E72EECA0075B6F8 /* DetectionViewController.swift in Sources */,
 				895308121E6D7A67007AF459 /* VolumeControl.swift in Sources */,

@@ -10,5 +10,6 @@ target 'CarDetecion' do
     pod 'MJRefresh'
     pod 'MBProgressHUD'
     pod 'SKPhotoBrowser'
+    pod 'SDCycleScrollView'
 end
 

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 /**
  *  扩展部分
@@ -34,4 +35,22 @@ extension UIColor {
                        blue: ((CGFloat)(rgb & 0xFF)) / 255.0,
                        alpha: 1.0)
     }
+}
+
+extension UIViewController : MBProgressHUDDelegate
+{
+    func showHUD(text : String) -> MBProgressHUD {
+        let hud = MBProgressHUD.showAdded(to: self.view, animated: true)
+        hud.delegate = self
+        hud.label.text = text
+        return hud
+    }
+    func hideHUD(hud : MBProgressHUD) {
+        hud.hide(animated: true)
+    }
+    public func hudWasHidden(_ hud: MBProgressHUD) {
+        hud.removeFromSuperview()
+    }
+    
+    
 }
