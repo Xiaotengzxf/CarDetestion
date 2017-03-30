@@ -14,7 +14,6 @@ import IQKeyboardManagerSwift
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var headView : UIView!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName : UIColor(red: 66/255.0, green: 83/255.0, blue: 90/255.0, alpha: 1)], for: .normal)
@@ -50,15 +49,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        if headView == nil {
-            headView = UIView()
-            headView.backgroundColor = UIColor(red: 55/255.0, green: 70/255.0, blue: 85/255.0, alpha: 1)
-            headView.translatesAutoresizingMaskIntoConstraints = false
-            window?.addSubview(headView)
-            window?.bringSubview(toFront: headView)
-            window?.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[view]|", options: .directionLeadingToTrailing, metrics: nil, views: ["view" : headView]))
-            window?.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[view(20)]", options: .directionLeadingToTrailing, metrics: nil, views: ["view" : headView]))
-        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

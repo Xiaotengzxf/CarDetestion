@@ -74,6 +74,9 @@ public class CameraViewController: UIViewController {
     var libraryButtonEdgeTwoConstraint: NSLayoutConstraint?
     var libraryButtonGravityConstraint: NSLayoutConstraint?
     
+    var cancelButtonEdgeConstraint: NSLayoutConstraint?
+    var cancelButtonGravityConstraint: NSLayoutConstraint?
+    
     var flashButtonEdgeConstraint: NSLayoutConstraint?
     var flashButtonGravityConstraint: NSLayoutConstraint?
     
@@ -88,6 +91,20 @@ public class CameraViewController: UIViewController {
         return cameraView
     }()
     
+    let leftView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.rgbColorFromHex(rgb: 0x363b3f)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let rightView : UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.rgbColorFromHex(rgb: 0x363b3f)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     let cameraOverlay : CropOverlay = {
         let cameraOverlay = CropOverlay()
         cameraOverlay.translatesAutoresizingMaskIntoConstraints = false
@@ -95,16 +112,12 @@ public class CameraViewController: UIViewController {
     }()
     
     let cameraButton : UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 64, height: 64))
+        let button = UIButton() // 56 49
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isEnabled = false
-        button.setImage(UIImage(named: "cameraButton",
-                                in: CameraGlobals.shared.bundle,
-                                compatibleWith: nil),
+        button.setImage(UIImage(named: "img_homepage_camera5"),
                         for: .normal)
-        button.setImage(UIImage(named: "cameraButtonHighlighted",
-                                in: CameraGlobals.shared.bundle,
-                                compatibleWith: nil),
+        button.setImage(UIImage(named: "img_homepage_camera5"),
                         for: .highlighted)
         return button
     }()
@@ -112,47 +125,84 @@ public class CameraViewController: UIViewController {
     let closeButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "closeButton",
-                                in: CameraGlobals.shared.bundle,
-                                compatibleWith: nil),
+        button.setImage(UIImage(named: "btn_camera_close"),
                         for: .normal)
         return button
     }()
     
-    let swapButton : UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "swapButton",
-                                in: CameraGlobals.shared.bundle,
-                                compatibleWith: nil),
-                        for: .normal)
-        return button
-    }()
+//    let swapButton : UIButton = {
+//        let button = UIButton()
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.setImage(UIImage(named: "swapButton",
+//                                in: CameraGlobals.shared.bundle,
+//                                compatibleWith: nil),
+//                        for: .normal)
+//        return button
+//    }()
     
     let libraryButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "libraryButton",
-                                in: CameraGlobals.shared.bundle,
-                                compatibleWith: nil),
-                        for: .normal)
+        button.setTitle("相册", for: .normal)
+        button.setTitleColor(UIColor.rgbColorFromHex(rgb: 0xfafafa), for: .normal)
+        return button
+    }()
+    
+    let nextButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("取消", for: .normal)
+        button.setTitleColor(UIColor.rgbColorFromHex(rgb: 0xfafafa), for: .normal)
         return button
     }()
     
     let flashButton : UIButton = {
-        let button = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+        let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "flashAutoIcon",
-                                in: CameraGlobals.shared.bundle,
-                                compatibleWith: nil),
+        button.setImage(UIImage(named: "btn_camera_flash_on"),
                         for: .normal)
         return button
     }()
     
-    let containerSwapLibraryButton : UIView = {
+//    let containerSwapLibraryButton : UIView = {
+//        let view = UIView()
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        return view
+//    }()
+    
+    let middleView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.clear
         return view
+    }()
+    
+    let imageView : UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "mask_dashboard")
+        return imageView
+    }()
+    
+    let lblName : UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let lblCurrentPage : UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let hintButton : UIButton = {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "simple"), for: .normal)
+        return button
     }()
   
     public init(croppingEnabled: Bool, allowsLibraryAccess: Bool = true, completion: @escaping CameraViewCompletion) {
@@ -180,6 +230,18 @@ public class CameraViewController: UIViewController {
         return UIStatusBarAnimation.slide
     }
     
+    public override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .landscapeRight
+    }
+    
+    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .landscapeRight
+    }
+    
     /**
      * Configure the background of the superview to black
      * and add the views on this superview. Then, request
@@ -189,13 +251,49 @@ public class CameraViewController: UIViewController {
         super.loadView()
         view.backgroundColor = UIColor.black
         [cameraView,
+         leftView,
+         rightView,
+         middleView,
             cameraOverlay,
             cameraButton,
             closeButton,
             flashButton,
-            containerSwapLibraryButton].forEach({ self.view.addSubview($0) })
-        [swapButton, libraryButton].forEach({ containerSwapLibraryButton.addSubview($0) })
+            libraryButton,
+            nextButton].forEach({ self.view.addSubview($0) })
         view.setNeedsUpdateConstraints()
+        
+        [imageView,
+         lblName,
+         lblCurrentPage,
+         hintButton].forEach({ middleView.addSubview($0) })
+        
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(50)-[cameraView]-(114)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[cameraView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[leftView(50)]", options: .directionLeadingToTrailing, metrics: nil, views: ["leftView" : leftView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[leftView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["leftView" : leftView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[rightView(114)]|", options: .directionLeadingToTrailing, metrics: nil, views: ["rightView" : rightView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[rightView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["rightView" : rightView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(50)-[middleView]-(114)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["middleView" : middleView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[middleView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["middleView" : middleView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[cameraButton(90)]", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraButton" : cameraButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[cameraButton(79)]", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraButton" : cameraButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[closeButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[closeButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
+        print(WIDTH)
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[imageView(width)]", options: .directionLeadingToTrailing, metrics: ["width" : min(467, 467 / 667.0 * MAX)], views: ["imageView" : imageView]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[imageView(height)]", options: .directionLeadingToTrailing, metrics: ["height" : min(350, 350 / 375.0 * MIN)], views: ["imageView" : imageView]))
+        middleView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: middleView, attribute: .centerX, multiplier: 1, constant: 0))
+        middleView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerY, relatedBy: .equal, toItem: middleView, attribute: .centerY, multiplier: 1, constant: 0))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[lblName]|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblName" : lblName]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblName]-(40)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblName" : lblName]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[lblCurrentPage]|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblCurrentPage" : lblCurrentPage]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblCurrentPage]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblCurrentPage" : lblCurrentPage]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
+        
+        
     }
     
     /**
@@ -209,7 +307,7 @@ public class CameraViewController: UIViewController {
     override public func updateViewConstraints() {
 
         if !didUpdateViews {
-            configCameraViewConstraints()
+            //configCameraViewConstraints()
             didUpdateViews = true
         }
         
@@ -223,13 +321,17 @@ public class CameraViewController: UIViewController {
         configCloseButtonEdgeConstraint(statusBarOrientation)
         configCloseButtonGravityConstraint(statusBarOrientation)
         
+        removeCancelButtonConstraints()
+        configCancelButtonEdgeConstraint(statusBarOrientation)
+        configCancelButtonGravityConstraint(statusBarOrientation)
+        
         removeContainerConstraints()
         configContainerEdgeConstraint(statusBarOrientation)
         configContainerGravityConstraint(statusBarOrientation)
         
-        removeSwapButtonConstraints()
-        configSwapButtonEdgeConstraint(statusBarOrientation)
-        configSwapButtonGravityConstraint(portrait)
+        //removeSwapButtonConstraints()
+        //configSwapButtonEdgeConstraint(statusBarOrientation)
+        //configSwapButtonGravityConstraint(portrait)
 
         removeLibraryButtonConstraints()
         configLibraryEdgeButtonConstraint(statusBarOrientation)
@@ -249,22 +351,6 @@ public class CameraViewController: UIViewController {
         
         super.updateViewConstraints()
     }
-    
-    // 屏幕方向不限定
-//    public override var shouldAutorotate: Bool{
-//        return true
-//    }
-//    
-//    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation
-//    {
-//        return .landscapeLeft
-//    }
-//    
-//    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask
-//    {
-//        return .landscape
-//    }
-    
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -359,7 +445,7 @@ public class CameraViewController: UIViewController {
      */
     private func setupActions() {
         cameraButton.action = { [weak self] in self?.capturePhoto() }
-        swapButton.action = { [weak self] in self?.swapCamera() }
+        //swapButton.action = { [weak self] in self?.swapCamera() }
         libraryButton.action = { [weak self] in self?.showLibrary() }
         closeButton.action = { [weak self] in self?.close() }
         flashButton.action = { [weak self] in self?.toggleFlash() }
@@ -372,7 +458,7 @@ public class CameraViewController: UIViewController {
     private func toggleButtons(enabled: Bool) {
         [cameraButton,
             closeButton,
-            swapButton,
+            //swapButton,
             libraryButton].forEach({ $0.isEnabled = enabled })
     }
     
@@ -424,7 +510,7 @@ public class CameraViewController: UIViewController {
     
     func setTransform(transform: CGAffineTransform) {
         self.closeButton.transform = transform
-        self.swapButton.transform = transform
+        //self.swapButton.transform = transform
         self.libraryButton.transform = transform
         self.flashButton.transform = transform
     }

@@ -20,6 +20,8 @@ class DetectionViewController: UIViewController {
     @IBOutlet weak var vCarStatus: UIView!
     @IBOutlet weak var vPreDetection: UIView!
     @IBOutlet weak var vDetection: UIView!
+    @IBOutlet weak var lcRight: NSLayoutConstraint!
+    @IBOutlet weak var lcLeft: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,16 +35,28 @@ class DetectionViewController: UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.handleGestureRecognizer(recognizer:)))
         
         vDetection.addGestureRecognizer(tap)
+        
+        lcRight.constant = (WIDTH - 240) / 4
+        lcLeft.constant = (WIDTH - 240) / 4
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0))
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.navigationBar.lt_reset()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
 
     override func didReceiveMemoryWarning() {

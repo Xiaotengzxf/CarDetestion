@@ -8,11 +8,11 @@
 
 import UIKit
 
-class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate {
+class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "备注"]
-    let titles = [["登记证首页" , "登记证-车辆信息记录"] , ["行驶证-正本／副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
+    let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
     var images : [[NSData]] = []
     
     override func viewDidLoad() {
@@ -23,6 +23,36 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    // 拍照代理
+    func cameraModel(tag: Int) {
+        let camera = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) {[weak self] (image, asset) in
+            self?.dismiss(animated: true, completion: {
+                
+            })
+        }
+        camera.modalTransitionStyle = .crossDissolve
+        self.navigationController?.tabBarController?.present(camera, animated: true) {
+         
+        }
+    }
+    
+    @IBAction func scrollToSection(_ sender: Any) {
+        if let button = sender as? UIButton {
+            switch button.tag {
+            case 1:
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            case 2:
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 2), at: .top, animated: true)
+            case 3:
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .top, animated: true)
+            case 4:
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 6), at: .top, animated: true)
+            default:
+                fatalError()
+            }
+        }
     }
     
     // MARK: - UITableView DataSource
@@ -44,17 +74,17 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section < 6 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetectionTableViewCell
+            cell.indexPath = indexPath
+            cell.delegate = self
             var count = titles[indexPath.section].count + 1
             if images.count > indexPath.section {
                 count = max(count, images[indexPath.section].count)
             }
-            if let view = cell.viewWithTag(5) {
-                if count % 2 > 0 && indexPath.row == count / 2 {
-                    view.isHidden = true
-                }else{
-                    view.isHidden = false
-                }
+            if count % 2 > 0 && indexPath.row == count / 2 {
+                cell.vCamera2.isHidden = true
+            }else{
+                cell.vCamera2.isHidden = false
             }
             if let label = cell.viewWithTag(2) as? UILabel {
                 if indexPath.row * 2 < count - 1 {
@@ -81,9 +111,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             return cell
         }else if indexPath.section == 6 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath)
-            if let view = cell.viewWithTag(5) {
-                view.isHidden = true
-            }
+
             return cell
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath)
@@ -114,14 +142,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        /*let camera = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) {[weak self] (image, asset) in
-         self?.dismiss(animated: true, completion: {
-         
-         })
-         }
-         present(camera, animated: true) {
-         
-         }*/
     }
 
     /*

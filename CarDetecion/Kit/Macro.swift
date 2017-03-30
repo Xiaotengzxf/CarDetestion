@@ -10,3 +10,5 @@ import UIKit
 
 let WIDTH = UIScreen.main.bounds.size.width
 let HEIGHT = UIScreen.main.bounds.size.height
+let MAX = max(WIDTH, HEIGHT)
+let MIN = min(WIDTH, HEIGHT)
