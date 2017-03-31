@@ -12,6 +12,12 @@ class DetectionTableViewCell: UITableViewCell {
 
     @IBOutlet weak var vCamera1: UIView!
     @IBOutlet weak var vCamera2: UIView!
+    @IBOutlet weak var iv1: UIImageView!
+    @IBOutlet weak var iv2: UIImageView!
+    @IBOutlet weak var iv11: UIImageView!
+    @IBOutlet weak var iv21: UIImageView!
+    @IBOutlet weak var lbl1: UILabel!
+    @IBOutlet weak var lbl2: UILabel!
     var tap1 : UITapGestureRecognizer?
     var tap2 : UITapGestureRecognizer?
     var indexPath : IndexPath!

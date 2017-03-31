@@ -26,7 +26,7 @@ class NetworkManager {
             switch response.result {
             case .success:
                 if let value = response.result.value {
-                    print(value)
+                    print("返回内容：\(value)")
                     callback(JSON(value) , nil)
                 }else{
                     callback(nil , CustomError.Custom)

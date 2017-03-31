@@ -643,15 +643,15 @@ public class CameraViewController: UIViewController {
         present(confirmViewController, animated: true, completion: nil)
     }
     
-//    public override var shouldAutorotate: Bool {
-//        return false
-//    }
-//    
-//    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-//        return .landscapeRight
-//    }
-//    
-//    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-//        return .landscapeRight
-//    }
+    public override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .landscapeRight
+    }
+    
+    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .landscapeRight
+    }
 }
