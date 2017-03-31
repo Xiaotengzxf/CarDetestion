@@ -1220,9 +1220,9 @@
         <!--评估-->
         <scene sceneID="gpV-tT-HWm">
             <objects>
-                <navigationController id="HF4-9P-rPQ" sceneMemberID="viewController">
+                <navigationController id="HF4-9P-rPQ" customClass="DNavigationController" customModule="CarDetecion" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="评估" image="tab20" selectedImage="tab21" id="YOO-o2-L8L"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Unf-O5-EdQ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Unf-O5-EdQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

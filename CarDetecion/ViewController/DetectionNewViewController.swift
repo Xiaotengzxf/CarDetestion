@@ -8,16 +8,30 @@
 
 import UIKit
 
-class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate {
+class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "备注"]
     let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
     var images : [[NSData]] = []
+    let presentAnimator = PresentAnimator()
+    let dismissAnimator = DismisssAnimator()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "ReUseHeaderFooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "header")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.barTintColor = UIColor(red: 55/255.0, green: 70/255.0, blue: 85/255.0, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.barTintColor = UIColor.clear
+        self.navigationController?.navigationBar.isTranslucent = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,8 +46,8 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 
             })
         }
-        camera.modalTransitionStyle = .crossDissolve
-        self.navigationController?.tabBarController?.present(camera, animated: true) {
+        camera.transitioningDelegate = self
+        self.present(camera, animated: true) {
          
         }
     }
@@ -153,5 +167,15 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         // Pass the selected object to the new view controller.
     }
     */
+    
+    // 转场动画
+    
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return presentAnimator
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return dismissAnimator
+    }
 
 }

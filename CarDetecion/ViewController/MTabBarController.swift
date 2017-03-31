@@ -21,7 +21,6 @@ class MTabBarController: UITabBarController {
         // Dispose of any resources that can be recreated.
     }
     
-    // 方向控制
     public override var shouldAutorotate: Bool {
         return true
     }

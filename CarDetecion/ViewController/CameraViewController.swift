@@ -230,18 +230,6 @@ public class CameraViewController: UIViewController {
         return UIStatusBarAnimation.slide
     }
     
-    public override var shouldAutorotate: Bool {
-        return true
-    }
-    
-    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .landscapeRight
-    }
-    
-    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .landscapeRight
-    }
-    
     /**
      * Configure the background of the superview to black
      * and add the views on this superview. Then, request
@@ -379,6 +367,10 @@ public class CameraViewController: UIViewController {
         if cameraView.session?.isRunning == true {
             notifyCameraReady()
         }
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
     }
     
     /**
@@ -650,4 +642,16 @@ public class CameraViewController: UIViewController {
         confirmViewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         present(confirmViewController, animated: true, completion: nil)
     }
+    
+//    public override var shouldAutorotate: Bool {
+//        return false
+//    }
+//    
+//    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+//        return .landscapeRight
+//    }
+//    
+//    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+//        return .landscapeRight
+//    }
 }
