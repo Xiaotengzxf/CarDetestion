@@ -1084,6 +1084,9 @@
                                                 <view tag="4" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="18P-2U-vmb">
                                                     <rect key="frame" x="10" y="5" width="172.5" height="168"/>
                                                     <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PmS-dv-Xet">
+                                                            <rect key="frame" x="0.0" y="0.0" width="172.5" height="168"/>
+                                                        </imageView>
                                                         <imageView userInteractionEnabled="NO" tag="10" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_camera" translatesAutoresizingMaskIntoConstraints="NO" id="FmJ-37-ic1">
                                                             <rect key="frame" x="74" y="62.5" width="25" height="23"/>
                                                             <constraints>
@@ -1101,14 +1104,21 @@
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="FmJ-37-ic1" firstAttribute="centerX" secondItem="18P-2U-vmb" secondAttribute="centerX" id="5Lg-7p-YJc"/>
+                                                        <constraint firstItem="PmS-dv-Xet" firstAttribute="leading" secondItem="18P-2U-vmb" secondAttribute="leading" id="FVl-x0-iu7"/>
                                                         <constraint firstItem="aLf-Sj-Gor" firstAttribute="top" secondItem="FmJ-37-ic1" secondAttribute="bottom" constant="5" id="NKT-O0-1UC"/>
                                                         <constraint firstItem="FmJ-37-ic1" firstAttribute="centerY" secondItem="18P-2U-vmb" secondAttribute="centerY" constant="-10" id="OWi-K7-nqr"/>
+                                                        <constraint firstAttribute="bottom" secondItem="PmS-dv-Xet" secondAttribute="bottom" id="cNW-EI-DuE"/>
+                                                        <constraint firstAttribute="trailing" secondItem="PmS-dv-Xet" secondAttribute="trailing" id="ciF-TU-0jr"/>
+                                                        <constraint firstItem="PmS-dv-Xet" firstAttribute="top" secondItem="18P-2U-vmb" secondAttribute="top" id="gyY-V9-6IQ"/>
                                                         <constraint firstItem="aLf-Sj-Gor" firstAttribute="centerX" secondItem="FmJ-37-ic1" secondAttribute="centerX" id="vla-GK-afQ"/>
                                                     </constraints>
                                                 </view>
                                                 <view tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gea-lS-ZME">
                                                     <rect key="frame" x="192.5" y="5" width="172.5" height="168"/>
                                                     <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="AZz-i3-BoM">
+                                                            <rect key="frame" x="-0.5" y="0.0" width="172.5" height="168"/>
+                                                        </imageView>
                                                         <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_camera" translatesAutoresizingMaskIntoConstraints="NO" id="DBG-bX-Rsc">
                                                             <rect key="frame" x="74" y="62.5" width="25" height="23"/>
                                                             <constraints>
@@ -1117,7 +1127,7 @@
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wFf-d7-LHf">
-                                                            <rect key="frame" x="86.5" y="95.5" width="0.0" height="0.0"/>
+                                                            <rect key="frame" x="86.5" y="90.5" width="0.0" height="0.0"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" red="0.41960784313725491" green="0.41960784313725491" blue="0.41960784313725491" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
@@ -1125,10 +1135,14 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstItem="wFf-d7-LHf" firstAttribute="top" secondItem="DBG-bX-Rsc" secondAttribute="bottom" constant="10" id="Ffe-6M-2lg"/>
+                                                        <constraint firstAttribute="trailing" secondItem="AZz-i3-BoM" secondAttribute="trailing" id="7g2-QR-gM0"/>
+                                                        <constraint firstItem="AZz-i3-BoM" firstAttribute="leading" secondItem="Gea-lS-ZME" secondAttribute="leading" id="F0r-2A-f1Y"/>
+                                                        <constraint firstItem="wFf-d7-LHf" firstAttribute="top" secondItem="DBG-bX-Rsc" secondAttribute="bottom" constant="5" id="Ffe-6M-2lg"/>
                                                         <constraint firstItem="DBG-bX-Rsc" firstAttribute="centerY" secondItem="Gea-lS-ZME" secondAttribute="centerY" constant="-10" id="GVS-hA-fDz"/>
                                                         <constraint firstItem="wFf-d7-LHf" firstAttribute="centerX" secondItem="DBG-bX-Rsc" secondAttribute="centerX" id="dYe-vP-LkN"/>
                                                         <constraint firstItem="DBG-bX-Rsc" firstAttribute="centerX" secondItem="Gea-lS-ZME" secondAttribute="centerX" id="rMh-hm-1xI"/>
+                                                        <constraint firstAttribute="bottom" secondItem="AZz-i3-BoM" secondAttribute="bottom" id="uKM-xX-CM8"/>
+                                                        <constraint firstItem="AZz-i3-BoM" firstAttribute="top" secondItem="Gea-lS-ZME" secondAttribute="top" id="xha-eS-7wM"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -1145,6 +1159,12 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.92549019607843142" green="0.94117647058823528" blue="0.96078431372549022" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <connections>
+                                            <outlet property="iv1" destination="PmS-dv-Xet" id="PhM-8t-Hbm"/>
+                                            <outlet property="iv11" destination="FmJ-37-ic1" id="TFt-5g-NCw"/>
+                                            <outlet property="iv2" destination="AZz-i3-BoM" id="Brg-CQ-pTw"/>
+                                            <outlet property="iv21" destination="DBG-bX-Rsc" id="uD6-TH-DmS"/>
+                                            <outlet property="lbl1" destination="aLf-Sj-Gor" id="e8T-JG-C6V"/>
+                                            <outlet property="lbl2" destination="wFf-d7-LHf" id="hWU-qh-ibs"/>
                                             <outlet property="vCamera1" destination="18P-2U-vmb" id="3Q4-2j-jJ5"/>
                                             <outlet property="vCamera2" destination="Gea-lS-ZME" id="C4S-5g-OoZ"/>
                                         </connections>
@@ -1289,6 +1309,9 @@
                                         <state key="normal" title="保存">
                                             <color key="titleColor" red="0.92941176470588238" green="0.33333333333333331" blue="0.396078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
+                                        <connections>
+                                            <action selector="save:" destination="3uE-nj-kEA" eventType="touchUpInside" id="ykB-43-XJE"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DWW-Dn-SWD">
                                         <rect key="frame" x="187.5" y="0.0" width="187" height="50"/>
@@ -1296,6 +1319,9 @@
                                         <state key="normal" title="立即提交">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="submit:" destination="3uE-nj-kEA" eventType="touchUpInside" id="Spg-Wt-eaj"/>
+                                        </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GX1-c9-OxX">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="1"/>
