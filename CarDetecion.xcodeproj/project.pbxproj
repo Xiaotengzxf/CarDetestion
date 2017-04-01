@@ -52,6 +52,7 @@
 		8985C7D91E7309D60075B6F8 /* DetectionNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */; };
 		898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 898916E41E7E8EBE00BE6848 /* Assets.xcassets */; };
 		898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */; };
+		89B945701E8F37F1009F0B58 /* logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89B9456F1E8F37F1009F0B58 /* logo.jpg */; };
 		927BA23DC90FCA9C2D177731 /* Pods_CarDetecion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */; };
 /* End PBXBuildFile section */
 
@@ -127,6 +128,7 @@
 		8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionNewViewController.swift; sourceTree = "<group>"; };
 		898916E41E7E8EBE00BE6848 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
+		89B9456F1E8F37F1009F0B58 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -201,6 +203,7 @@
 				895307D11E6D18D9007AF459 /* Info.plist */,
 				8953081E1E6D7CEC007AF459 /* CameraView.strings */,
 				895307C91E6D18D9007AF459 /* CarDetecion.xcdatamodeld */,
+				89B9456F1E8F37F1009F0B58 /* logo.jpg */,
 			);
 			path = CarDetecion;
 			sourceTree = "<group>";
@@ -434,6 +437,7 @@
 				8953081F1E6D7CEC007AF459 /* CameraView.strings in Resources */,
 				895307C81E6D18D9007AF459 /* Main.storyboard in Resources */,
 				895308161E6D7A67007AF459 /* ConfirmViewController.xib in Resources */,
+				89B945701E8F37F1009F0B58 /* logo.jpg in Resources */,
 				898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */,
 				896AFA751E8BC283008DE6F5 /* ReUseHeaderFooterView.xib in Resources */,
 			);

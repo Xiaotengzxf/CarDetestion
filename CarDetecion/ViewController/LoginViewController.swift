@@ -15,17 +15,35 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var tfUserName: UITextField!
     @IBOutlet weak var tfPwd: UITextField!
     @IBOutlet weak var btnLogin: UIButton!
+    @IBOutlet weak var ivTriangle: UIImageView!
     let login = "external/checkUser.html"
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        btnLogin.layer.cornerRadius = 6.0
+        //btnLogin.layer.cornerRadius = 6.0
+        ivTriangle.image = drawTriangle()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func drawTriangle() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 10, height: 5), false, UIScreen.main.scale)
+        let ctx = UIGraphicsGetCurrentContext()
+        
+        ctx?.beginPath()
+        ctx?.move(to: CGPoint(x: 5, y: 0))
+        ctx?.addLine(to: CGPoint(x: 10, y: 5))
+        ctx?.addLine(to: CGPoint(x: 0, y: 5))
+        ctx?.setFillColor(UIColor.white.cgColor)
+        ctx?.closePath()
+        ctx?.fillPath()
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
     
     // 登录

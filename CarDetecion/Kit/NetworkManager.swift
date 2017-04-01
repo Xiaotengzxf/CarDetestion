@@ -37,4 +37,30 @@ class NetworkManager {
             }
         }
     }
+    
+    func upload(url: String , params : Parameters? ,data : Data? , callback : @escaping (_ json : JSON? ,_ error : Error?)->()) {
+        Alamofire.upload(
+            multipartFormData: { multipartFormData in
+                if data != nil {
+                    multipartFormData.append(data!, withName: "image", fileName: "image.jpg", mimeType: "image/jpg")
+                }
+                if params != nil {
+                    for (key , value) in params! {
+                        
+                    }
+                }
+        },
+            to: "\(domain)\(url)",
+            encodingCompletion: { encodingResult in
+                switch encodingResult {
+                case .success(let upload, _, _):
+                    upload.responseJSON { response in
+                        debugPrint(response)
+                    }
+                case .failure(let encodingError):
+                    print(encodingError)
+                }
+        }
+        )
+    }
 }
