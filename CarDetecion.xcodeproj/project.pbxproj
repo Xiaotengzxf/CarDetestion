@@ -44,6 +44,8 @@
 		896AFA771E8C9213008DE6F5 /* DetectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA761E8C9213008DE6F5 /* DetectionTableViewCell.swift */; };
 		896AFA791E8CFAE1008DE6F5 /* MTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA781E8CFAE1008DE6F5 /* MTabBarController.swift */; };
 		896AFA7B1E8D10F2008DE6F5 /* UINavigationBarExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA7A1E8D10F2008DE6F5 /* UINavigationBarExtension.swift */; };
+		8978CAE71E928EF300BBC926 /* Detection1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8978CAE61E928EF300BBC926 /* Detection1TableViewCell.swift */; };
+		8978CAE91E928F0400BBC926 /* Detection2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8978CAE81E928F0400BBC926 /* Detection2TableViewCell.swift */; };
 		8985C79F1E72E63A0075B6F8 /* MineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */; };
 		8985C7A21E72E7BC0075B6F8 /* Macro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A11E72E7BC0075B6F8 /* Macro.swift */; };
 		8985C7A41E72ED850075B6F8 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A31E72ED850075B6F8 /* Extension.swift */; };
@@ -120,6 +122,8 @@
 		896AFA761E8C9213008DE6F5 /* DetectionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionTableViewCell.swift; sourceTree = "<group>"; };
 		896AFA781E8CFAE1008DE6F5 /* MTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTabBarController.swift; sourceTree = "<group>"; };
 		896AFA7A1E8D10F2008DE6F5 /* UINavigationBarExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationBarExtension.swift; sourceTree = "<group>"; };
+		8978CAE61E928EF300BBC926 /* Detection1TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detection1TableViewCell.swift; sourceTree = "<group>"; };
+		8978CAE81E928F0400BBC926 /* Detection2TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detection2TableViewCell.swift; sourceTree = "<group>"; };
 		8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MineTableViewController.swift; sourceTree = "<group>"; };
 		8985C7A11E72E7BC0075B6F8 /* Macro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Macro.swift; sourceTree = "<group>"; };
 		8985C7A31E72ED850075B6F8 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -272,6 +276,8 @@
 				896AFA721E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift */,
 				896AFA741E8BC283008DE6F5 /* ReUseHeaderFooterView.xib */,
 				896AFA761E8C9213008DE6F5 /* DetectionTableViewCell.swift */,
+				8978CAE61E928EF300BBC926 /* Detection1TableViewCell.swift */,
+				8978CAE81E928F0400BBC926 /* Detection2TableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -522,6 +528,7 @@
 				895308181E6D7A67007AF459 /* CameraView.swift in Sources */,
 				895308151E6D7A67007AF459 /* ConfirmViewController.swift in Sources */,
 				896AFA731E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift in Sources */,
+				8978CAE71E928EF300BBC926 /* Detection1TableViewCell.swift in Sources */,
 				8953080E1E6D7A67007AF459 /* SingleImageSaver.swift in Sources */,
 				898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */,
 				8985C7A81E72FCE80075B6F8 /* RecordTableViewController.swift in Sources */,
@@ -535,6 +542,7 @@
 				895308171E6D7A67007AF459 /* PhotoLibraryViewController.swift in Sources */,
 				8985C7A61E72EECA0075B6F8 /* DetectionViewController.swift in Sources */,
 				895308121E6D7A67007AF459 /* VolumeControl.swift in Sources */,
+				8978CAE91E928F0400BBC926 /* Detection2TableViewCell.swift in Sources */,
 				893F5F6B1E76EE3100834FA1 /* NetworkManager.swift in Sources */,
 				895308111E6D7A67007AF459 /* Utilities.swift in Sources */,
 				8953080F1E6D7A67007AF459 /* UIButtonExtensions.swift in Sources */,

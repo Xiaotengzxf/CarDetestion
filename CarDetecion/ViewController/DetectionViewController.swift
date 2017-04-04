@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Toaster
+import SwiftyJSON
 
 class DetectionViewController: UIViewController {
 
@@ -23,9 +25,11 @@ class DetectionViewController: UIViewController {
     @IBOutlet weak var lcRight: NSLayoutConstraint!
     @IBOutlet weak var lcLeft: NSLayoutConstraint!
     
+    let applyCount = "external/app/getApplyCountInfo.html"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        getApplyCount()
         searchBar.backgroundImage = UIImage()
         searchBar.backgroundColor = UIColor.clear
         let abStr = NSMutableAttributedString(string: "详情...")
@@ -70,6 +74,25 @@ class DetectionViewController: UIViewController {
     func handleGestureRecognizer(recognizer : UITapGestureRecognizer) {
         if recognizer.view == vDetection {
             self.performSegue(withIdentifier: "toNewDetection", sender: self)
+        }
+    }
+    
+    // 获取审核中，未通过及通过的订单总数
+    func getApplyCount() {
+        let username = UserDefaults.standard.string(forKey: "username")
+        let params = ["userName" : username!]
+        NetworkManager.sharedInstall.request(url: applyCount, params: params) {(json, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json , data["success"].boolValue {
+                    
+                }else{
+                    if let message = json?["message"].string {
+                        Toast(text: message).show()
+                    }
+                }
+            }
         }
     }
 

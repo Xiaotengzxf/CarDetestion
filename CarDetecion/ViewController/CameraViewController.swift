@@ -223,65 +223,11 @@ public class CameraViewController: UIViewController {
     }
     
     public override var prefersStatusBarHidden: Bool {
-        return true
+        return false
     }
     
     public override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return UIStatusBarAnimation.slide
-    }
-    
-    /**
-     * Configure the background of the superview to black
-     * and add the views on this superview. Then, request
-     * the update of constraints for this superview.
-     */
-    public override func loadView() {
-        super.loadView()
-        view.backgroundColor = UIColor.black
-        [cameraView,
-         leftView,
-         rightView,
-         middleView,
-            cameraOverlay,
-            cameraButton,
-            closeButton,
-            flashButton,
-            libraryButton,
-            nextButton].forEach({ self.view.addSubview($0) })
-        view.setNeedsUpdateConstraints()
-        
-        [imageView,
-         lblName,
-         lblCurrentPage,
-         hintButton].forEach({ middleView.addSubview($0) })
-        
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(50)-[cameraView]-(114)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[cameraView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[leftView(50)]", options: .directionLeadingToTrailing, metrics: nil, views: ["leftView" : leftView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[leftView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["leftView" : leftView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[rightView(114)]|", options: .directionLeadingToTrailing, metrics: nil, views: ["rightView" : rightView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[rightView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["rightView" : rightView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(50)-[middleView]-(114)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["middleView" : middleView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[middleView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["middleView" : middleView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[cameraButton(90)]", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraButton" : cameraButton]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[cameraButton(79)]", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraButton" : cameraButton]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[closeButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[closeButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
-        print(WIDTH)
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[imageView(width)]", options: .directionLeadingToTrailing, metrics: ["width" : min(467, 467 / 667.0 * MAX)], views: ["imageView" : imageView]))
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[imageView(height)]", options: .directionLeadingToTrailing, metrics: ["height" : min(350, 350 / 375.0 * MIN)], views: ["imageView" : imageView]))
-        middleView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: middleView, attribute: .centerX, multiplier: 1, constant: 0))
-        middleView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerY, relatedBy: .equal, toItem: middleView, attribute: .centerY, multiplier: 1, constant: 0))
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[lblName]|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblName" : lblName]))
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblName]-(40)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblName" : lblName]))
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[lblCurrentPage]|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblCurrentPage" : lblCurrentPage]))
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblCurrentPage]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblCurrentPage" : lblCurrentPage]))
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
-        
-        
     }
     
     /**
@@ -295,7 +241,6 @@ public class CameraViewController: UIViewController {
     override public func updateViewConstraints() {
 
         if !didUpdateViews {
-            //configCameraViewConstraints()
             didUpdateViews = true
         }
         
@@ -342,6 +287,49 @@ public class CameraViewController: UIViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.black
+        [cameraView,
+         leftView,
+         rightView,
+         middleView,
+         cameraOverlay,
+         cameraButton,
+         closeButton,
+         flashButton,
+         libraryButton,
+         nextButton].forEach({ self.view.addSubview($0) })
+        view.setNeedsUpdateConstraints()
+        
+        [imageView,
+         lblName,
+         lblCurrentPage,
+         hintButton].forEach({ middleView.addSubview($0) })
+        
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(50)-[cameraView]-(114)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[cameraView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[leftView(50)]", options: .directionLeadingToTrailing, metrics: nil, views: ["leftView" : leftView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[leftView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["leftView" : leftView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[rightView(114)]|", options: .directionLeadingToTrailing, metrics: nil, views: ["rightView" : rightView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[rightView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["rightView" : rightView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(50)-[middleView]-(114)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["middleView" : middleView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[middleView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["middleView" : middleView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[cameraButton(90)]", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraButton" : cameraButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[cameraButton(79)]", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraButton" : cameraButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[closeButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[closeButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
+        print(WIDTH)
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[imageView(width)]", options: .directionLeadingToTrailing, metrics: ["width" : min(467, 467 / 667.0 * MAX)], views: ["imageView" : imageView]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[imageView(height)]", options: .directionLeadingToTrailing, metrics: ["height" : min(350, 350 / 375.0 * MIN)], views: ["imageView" : imageView]))
+        middleView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: middleView, attribute: .centerX, multiplier: 1, constant: 0))
+        middleView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerY, relatedBy: .equal, toItem: middleView, attribute: .centerY, multiplier: 1, constant: 0))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[lblName]|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblName" : lblName]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblName]-(40)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblName" : lblName]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[lblCurrentPage]|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblCurrentPage" : lblCurrentPage]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblCurrentPage]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblCurrentPage" : lblCurrentPage]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
         addCameraObserver()
         addRotateObserver()
         setupVolumeControl()
@@ -355,7 +343,6 @@ public class CameraViewController: UIViewController {
      */
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        cameraView.startSession()
     }
     
     /**
@@ -364,8 +351,12 @@ public class CameraViewController: UIViewController {
      */
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if cameraView.session?.isRunning == true {
-            notifyCameraReady()
+        DispatchQueue.global().async {
+            [weak self] in
+            self?.cameraView.startSession()
+            if self?.cameraView.session?.isRunning == true {
+                self?.notifyCameraReady()
+            }
         }
     }
     

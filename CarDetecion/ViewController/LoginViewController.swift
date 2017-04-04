@@ -70,6 +70,9 @@ class LoginViewController: UIViewController {
                 Toast(text: "网络故障，请检查网络").show()
             }else{
                 if let data = json , data["success"].boolValue {
+                    if let message = json?["message"].string {
+                        Toast(text: message).show()
+                    }
                     if let tab = self?.storyboard?.instantiateViewController(withIdentifier: "tab") {
                         UserDefaults.standard.set(username, forKey: "username")
                         UserDefaults.standard.synchronize()

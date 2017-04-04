@@ -1169,7 +1169,7 @@
                                             <outlet property="vCamera2" destination="Gea-lS-ZME" id="C4S-5g-OoZ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell1" id="UXq-OT-S82">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell1" id="UXq-OT-S82" customClass="Detection1TableViewCell" customModule="CarDetecion" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="206" width="375" height="178"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UXq-OT-S82" id="D1R-av-B89">
@@ -1193,6 +1193,9 @@
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="UXq-OT-S82" id="SVp-Oc-wUH"/>
+                                                    </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
@@ -1206,8 +1209,11 @@
                                                 <constraint firstItem="GfF-Kl-dpt" firstAttribute="leading" secondItem="sre-r4-vFy" secondAttribute="trailing" constant="1" id="y4t-ls-eWa"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="tfPrice" destination="SzD-hN-Q4Q" id="Idh-MS-gIa"/>
+                                        </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell2" id="ib4-iL-J9T">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="cell2" id="ib4-iL-J9T" customClass="Detection2TableViewCell" customModule="CarDetecion" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="384" width="375" height="178"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ib4-iL-J9T" id="sgv-nA-q53">
@@ -1222,6 +1228,9 @@
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="string" keyPath="placeholder" value="请输入备注信息"/>
                                                     </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <outlet property="delegate" destination="ib4-iL-J9T" id="lbo-9C-m1i"/>
+                                                    </connections>
                                                 </textView>
                                             </subviews>
                                             <constraints>
@@ -1231,6 +1240,9 @@
                                                 <constraint firstItem="2Ab-eG-HMq" firstAttribute="leading" secondItem="sgv-nA-q53" secondAttribute="leading" constant="16" id="tpq-yk-dg0"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="tvMark" destination="2Ab-eG-HMq" id="tjG-eW-fZM"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>
@@ -1248,7 +1260,7 @@
                                         </constraints>
                                         <state key="normal" image="icon_car_default"/>
                                         <connections>
-                                            <action selector="scrollToSection:" destination="3uE-nj-kEA" eventType="touchUpInside" id="1np-hL-Bll"/>
+                                            <action selector="move:" destination="3uE-nj-kEA" eventType="touchUpInside" id="D6y-Vr-Okn"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xdC-vI-j15">
@@ -1258,7 +1270,7 @@
                                         </constraints>
                                         <state key="normal" image="icon_certificate_default"/>
                                         <connections>
-                                            <action selector="scorllToSection:" destination="3uE-nj-kEA" eventType="touchUpInside" id="gNH-u9-SPB"/>
+                                            <action selector="move:" destination="3uE-nj-kEA" eventType="touchUpInside" id="Nu0-79-eNu"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LVZ-Ru-jx3">
@@ -1268,7 +1280,7 @@
                                         </constraints>
                                         <state key="normal" image="icon_add_default"/>
                                         <connections>
-                                            <action selector="scorllToSection:" destination="3uE-nj-kEA" eventType="touchUpInside" id="iZ5-6A-jMU"/>
+                                            <action selector="move:" destination="3uE-nj-kEA" eventType="touchUpInside" id="EpE-t0-Kvh"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LT4-8B-2Wy">
@@ -1278,7 +1290,7 @@
                                         </constraints>
                                         <state key="normal" image="icon_information_default"/>
                                         <connections>
-                                            <action selector="scorllToSection:" destination="3uE-nj-kEA" eventType="touchUpInside" id="0Fn-qH-q8f"/>
+                                            <action selector="move:" destination="3uE-nj-kEA" eventType="touchUpInside" id="OXv-2z-tz4"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1376,7 +1388,7 @@
             <objects>
                 <navigationController id="HF4-9P-rPQ" customClass="DNavigationController" customModule="CarDetecion" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="评估" image="tab20" selectedImage="tab21" id="YOO-o2-L8L"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Unf-O5-EdQ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Unf-O5-EdQ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

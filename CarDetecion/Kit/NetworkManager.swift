@@ -38,7 +38,7 @@ class NetworkManager {
         }
     }
     
-    func upload(url: String , params : Parameters? ,data : Data? , callback : @escaping (_ json : JSON? ,_ error : Error?)->()) {
+    func upload(url: String , params : [String : String]? ,data : Data? , callback : @escaping (_ json : JSON? ,_ error : Error?)->()) {
         Alamofire.upload(
             multipartFormData: { multipartFormData in
                 if data != nil {
@@ -46,7 +46,7 @@ class NetworkManager {
                 }
                 if params != nil {
                     for (key , value) in params! {
-                        
+                        multipartFormData.append(value.data(using: .utf8)!, withName: key)
                     }
                 }
         },
@@ -55,10 +55,10 @@ class NetworkManager {
                 switch encodingResult {
                 case .success(let upload, _, _):
                     upload.responseJSON { response in
-                        debugPrint(response)
+                        callback(JSON(data: response.data!), nil)
                     }
                 case .failure(let encodingError):
-                    print(encodingError)
+                    callback(nil , encodingError)
                 }
         }
         )

@@ -8,6 +8,7 @@
 
 import UIKit
 import Toaster
+import SKPhotoBrowser
 
 class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate {
 
@@ -19,23 +20,31 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     let dismissAnimator = DismisssAnimator()
     let bill = "external/carBill/getCarBillIdNextVal.html"
     let upload = "external/app/uploadAppImage.html"
+    let createBill = "external/app/finishCreateAppCarBill.html"
     var orderNo = ""
+    var price = ""
+    var remark = ""
+    var bSubmit = false // 是否点击了提交
+    var companyNo = 0 // 单位代号
+    var nTag = 0 // 临时tag
+    let companyOtherNeed : Set<Int> = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4003 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 5000 , 5100 , 5001 , 5101]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName: "ReUseHeaderFooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "header")
+        NotificationCenter.default.addObserver(self, selector: #selector(DetectionNewViewController.handleNotification(notification:)), name: Notification.Name("detectionnew"), object: nil)
+        self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: nil, action: nil)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.barTintColor = UIColor(red: 55/255.0, green: 70/255.0, blue: 85/255.0, alpha: 1)
-        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 55/255.0, green: 70/255.0, blue: 85/255.0, alpha: 1))
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.barTintColor = UIColor.clear
-        self.navigationController?.navigationBar.isTranslucent = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,23 +52,74 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         // Dispose of any resources that can be recreated.
     }
     
-    // 拍照代理
-    func cameraModel(tag: Int) {
-        let camera = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) {[weak self] (image, asset) in
-            self?.dismiss(animated: true, completion: {
-                if image != nil {
-                    self?.images[tag] = UIImageJPEGRepresentation(image!, 0.2)!
-                    self?.tableView.reloadData()
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // 通知处理
+    func handleNotification(notification : Notification) {
+        if let tag = notification.object as? Int {
+            if tag == 1 {
+                if let userInfo = notification.userInfo as? [String : String] {
+                    price = userInfo["text"]!
                 }
-            })
-        }
-        //camera.transitioningDelegate = self
-        self.present(camera, animated: true) {
-         
+            }else if tag == 2 {
+                if let userInfo = notification.userInfo as? [String : String] {
+                    remark = userInfo["text"]!
+                }
+            }
         }
     }
     
-    @IBAction func scrollToSection(_ sender: Any) {
+    // 拍照代理
+    func cameraModel(tag: Int) {
+        nTag = tag
+        if let data = images[tag] {
+            var images = [SKPhoto]()
+            let photo = SKPhoto.photoWithImage(UIImage(data: data)!)// add some UIImage
+            images.append(photo)
+            SKPhotoBrowserOptions.displayAction = false
+            SKPhotoBrowserOptions.displayCloseButton = false
+            let browser = SKPhotoBrowser(photos: images)
+            browser.title = titles[tag / 1000][((tag % 1000) % 100) * 2 + (tag % 1000 >= 100 ? 1 : 0)]
+            browser.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "delete"), style: .plain, target: self, action: #selector(DetectionNewViewController.pop))
+            self.navigationController?.pushViewController(browser, animated: true)
+        }else{
+            let camera = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) {[weak self] (image, asset) in
+                self?.dismiss(animated: true, completion: {
+                    if image != nil {
+                        self?.images[tag] = UIImageJPEGRepresentation(image!, 0.2)!
+                        self?.tableView.reloadData()
+                    }
+                })
+            }
+            camera.modalTransitionStyle = .crossDissolve
+            //camera.transitioningDelegate = self
+            self.present(camera, animated: true) {
+                
+            }
+        }
+        
+    }
+    
+    func pop() {
+        let alert = UIAlertController(title: nil, message: "确认删除？", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "删除", style: .default, handler: {[weak self] (action) in
+            self!.images[self!.nTag] = nil
+            self?.tableView.reloadData()
+            _ = self?.navigationController?.popViewController(animated: true)
+        }))
+        alert.addAction(UIAlertAction(title: "不，保留", style: .cancel, handler: { (action) in
+            
+        }))
+        self.present(alert, animated: true) { 
+            
+        }
+    }
+    
+    
+
+    @IBAction func move(_ sender: Any) {
         if let button = sender as? UIButton {
             switch button.tag {
             case 1:
@@ -76,11 +136,39 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         }
     }
     
+    // 保存
     @IBAction func save(_ sender: Any) {
         
     }
     
+    // 显示提示框
+    func showAlert(message : String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "继续编辑", style: .cancel, handler: { (action) in
+            
+        }))
+        present(alert, animated: true) { 
+            
+        }
+    }
+    
+    // 提交订单
     @IBAction func submit(_ sender: Any) {
+        tableView.endEditing(true) // 结束编辑
+        bSubmit = true
+        if !checkoutImage(companyNo: companyNo) {
+            self.tableView.reloadData()
+            showAlert(message: "您还有内容尚未录入，是否返回继续编辑？")
+            return
+        }
+        if price.characters.count == 0 {
+            Toast(text : "请输入预售价格").show()
+            return
+        }
+        if remark.characters.count == 0 {
+            Toast(text : "请输入备注").show()
+            return
+        }
         let hud = self.showHUD(text: "创建中...")
         NetworkManager.sharedInstall.request(url: bill, params: nil) {[weak self] (json, error) in
             self?.hideHUD(hud: hud)
@@ -89,13 +177,80 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }else{
                 if let data = json {
                     self?.orderNo = data.stringValue
+                    self?.submitBill()
+                    for (key , value) in self!.images {
+                        let section = key / 1000
+                        let row = (key % 1000) % 100
+                        let right = key % 1000 >= 100
+                        self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+                    }
                 }
             }
         }
     }
     
-    func uploadImage() {
+    // 上传图片
+    func uploadImage(imageClass : String , imageSeqNum : Int , data : Data) {
+        DispatchQueue.global().async {
+            [weak self] in
+            let username = UserDefaults.standard.string(forKey: "username")
+            var params = ["createUser" : username!]
+            params["clientName"] = "iOS"
+            params["carBillId"] = self!.orderNo
+            params["imageClass"] = imageClass
+            params["imageSeqNum"] = "\(imageSeqNum)"
+            NetworkManager.sharedInstall.upload(url: self!.upload, params: params, data: data) { (json, error) in
+                print(json ?? "")
+            }
+        }
         
+    }
+    
+    // 提交订单
+    func submitBill()  {
+        DispatchQueue.global().async {
+            [weak self] in
+            let username = UserDefaults.standard.string(forKey: "username")
+            var params = ["createUser" : username!]
+            params["carBillId"] = self!.orderNo
+            params["preSalePrice"] = self!.price
+            params["mark"] = self!.remark
+            NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in
+                if error != nil {
+                    
+                }else{
+                    DispatchQueue.main.async {
+                        [weak self] in
+                        if let data = json , data["success"].boolValue {
+                            if let message = json?["message"].string {
+                                Toast(text: message).show()
+                            }
+                            _ = self?.navigationController?.popViewController(animated: true)
+                        }else{
+                            if let message = json?["message"].string {
+                                Toast(text: message).show()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    // 检查公司必传的照片
+    func checkoutImage(companyNo : Int) -> Bool {
+        if images.count > 0 {
+            if companyNo == 0 {
+                let keys = Set<Int>(images.keys)
+                if companyOtherNeed.isSubset(of: keys) {
+                    return true
+                }else{
+                    return false
+                }
+            }
+        }
+        return false
     }
     
     // MARK: - UITableView DataSource
@@ -107,7 +262,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         if section < 6 {
             var count = titles[section].count + 1
             if images.count > 0 {
-                let array = images.map{$0.key >= section * 1000 && $0.key < (section + 1) * 1000}
+                let array = images.filter{$0.key >= section * 1000 && $0.key < (section + 1) * 1000}
                 count = max(count, array.count)
             }
             return (count % 2 > 0) ? (count / 2 + 1) : (count / 2)
@@ -119,11 +274,19 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section < 6 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetectionTableViewCell
+            cell.vCamera1.layer.cornerRadius = 6.0
+            cell.vCamera2.layer.cornerRadius = 6.0
+            cell.iv1.layer.cornerRadius = 6.0
+            cell.iv2.layer.cornerRadius = 6.0
+            cell.iv1.clipsToBounds = true
+            cell.iv2.clipsToBounds = true
+            cell.lbl1.layer.cornerRadius = 3.0
+            cell.lbl2.layer.cornerRadius = 3.0
             cell.indexPath = indexPath
             cell.delegate = self
             var count = titles[indexPath.section].count + 1
             if images.count > 0 {
-                let array = images.map{$0.key >= indexPath.section * 1000 && $0.key < (indexPath.section + 1) * 1000}
+                let array = images.filter{$0.key >= indexPath.section * 1000 && $0.key < (indexPath.section + 1) * 1000}
                 count = max(count, array.count)
             }
             if count % 2 > 0 && indexPath.row == count / 2 {
@@ -143,33 +306,79 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }
             cell.iv11.image = UIImage(named: indexPath.row * 2 < count - 1 ? "icon_camera" : "icon_add_photo")
             cell.iv21.image = UIImage(named: indexPath.row * 2 + 1 < count - 1 ? "icon_camera" : "icon_add_photo")
+            cell.vCamera1.layer.borderWidth = 0.5
+            cell.vCamera2.layer.borderWidth = 0.5
             if let data = images[indexPath.section * 1000 + indexPath.row] {
                 cell.iv1.image = UIImage(data: data)
-                cell.lbl1.isHidden = true
+                cell.lbl1.textColor = UIColor.white
+                cell.lbl1.backgroundColor = UIColor.black.withAlphaComponent(0.5)
                 cell.iv11.isHidden = true
+                cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
             }else{
                 cell.iv1.image = nil
-                cell.lbl1.isHidden = false
+                cell.lbl1.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
+
+                cell.lbl1.backgroundColor = UIColor.clear
                 cell.iv11.isHidden = false
+                if bSubmit {
+                    if companyNo == 0 {
+                        if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row) {
+                            cell.vCamera1.layer.borderColor = UIColor.red.cgColor
+                        }else{
+                            cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                        }
+                    }else{
+                        cell.vCamera1.layer.borderColor = UIColor.red.cgColor
+                    }
+                    
+                }else{
+                    cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                }
             }
             if let data = images[indexPath.section * 1000 + indexPath.row + 100] {
                 cell.iv2.image = UIImage(data: data)
-                cell.lbl2.isHidden = true
+                cell.lbl2.textColor = UIColor.white
+                cell.lbl2.backgroundColor = UIColor.black.withAlphaComponent(0.5)
                 cell.iv21.isHidden = true
+                cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
             }else{
                 cell.iv2.image = nil
-                cell.lbl2.isHidden = false
+                cell.lbl2.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
+                cell.lbl2.backgroundColor = UIColor.clear
                 cell.iv21.isHidden = false
+                if bSubmit {
+                    if companyNo == 0 {
+                        if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row + 100) {
+                            cell.vCamera2.layer.borderColor = UIColor.red.cgColor
+                        }else{
+                            cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                        }
+                    }else{
+                        cell.vCamera2.layer.borderColor = UIColor.red.cgColor
+                    }
+                }else{
+                    cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                }
             }
             
             return cell
         }else if indexPath.section == 6 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath)
-
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as! Detection1TableViewCell
+            cell.contentView.layer.borderWidth = 0.5
+            if price.characters.count == 0 && bSubmit {
+                cell.contentView.layer.borderColor = UIColor.red.cgColor
+            }else{
+                cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+            }
             return cell
         }else{
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath)
-            
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
+            cell.contentView.layer.borderWidth = 0.5
+            if remark.characters.count == 0 && bSubmit {
+                cell.contentView.layer.borderColor = UIColor.red.cgColor
+            }else{
+                cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+            }
             return cell
         }
     }
@@ -217,5 +426,4 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return dismissAnimator
     }
-
 }
