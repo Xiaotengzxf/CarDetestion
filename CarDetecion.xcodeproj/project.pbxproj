@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		893F5F6B1E76EE3100834FA1 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893F5F6A1E76EE3100834FA1 /* NetworkManager.swift */; };
 		894B4BF21E6EDCE600FE9D90 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */; };
+		894E4F131E95149100D9BF55 /* DefaultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894E4F121E95149100D9BF55 /* DefaultViewController.swift */; };
 		895307C31E6D18D9007AF459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C21E6D18D9007AF459 /* AppDelegate.swift */; };
 		895307C51E6D18D9007AF459 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C41E6D18D9007AF459 /* ViewController.swift */; };
 		895307C81E6D18D9007AF459 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 895307C61E6D18D9007AF459 /* Main.storyboard */; };
@@ -81,6 +82,7 @@
 		7FA2B127C77D69B2B4084750 /* Pods-CarDetecion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarDetecion.release.xcconfig"; path = "Pods/Target Support Files/Pods-CarDetecion/Pods-CarDetecion.release.xcconfig"; sourceTree = "<group>"; };
 		893F5F6A1E76EE3100834FA1 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
+		894E4F121E95149100D9BF55 /* DefaultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultViewController.swift; sourceTree = "<group>"; };
 		895307BF1E6D18D9007AF459 /* CarDetecion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarDetecion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		895307C21E6D18D9007AF459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		895307C41E6D18D9007AF459 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -286,6 +288,7 @@
 			isa = PBXGroup;
 			children = (
 				896AFA6F1E8B694E008DE6F5 /* LoginViewController.swift */,
+				894E4F121E95149100D9BF55 /* DefaultViewController.swift */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -528,6 +531,7 @@
 				895308181E6D7A67007AF459 /* CameraView.swift in Sources */,
 				895308151E6D7A67007AF459 /* ConfirmViewController.swift in Sources */,
 				896AFA731E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift in Sources */,
+				894E4F131E95149100D9BF55 /* DefaultViewController.swift in Sources */,
 				8978CAE71E928EF300BBC926 /* Detection1TableViewCell.swift in Sources */,
 				8953080E1E6D7A67007AF459 /* SingleImageSaver.swift in Sources */,
 				898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */,

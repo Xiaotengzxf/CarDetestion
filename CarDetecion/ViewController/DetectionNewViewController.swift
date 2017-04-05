@@ -177,7 +177,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }else{
                 if let data = json {
                     self?.orderNo = data.stringValue
-                    self?.submitBill()
                     for (key , value) in self!.images {
                         let section = key / 1000
                         let row = (key % 1000) % 100
@@ -235,7 +234,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 }
             }
         }
-        
     }
     
     // 检查公司必传的照片
