@@ -23,6 +23,7 @@ class NetworkManager {
     
     func request(url: String , params : Parameters? , callback : @escaping (_ json : JSON? ,_ error : Error?)->()) {
         Alamofire.request("\(domain)\(url)", method: .get, parameters: params, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
+            print("是否为主线程:\(Thread.isMainThread)")
             switch response.result {
             case .success:
                 if let value = response.result.value {

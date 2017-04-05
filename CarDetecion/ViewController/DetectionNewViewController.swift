@@ -20,7 +20,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     let dismissAnimator = DismisssAnimator()
     let bill = "external/carBill/getCarBillIdNextVal.html"
     let upload = "external/app/uploadAppImage.html"
-    let createBill = "external/app/finishCreateAppCarBill.html"
     var orderNo = ""
     var price = ""
     var remark = ""
@@ -93,7 +92,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     }
                 })
             }
-            camera.modalTransitionStyle = .crossDissolve
+            camera.nTag = nTag
+            camera.sectionTiltes = sectionTitles
+            camera.titles = titles
             //camera.transitioningDelegate = self
             self.present(camera, animated: true) {
                 
@@ -178,11 +179,14 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 if let data = json {
                     self?.orderNo = data.stringValue
                     for (key , value) in self!.images {
+                        upLoadCount = self!.images.count
                         let section = key / 1000
                         let row = (key % 1000) % 100
                         let right = key % 1000 >= 100
                         self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                     }
+                    NotificationCenter.default.post(name: Notification.Name("detection"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark])
+                    _ = self?.navigationController?.popViewController(animated: true)
                 }
             }
         }
@@ -190,51 +194,26 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 上传图片
     func uploadImage(imageClass : String , imageSeqNum : Int , data : Data) {
-        DispatchQueue.global().async {
-            [weak self] in
-            let username = UserDefaults.standard.string(forKey: "username")
-            var params = ["createUser" : username!]
-            params["clientName"] = "iOS"
-            params["carBillId"] = self!.orderNo
-            params["imageClass"] = imageClass
-            params["imageSeqNum"] = "\(imageSeqNum)"
-            NetworkManager.sharedInstall.upload(url: self!.upload, params: params, data: data) { (json, error) in
-                print(json ?? "")
-            }
-        }
         
-    }
-    
-    // 提交订单
-    func submitBill()  {
-        DispatchQueue.global().async {
-            [weak self] in
-            let username = UserDefaults.standard.string(forKey: "username")
-            var params = ["createUser" : username!]
-            params["carBillId"] = self!.orderNo
-            params["preSalePrice"] = self!.price
-            params["mark"] = self!.remark
-            NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in
-                if error != nil {
-                    
-                }else{
-                    DispatchQueue.main.async {
-                        [weak self] in
-                        if let data = json , data["success"].boolValue {
-                            if let message = json?["message"].string {
-                                Toast(text: message).show()
-                            }
-                            _ = self?.navigationController?.popViewController(animated: true)
-                        }else{
-                            if let message = json?["message"].string {
-                                Toast(text: message).show()
-                            }
-                        }
-                    }
+        let username = UserDefaults.standard.string(forKey: "username")
+        var params = ["createUser" : username!]
+        params["clientName"] = "iOS"
+        params["carBillId"] = orderNo
+        params["imageClass"] = imageClass
+        params["imageSeqNum"] = "\(imageSeqNum)"
+        NetworkManager.sharedInstall.upload(url: upload, params: params, data: data) { (json, error) in
+            DispatchQueue.global().async {
+                upLoadCount -= 1
+                if upLoadCount == 0 {
+                    NotificationCenter.default.post(name: Notification.Name("detection"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
                 }
             }
         }
+        
+        
     }
+    
+    
     
     // 检查公司必传的照片
     func checkoutImage(companyNo : Int) -> Bool {

@@ -26,10 +26,15 @@ class DetectionViewController: UIViewController {
     @IBOutlet weak var lcLeft: NSLayoutConstraint!
     
     let applyCount = "external/app/getApplyCountInfo.html"
+    let createBill = "external/app/finishCreateAppCarBill.html"
+    let latestList = "external/news/latestList.html"
+    var orderInfo : [String : [String : String]] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         getApplyCount()
+        getLatestList(type: "新闻公告")
         searchBar.backgroundImage = UIImage()
         searchBar.backgroundColor = UIColor.clear
         let abStr = NSMutableAttributedString(string: "详情...")
@@ -42,6 +47,8 @@ class DetectionViewController: UIViewController {
         
         lcRight.constant = (WIDTH - 240) / 4
         lcLeft.constant = (WIDTH - 240) / 4
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(DetectionViewController.handleNotification(notification:)), name: Notification.Name("detection"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -68,7 +75,26 @@ class DetectionViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     @IBAction func showAdvertiseDetail(_ sender: Any) {
+    }
+    
+    // 处理通知
+    func handleNotification(notification : Notification) {
+        if let tag = notification.object as? Int {
+            if tag == 1 {
+                if let userinfo = notification.userInfo as? [String : String] {
+                    orderInfo[userinfo["orderNo"]!] = ["price" : userinfo["price"]! , "remark" : userinfo["remark"]!]
+                }
+            }else if tag == 2 {
+                if let userinfo = notification.userInfo as? [String : String] {
+                    submitBill(orderNo: userinfo["orderNo"] ?? "")
+                }
+            }
+        }
     }
     
     func handleGestureRecognizer(recognizer : UITapGestureRecognizer) {
@@ -91,6 +117,40 @@ class DetectionViewController: UIViewController {
                     if let message = json?["message"].string {
                         Toast(text: message).show()
                     }
+                }
+            }
+        }
+    }
+    
+    // 获取最新公告
+    func getLatestList(type : String) {
+        NetworkManager.sharedInstall.request(url: latestList, params: ["classType" : type]) {(json, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json , data["success"].boolValue {
+                    print(data)
+                }else{
+                    if let message = json?["message"].string {
+                        Toast(text: message).show()
+                    }
+                }
+            }
+        }
+    }
+    
+    // 提交订单
+    func submitBill(orderNo : String)  {
+        if orderNo.characters.count > 0 {
+            DispatchQueue.global().async {
+                [weak self] in
+                let username = UserDefaults.standard.string(forKey: "username")
+                var params = ["createUser" : username!]
+                params["carBillId"] = orderNo
+                params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? ""
+                params["mark"] = self?.orderInfo[orderNo]?["remark"] ?? ""
+                NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in
+                    
                 }
             }
         }

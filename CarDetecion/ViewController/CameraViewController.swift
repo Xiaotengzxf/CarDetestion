@@ -9,6 +9,8 @@
 import UIKit
 import AVFoundation
 import Photos
+import Toaster
+import SwiftyJSON
 
 public typealias CameraViewCompletion = (UIImage?, PHAsset?) -> Void
 
@@ -44,9 +46,16 @@ public extension CameraViewController {
 
 public class CameraViewController: UIViewController {
     
+    let operationDesc = "external/source/operation-desc.json" // 水印和接口说明
+    var waterMarks : [JSON] = []
     var didUpdateViews = false
     var allowCropping = false
     var animationRunning = false
+    var nTag = 0
+    var sectionTiltes : [String] = []
+    var titles : [[String]] = []
+    var lcWidth : NSLayoutConstraint!
+    var lcHeight : NSLayoutConstraint!
     
     var lastInterfaceOrientation : UIInterfaceOrientation?
     var onCompletion: CameraViewCompletion?
@@ -204,6 +213,12 @@ public class CameraViewController: UIViewController {
         button.setImage(UIImage(named: "simple"), for: .normal)
         return button
     }()
+    
+    let ivDetailDesc : UIImageView = { //描述图片
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
   
     public init(croppingEnabled: Bool, allowsLibraryAccess: Bool = true, completion: @escaping CameraViewCompletion) {
         super.init(nibName: nil, bundle: nil)
@@ -280,7 +295,7 @@ public class CameraViewController: UIViewController {
         configCameraOverlayWidthConstraint(portrait)
         configCameraOverlayCenterConstraint(portrait)
         
-        rotate(actualInterfaceOrientation: statusBarOrientation)
+        //rotate(actualInterfaceOrientation: statusBarOrientation)
         
         super.updateViewConstraints()
     }
@@ -303,7 +318,8 @@ public class CameraViewController: UIViewController {
         [imageView,
          lblName,
          lblCurrentPage,
-         hintButton].forEach({ middleView.addSubview($0) })
+         hintButton,
+         ivDetailDesc].forEach({ middleView.addSubview($0) })
         
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(50)-[cameraView]-(114)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[cameraView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
@@ -319,7 +335,7 @@ public class CameraViewController: UIViewController {
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[closeButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
-        print(WIDTH)
+        
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[imageView(width)]", options: .directionLeadingToTrailing, metrics: ["width" : min(467, 467 / 667.0 * MAX)], views: ["imageView" : imageView]))
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[imageView(height)]", options: .directionLeadingToTrailing, metrics: ["height" : min(350, 350 / 375.0 * MIN)], views: ["imageView" : imageView]))
         middleView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: middleView, attribute: .centerX, multiplier: 1, constant: 0))
@@ -330,13 +346,29 @@ public class CameraViewController: UIViewController {
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblCurrentPage]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblCurrentPage" : lblCurrentPage]))
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
+        
+        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .bottom, relatedBy: .equal, toItem: hintButton, attribute: .top, multiplier: 0, constant: -5))
+        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .right, relatedBy: .equal, toItem: hintButton, attribute: .right, multiplier: 0, constant: -22))
+        lcWidth = NSLayoutConstraint(item: ivDetailDesc, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 0)
+        lcHeight = NSLayoutConstraint(item: ivDetailDesc, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 0)
+        
+        
+        
+        
         addCameraObserver()
-        addRotateObserver()
+        //addRotateObserver()
         setupVolumeControl()
         setupActions()
         checkPermissions()
         cameraView.configureFocus()
+        
+        getWaterMark() //获取水印
     }
+    
+    /* "imageClass": "登记证",
+     "imageSeqNum": 0,
+     "imageDesc": "/source/upload/users/642/2017/03/24/cy/NS201703240001/thumb_cut_a0beb4882ae84aa7b808600bbe2c89b8.png",
+     "waterMark": "/source/upload/users/642/2017/03/24/cy/NS201703240001/thumb_cut_a0beb4882ae84aa7b808600bbe2c89b8.png"*/
 
     /**
      * Start the session of the camera.
@@ -432,6 +464,28 @@ public class CameraViewController: UIViewController {
         libraryButton.action = { [weak self] in self?.showLibrary() }
         closeButton.action = { [weak self] in self?.close() }
         flashButton.action = { [weak self] in self?.toggleFlash() }
+        hintButton.action = {
+            [weak self] in
+            if self!.lcWidth.constant == 0 {
+                self?.lcWidth.constant = MAX - 164 - 20 - 22 - 10
+                self?.lcHeight.constant = MIN - 20 - 60
+                UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveLinear, animations: {
+                    [weak self] in
+                    self?.view.layoutIfNeeded()
+                    }, completion: { (finish) in
+                        
+                })
+            }else{
+                self?.lcWidth.constant = 0
+                self?.lcHeight.constant = 0
+                UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveLinear, animations: {
+                    [weak self] in
+                    self?.view.layoutIfNeeded()
+                    }, completion: { (finish) in
+                        
+                })
+            }
+        }
     }
     
     /**
@@ -634,6 +688,7 @@ public class CameraViewController: UIViewController {
         present(confirmViewController, animated: true, completion: nil)
     }
     
+    // 设置屏幕方向
     public override var shouldAutorotate: Bool {
         return false
     }
@@ -644,5 +699,22 @@ public class CameraViewController: UIViewController {
     
     public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         return .landscapeRight
+    }
+    
+    // 获取水印
+    func getWaterMark() {
+        NetworkManager.sharedInstall.request(url: operationDesc, params: nil) {[weak self] (json, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json?["data"].array {
+                    self?.waterMarks += data
+                }else{
+                    if let message = json?["message"].string {
+                        Toast(text: message).show()
+                    }
+                }
+            }
+        }
     }
 }
