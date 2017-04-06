@@ -10,6 +10,7 @@ import UIKit
 import Toaster
 import SKPhotoBrowser
 import SwiftyJSON
+import MBProgressHUD
 
 class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate {
 
@@ -38,7 +39,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: nil, action: nil)
         
-        getWaterMark(tag: 0)
+        getWaterMark(tag: -1)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -91,7 +92,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             if waterMarks.count > 0{
                 pushToCamera(tag: tag)
             }else{
-                
+                getWaterMark(tag: tag)
             }
             
         }
@@ -101,12 +102,10 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     // 跳转到拍照界面
     func pushToCamera(tag : Int) {
         let camera = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) {[weak self] (image, asset) in
-            self?.dismiss(animated: true, completion: {
-                if image != nil {
-                    self?.images[tag] = UIImageJPEGRepresentation(image!, 0.2)!
-                    self?.tableView.reloadData()
-                }
-            })
+            if image != nil {
+                self?.images[tag] = UIImageJPEGRepresentation(image!, 0.2)!
+                self?.tableView.reloadData()
+            }
         }
         camera.nTag = nTag
         camera.sectionTiltes = sectionTitles
@@ -228,12 +227,22 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 获取水印
     func getWaterMark(tag : Int) {
+        var hud : MBProgressHUD?
+        if tag >= 0 {
+            hud = showHUD(text: "加载中...")
+        }
         NetworkManager.sharedInstall.request(url: operationDesc, params: nil) {[weak self] (json, error) in
+            if hud != nil {
+                hud?.hide(animated: true)
+            }
             if error != nil {
                 print(error!.localizedDescription)
             }else{
                 if let data = json?["data"].array {
                     self?.waterMarks += data
+                    if tag >= 0 {
+                        self?.pushToCamera(tag: tag)
+                    }
                 }
             }
         }

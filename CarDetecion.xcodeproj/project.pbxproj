@@ -29,8 +29,6 @@
 		895308121E6D7A67007AF459 /* VolumeControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307FD1E6D7A67007AF459 /* VolumeControl.swift */; };
 		895308131E6D7A67007AF459 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307FF1E6D7A67007AF459 /* CameraViewController.swift */; };
 		895308141E6D7A67007AF459 /* CameraViewControllerConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308001E6D7A67007AF459 /* CameraViewControllerConstraint.swift */; };
-		895308151E6D7A67007AF459 /* ConfirmViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308011E6D7A67007AF459 /* ConfirmViewController.swift */; };
-		895308161E6D7A67007AF459 /* ConfirmViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 895308021E6D7A67007AF459 /* ConfirmViewController.xib */; };
 		895308171E6D7A67007AF459 /* PhotoLibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308031E6D7A67007AF459 /* PhotoLibraryViewController.swift */; };
 		895308181E6D7A67007AF459 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308051E6D7A67007AF459 /* CameraView.swift */; };
 		895308191E6D7A67007AF459 /* CropOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895308061E6D7A67007AF459 /* CropOverlay.swift */; };
@@ -108,8 +106,6 @@
 		895307FD1E6D7A67007AF459 /* VolumeControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeControl.swift; sourceTree = "<group>"; };
 		895307FF1E6D7A67007AF459 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		895308001E6D7A67007AF459 /* CameraViewControllerConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewControllerConstraint.swift; sourceTree = "<group>"; };
-		895308011E6D7A67007AF459 /* ConfirmViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmViewController.swift; sourceTree = "<group>"; };
-		895308021E6D7A67007AF459 /* ConfirmViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConfirmViewController.xib; sourceTree = "<group>"; };
 		895308031E6D7A67007AF459 /* PhotoLibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoLibraryViewController.swift; sourceTree = "<group>"; };
 		895308051E6D7A67007AF459 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		895308061E6D7A67007AF459 /* CropOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CropOverlay.swift; sourceTree = "<group>"; };
@@ -257,8 +253,6 @@
 				898916E61E7ECF7B00BE6848 /* Detection */,
 				895307FF1E6D7A67007AF459 /* CameraViewController.swift */,
 				895308001E6D7A67007AF459 /* CameraViewControllerConstraint.swift */,
-				895308011E6D7A67007AF459 /* ConfirmViewController.swift */,
-				895308021E6D7A67007AF459 /* ConfirmViewController.xib */,
 				895308031E6D7A67007AF459 /* PhotoLibraryViewController.swift */,
 				894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */,
 				8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */,
@@ -445,7 +439,6 @@
 				895307D01E6D18D9007AF459 /* LaunchScreen.storyboard in Resources */,
 				8953081F1E6D7CEC007AF459 /* CameraView.strings in Resources */,
 				895307C81E6D18D9007AF459 /* Main.storyboard in Resources */,
-				895308161E6D7A67007AF459 /* ConfirmViewController.xib in Resources */,
 				89B945701E8F37F1009F0B58 /* logo.jpg in Resources */,
 				898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */,
 				896AFA751E8BC283008DE6F5 /* ReUseHeaderFooterView.xib in Resources */,
@@ -529,7 +522,6 @@
 				8953080D1E6D7A67007AF459 /* SingleImageFetcher.swift in Sources */,
 				896AFA771E8C9213008DE6F5 /* DetectionTableViewCell.swift in Sources */,
 				895308181E6D7A67007AF459 /* CameraView.swift in Sources */,
-				895308151E6D7A67007AF459 /* ConfirmViewController.swift in Sources */,
 				896AFA731E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift in Sources */,
 				894E4F131E95149100D9BF55 /* DefaultViewController.swift in Sources */,
 				8978CAE71E928EF300BBC926 /* Detection1TableViewCell.swift in Sources */,

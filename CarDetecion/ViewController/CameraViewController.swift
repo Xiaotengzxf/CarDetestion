@@ -23,18 +23,18 @@ public extension CameraViewController {
         navigationController.navigationBar.barStyle = UIBarStyle.black
         navigationController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
 
-        imagePicker.onSelectionComplete = { [weak imagePicker] asset in
+        imagePicker.onSelectionComplete = { asset in
             if let asset = asset {
-                let confirmController = ConfirmViewController(asset: asset, allowsCropping: croppingEnabled)
-                confirmController.onComplete = { [weak imagePicker] image, asset in
-                    if let image = image, let asset = asset {
+                _ = SingleImageFetcher()
+                    .setAsset(asset)
+                    .setTargetSize(largestPhotoSize())
+                    .onSuccess { image in
                         completion(image, asset)
-                    } else {
-                        imagePicker?.dismiss(animated: true, completion: nil)
                     }
-                }
-                confirmController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-                imagePicker?.present(confirmController, animated: true, completion: nil)
+                    .onFailure { error in
+                        completion(nil, nil)
+                    }
+                    .fetch()
             } else {
                 completion(nil, nil)
             }
@@ -55,6 +55,8 @@ public class CameraViewController: UIViewController {
     var titles : [[String]] = []
     var lcWidth : NSLayoutConstraint!
     var lcHeight : NSLayoutConstraint!
+    var imageInfo : (UIImage? , PHAsset?)
+    var companyNeed : Set<Int> = []
     
     var lastInterfaceOrientation : UIInterfaceOrientation?
     var onCompletion: CameraViewCompletion?
@@ -195,6 +197,7 @@ public class CameraViewController: UIViewController {
     let lblName : UILabel = {
         let label = UILabel()
         label.textColor = UIColor.white
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -202,6 +205,7 @@ public class CameraViewController: UIViewController {
     let lblCurrentPage : UILabel = {
         let label = UILabel()
         label.textColor = UIColor.white
+        label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -214,6 +218,12 @@ public class CameraViewController: UIViewController {
     }()
     
     let ivDetailDesc : UIImageView = { //描述图片
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let ivSnap : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -318,7 +328,8 @@ public class CameraViewController: UIViewController {
          lblName,
          lblCurrentPage,
          hintButton,
-         ivDetailDesc].forEach({ middleView.addSubview($0) })
+         ivDetailDesc,
+         ivSnap].forEach({ middleView.addSubview($0) })
         
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(50)-[cameraView]-(114)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[cameraView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraView" : cameraView]))
@@ -335,6 +346,8 @@ public class CameraViewController: UIViewController {
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
         
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[ivSnap]|", options: .directionLeadingToTrailing, metrics: nil, views: ["ivSnap" : ivSnap]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[ivSnap]|", options: .directionLeadingToTrailing, metrics: nil, views: ["ivSnap" : ivSnap]))
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[imageView(width)]", options: .directionLeadingToTrailing, metrics: ["width" : min(467, 467 / 667.0 * MAX)], views: ["imageView" : imageView]))
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[imageView(height)]", options: .directionLeadingToTrailing, metrics: ["height" : min(350, 350 / 375.0 * MIN)], views: ["imageView" : imageView]))
         middleView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: middleView, attribute: .centerX, multiplier: 1, constant: 0))
@@ -346,13 +359,13 @@ public class CameraViewController: UIViewController {
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
         
-        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .bottom, relatedBy: .equal, toItem: hintButton, attribute: .top, multiplier: 0, constant: -5))
-        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .right, relatedBy: .equal, toItem: hintButton, attribute: .right, multiplier: 0, constant: -22))
-        lcWidth = NSLayoutConstraint(item: ivDetailDesc, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 0)
-        lcHeight = NSLayoutConstraint(item: ivDetailDesc, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 0, constant: 0)
+        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .bottom, relatedBy: .equal, toItem: hintButton, attribute: .top, multiplier: 1, constant: -5))
+        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .right, relatedBy: .equal, toItem: hintButton, attribute: .right, multiplier: 1, constant: -22))
+        lcWidth = NSLayoutConstraint(item: ivDetailDesc, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
+        lcHeight = NSLayoutConstraint(item: ivDetailDesc, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
         
         
-        
+        ivSnap.isHidden = true
         
         addCameraObserver()
         //addRotateObserver()
@@ -360,6 +373,14 @@ public class CameraViewController: UIViewController {
         setupActions()
         checkPermissions()
         cameraView.configureFocus()
+        
+        let section = nTag / 1000
+        let row = nTag % 1000 % 100
+        if titles.count > section && titles[section].count > row {
+            lblName.text = titles[section][row]
+        }else{
+            lblName.text = "其他照片"
+        }
         
     }
     
@@ -626,25 +647,43 @@ public class CameraViewController: UIViewController {
     }
     
     internal func close() {
-        onCompletion?(nil, nil)
+        self.onCompletion?(nil , nil)
+        self.dismiss(animated: true) { 
+            
+        }
     }
     
     internal func showLibrary() {
-        let imagePicker = CameraViewController.imagePickerViewController(croppingEnabled: allowCropping) { image, asset in
-
-            defer {
-                self.dismiss(animated: true, completion: nil)
-            }
-
-            guard let image = image, let asset = asset else {
-                return
+        if libraryButton.title(for: .normal) == "重拍" {
+            cameraView.startSession()
+            ivSnap.isHidden = true
+            flashButton.isHidden = false
+            libraryButton.setTitle("相册", for: .normal)
+            nextButton.setTitle("取消", for: .normal)
+            imageInfo = (nil , nil)
+        }else{
+            let imagePicker = CameraViewController.imagePickerViewController(croppingEnabled: allowCropping) { image, asset in
+                
+                defer {
+                    self.dismiss(animated: true, completion: nil)
+                }
+                
+                guard let image = image, let asset = asset else {
+                    return
+                }
+                
+                self.ivSnap.isHidden = false
+                self.ivSnap.image = image
+                self.flashButton.isHidden = true
+                self.libraryButton.setTitle("重拍", for: .normal)
+                self.nextButton.setTitle("拍下一张", for: .normal)
+                
+                self.imageInfo = (image , asset)
             }
             
-            self.onCompletion?(image, asset)
-        }
-        
-        present(imagePicker, animated: true) {
-            self.cameraView.stopSession()
+            present(imagePicker, animated: true) {
+                self.cameraView.stopSession()
+            }
         }
     }
     
@@ -669,21 +708,25 @@ public class CameraViewController: UIViewController {
     
     internal func layoutCameraResult(asset: PHAsset) {
         cameraView.stopSession()
-        startConfirmController(asset: asset)
+        
         toggleButtons(enabled: true)
-    }
-    
-    private func startConfirmController(asset: PHAsset) {
-        let confirmViewController = ConfirmViewController(asset: asset, allowsCropping: allowCropping)
-        confirmViewController.onComplete = { image, asset in
-            if let image = image, let asset = asset {
-                self.onCompletion?(image, asset)
-            } else {
-                self.dismiss(animated: true, completion: nil)
+        
+        _ = SingleImageFetcher()
+            .setAsset(asset)
+            .setTargetSize(largestPhotoSize())
+            .onSuccess {[weak self] image in
+                self?.ivSnap.isHidden = false
+                self?.ivSnap.image = image
+                self?.flashButton.isHidden = true
+                self?.libraryButton.setTitle("重拍", for: .normal)
+                self?.nextButton.setTitle("拍下一张", for: .normal)
+                self?.imageInfo = (image , asset)
             }
-        }
-        confirmViewController.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-        present(confirmViewController, animated: true, completion: nil)
+            .onFailure { error in
+                
+            }
+            .fetch()
+        
     }
     
     // 设置屏幕方向
