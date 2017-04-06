@@ -9,6 +9,7 @@
 import UIKit
 import Toaster
 import SKPhotoBrowser
+import SwiftyJSON
 
 class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate {
 
@@ -20,12 +21,14 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     let dismissAnimator = DismisssAnimator()
     let bill = "external/carBill/getCarBillIdNextVal.html"
     let upload = "external/app/uploadAppImage.html"
+    let operationDesc = "external/source/operation-desc.json" // 水印和接口说明
     var orderNo = ""
     var price = ""
     var remark = ""
     var bSubmit = false // 是否点击了提交
     var companyNo = 0 // 单位代号
     var nTag = 0 // 临时tag
+    var waterMarks : [JSON] = []
     let companyOtherNeed : Set<Int> = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4003 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 5000 , 5100 , 5001 , 5101]
     
     override func viewDidLoad() {
@@ -35,6 +38,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: nil, action: nil)
         
+        getWaterMark(tag: 0)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,25 +88,36 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             browser.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "delete"), style: .plain, target: self, action: #selector(DetectionNewViewController.pop))
             self.navigationController?.pushViewController(browser, animated: true)
         }else{
-            let camera = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) {[weak self] (image, asset) in
-                self?.dismiss(animated: true, completion: {
-                    if image != nil {
-                        self?.images[tag] = UIImageJPEGRepresentation(image!, 0.2)!
-                        self?.tableView.reloadData()
-                    }
-                })
-            }
-            camera.nTag = nTag
-            camera.sectionTiltes = sectionTitles
-            camera.titles = titles
-            //camera.transitioningDelegate = self
-            self.present(camera, animated: true) {
+            if waterMarks.count > 0{
+                pushToCamera(tag: tag)
+            }else{
                 
             }
+            
         }
         
     }
     
+    // 跳转到拍照界面
+    func pushToCamera(tag : Int) {
+        let camera = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) {[weak self] (image, asset) in
+            self?.dismiss(animated: true, completion: {
+                if image != nil {
+                    self?.images[tag] = UIImageJPEGRepresentation(image!, 0.2)!
+                    self?.tableView.reloadData()
+                }
+            })
+        }
+        camera.nTag = nTag
+        camera.sectionTiltes = sectionTitles
+        camera.titles = titles
+        //camera.transitioningDelegate = self
+        self.present(camera, animated: true) {
+            
+        }
+    }
+    
+    // 弹框是否删除
     func pop() {
         let alert = UIAlertController(title: nil, message: "确认删除？", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "删除", style: .default, handler: {[weak self] (action) in
@@ -117,8 +132,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             
         }
     }
-    
-    
 
     @IBAction func move(_ sender: Any) {
         if let button = sender as? UIButton {
@@ -213,7 +226,18 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         
     }
     
-    
+    // 获取水印
+    func getWaterMark(tag : Int) {
+        NetworkManager.sharedInstall.request(url: operationDesc, params: nil) {[weak self] (json, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json?["data"].array {
+                    self?.waterMarks += data
+                }
+            }
+        }
+    }
     
     // 检查公司必传的照片
     func checkoutImage(companyNo : Int) -> Bool {

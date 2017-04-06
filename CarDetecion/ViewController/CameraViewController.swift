@@ -46,12 +46,11 @@ public extension CameraViewController {
 
 public class CameraViewController: UIViewController {
     
-    let operationDesc = "external/source/operation-desc.json" // 水印和接口说明
     var waterMarks : [JSON] = []
     var didUpdateViews = false
     var allowCropping = false
     var animationRunning = false
-    var nTag = 0
+    var nTag = 0 // 定位当前位置
     var sectionTiltes : [String] = []
     var titles : [[String]] = []
     var lcWidth : NSLayoutConstraint!
@@ -362,7 +361,6 @@ public class CameraViewController: UIViewController {
         checkPermissions()
         cameraView.configureFocus()
         
-        getWaterMark() //获取水印
     }
     
     /* "imageClass": "登记证",
@@ -699,22 +697,5 @@ public class CameraViewController: UIViewController {
     
     public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         return .landscapeRight
-    }
-    
-    // 获取水印
-    func getWaterMark() {
-        NetworkManager.sharedInstall.request(url: operationDesc, params: nil) {[weak self] (json, error) in
-            if error != nil {
-                print(error!.localizedDescription)
-            }else{
-                if let data = json?["data"].array {
-                    self?.waterMarks += data
-                }else{
-                    if let message = json?["message"].string {
-                        Toast(text: message).show()
-                    }
-                }
-            }
-        }
     }
 }
