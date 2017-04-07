@@ -647,7 +647,7 @@ public class CameraViewController: UIViewController {
     }
     
     internal func close() {
-        self.onCompletion?(nil , nil)
+        self.onCompletion?(imageInfo.0 , imageInfo.1)
         self.dismiss(animated: true) { 
             
         }

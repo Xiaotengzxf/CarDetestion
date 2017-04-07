@@ -7,12 +7,22 @@
 //
 
 import UIKit
+import MJRefresh
+import SwiftyJSON
+import Toaster
 
 class RecordTableViewController: UITableViewController {
 
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var ivDivide: UIImageView!
     @IBOutlet weak var lcDivideLeft: NSLayoutConstraint!
+    let orderList = "external/app/getAppBillList.html"
+    var curPage = 0
+    var status = ""
+    let pageSize = 20
+    let data : [JSON] = []
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,15 +31,68 @@ class RecordTableViewController: UITableViewController {
         segmentedControl.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.darkGray], for: .normal)
         segmentedControl.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor.black], for: .selected)
         segmentedControl.setDividerImage(UIImage(), forLeftSegmentState: .normal, rightSegmentState: .normal, barMetrics: .default)
+        
+        tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { 
+            [weak self] in
+            self?.curPage = 0
+            self?.getBillList()
+        })
+        tableView.mj_header.beginRefreshing()
+        
+        tableView.mj_footer = MJRefreshBackNormalFooter(refreshingBlock: { 
+            [weak self] in
+            self?.curPage += 1
+            self?.getBillList()
+        })
+        tableView.mj_footer.isHidden = true
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func getBillList() {
+        let username = UserDefaults.standard.string(forKey: "username")
+        var params = ["userName" : username!]
+        params["curPage"] = "\(curPage)"
+        params["pageSize"] = "\(pageSize)"
+        params["status"] = ""
+        NetworkManager.sharedInstall.request(url: orderList, params: params) {[weak self] (json, error) in
+            self?.tableView.mj_header.endRefreshing()
+            self?.tableView.mj_footer.endRefreshing()
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json , data["success"].boolValue {
+                    
+                }else{
+                    if let message = json?["message"].string {
+                        Toast(text: message).show()
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    
 
     @IBAction func changeSegmentControl(_ sender: Any) {
         lcDivideLeft.constant = segmentedControl.bounds.width / 4 * CGFloat(segmentedControl.selectedSegmentIndex)
+        switch segmentedControl.selectedSegmentIndex {
+        case 0:
+            status = ""
+        case 1:
+            status = "21,22,24,31,32,34,41,42,44,51,52,54"
+        case 2:
+            status = "23,33,43,54"
+        case 3:
+            status = "80"
+        default:
+            status = "0"
+        }
+        tableView.mj_header.beginRefreshing()
     }
     // MARK: - Table view data source
 
