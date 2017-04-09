@@ -16,6 +16,8 @@ var upLoadCount = 0 // 上传图片的数量
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var orderInfo : [String : [String : String]] = [:]
+    let createBill = "external/app/finishCreateAppCarBill.html"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -33,6 +35,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let login = storyboard.instantiateViewController(withIdentifier: "login")
             window?.rootViewController = login
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(DetectionViewController.handleNotification(notification:)), name: Notification.Name("app"), object: nil)
         
         return true
     }
@@ -111,5 +115,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    // 处理通知
+    func handleNotification(notification : Notification) {
+        if let tag = notification.object as? Int {
+            if tag == 1 {
+                if let userinfo = notification.userInfo as? [String : String] {
+                    orderInfo[userinfo["orderNo"]!] = ["price" : userinfo["price"]! , "remark" : userinfo["remark"]!]
+                    self.showAlert(title: "温馨提示", message: "评估单：\(userinfo["orderNo"]!)，在提交中", button: "确认")
+                }
+            }else if tag == 2 {
+                if let userinfo = notification.userInfo as? [String : String] {
+                    submitBill(orderNo: userinfo["orderNo"] ?? "")
+                }
+            }
+        }
+    }
+    
+    // 提交订单
+    func submitBill(orderNo : String)  {
+        if orderNo.characters.count > 0 {
+            DispatchQueue.global().async {
+                [weak self] in
+                let username = UserDefaults.standard.string(forKey: "username")
+                var params = ["createUser" : username!]
+                params["carBillId"] = orderNo
+                params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? ""
+                params["mark"] = self?.orderInfo[orderNo]?["remark"] ?? ""
+                NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in
+                    if error != nil {
+                        print(error!.localizedDescription)
+                        self?.showAlert(title: "温馨提示", message: "评估单：\(orderNo)，提交失败；原因：\(error!.localizedDescription)", button: "确认")
+                    }else{
+                        if let data = json , data["success"].boolValue {
+                            self?.showAlert(title: "温馨提示", message: "评估单：\(orderNo)，已提交成功！", button: "确认")
+                        }else{
+                            if let message = json?["message"].string {
+                                self?.showAlert(title: "温馨提示", message: "评估单：\(orderNo)，提交失败；原因：\(message)", button: "确认")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // 显示提示框
+    func showAlert(title : String?, message : String , button : String) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: button, style: .cancel, handler: { (action) in
+            
+        }))
+        window?.rootViewController?.present(alert, animated: true) {
+            
+        }
+    }
+    
+    
 }
 

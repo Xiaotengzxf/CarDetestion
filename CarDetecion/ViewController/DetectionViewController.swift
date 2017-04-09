@@ -26,9 +26,7 @@ class DetectionViewController: UIViewController {
     @IBOutlet weak var lcLeft: NSLayoutConstraint!
     
     let applyCount = "external/app/getApplyCountInfo.html"
-    let createBill = "external/app/finishCreateAppCarBill.html"
     let latestList = "external/news/latestList.html"
-    var orderInfo : [String : [String : String]] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +47,13 @@ class DetectionViewController: UIViewController {
         lcLeft.constant = (WIDTH - 240) / 4
         
         NotificationCenter.default.addObserver(self, selector: #selector(DetectionViewController.handleNotification(notification:)), name: Notification.Name("detection"), object: nil)
+        
+        
+        if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
+            lblUnSubmit.text = "共有\(orders.count)单"
+        }else{
+            lblUnSubmit.text = "共有0单"
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -84,17 +89,7 @@ class DetectionViewController: UIViewController {
     
     // 处理通知
     func handleNotification(notification : Notification) {
-        if let tag = notification.object as? Int {
-            if tag == 1 {
-                if let userinfo = notification.userInfo as? [String : String] {
-                    orderInfo[userinfo["orderNo"]!] = ["price" : userinfo["price"]! , "remark" : userinfo["remark"]!]
-                }
-            }else if tag == 2 {
-                if let userinfo = notification.userInfo as? [String : String] {
-                    submitBill(orderNo: userinfo["orderNo"] ?? "")
-                }
-            }
-        }
+        
     }
     
     func handleGestureRecognizer(recognizer : UITapGestureRecognizer) {
@@ -107,12 +102,24 @@ class DetectionViewController: UIViewController {
     func getApplyCount() {
         let username = UserDefaults.standard.string(forKey: "username")
         let params = ["userName" : username!]
-        NetworkManager.sharedInstall.request(url: applyCount, params: params) {(json, error) in
+        NetworkManager.sharedInstall.request(url: applyCount, params: params) {[weak self] (json, error) in
             if error != nil {
                 print(error!.localizedDescription)
             }else{
-                if let data = json , data["success"].boolValue {
-                    
+                if let data = json , data["total"].intValue > 0 {
+                    if let array = data["data"].array {
+                        for j in array {
+                            if j["infoType"].stringValue == "finishCount" {
+                                self?.lblPass.text = "共有\(j["countInfo"].int ?? 0)单"
+                            }else if j["infoType"].stringValue == "refuseCount" {
+                                self?.lblUnpass.text = "共有\(j["countInfo"].int ?? 0)单"
+                            }else if j["infoType"].stringValue == "processCount" {
+                                self?.lblReview.text = "共有\(j["countInfo"].int ?? 0)单"
+                            }else if j["infoType"].stringValue == "allCount" {
+                                //self?.lblReview.text = "共有\(j["countInfo"].string ?? "0")单"
+                            }
+                        }
+                    }
                 }else{
                     if let message = json?["message"].string {
                         Toast(text: message).show()
@@ -134,23 +141,6 @@ class DetectionViewController: UIViewController {
                     if let message = json?["message"].string {
                         Toast(text: message).show()
                     }
-                }
-            }
-        }
-    }
-    
-    // 提交订单
-    func submitBill(orderNo : String)  {
-        if orderNo.characters.count > 0 {
-            DispatchQueue.global().async {
-                [weak self] in
-                let username = UserDefaults.standard.string(forKey: "username")
-                var params = ["createUser" : username!]
-                params["carBillId"] = orderNo
-                params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? ""
-                params["mark"] = self?.orderInfo[orderNo]?["remark"] ?? ""
-                NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in
-                    
                 }
             }
         }

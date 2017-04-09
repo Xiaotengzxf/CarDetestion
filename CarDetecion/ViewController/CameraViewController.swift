@@ -51,6 +51,7 @@ public class CameraViewController: UIViewController {
     var allowCropping = false
     var animationRunning = false
     var nTag = 0 // 定位当前位置
+    var cameraType = 0
     var sectionTiltes : [String] = []
     var titles : [[String]] = []
     var lcWidth : NSLayoutConstraint!
@@ -163,6 +164,7 @@ public class CameraViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("取消", for: .normal)
         button.setTitleColor(UIColor.rgbColorFromHex(rgb: 0xfafafa), for: .normal)
+        button.addTarget(self, action: #selector(CameraViewController.doNextOrCancel), for: .touchUpInside)
         return button
     }()
     
@@ -418,20 +420,20 @@ public class CameraViewController: UIViewController {
     /**
      * This method will disable the rotation of the
      */
-    override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-         lastInterfaceOrientation = UIApplication.shared.statusBarOrientation
-        if animationRunning {
-            return
-        }
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
-        coordinator.animate(alongsideTransition: { animation in
-            self.view.setNeedsUpdateConstraints()
-            }, completion: { _ in
-                CATransaction.commit()
-        })
-    }
+//    override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//        super.viewWillTransition(to: size, with: coordinator)
+//         lastInterfaceOrientation = UIApplication.shared.statusBarOrientation
+//        if animationRunning {
+//            return
+//        }
+//        CATransaction.begin()
+//        CATransaction.setDisableActions(true)
+//        coordinator.animate(alongsideTransition: { animation in
+//            self.view.setNeedsUpdateConstraints()
+//            }, completion: { _ in
+//                CATransaction.commit()
+//        })
+//    }
     
     /**
      * Observer the camera status, when it is ready,
@@ -526,50 +528,50 @@ public class CameraViewController: UIViewController {
      * This method will rotate the buttons based on
      * the last and actual orientation of the device.
      */
-    internal func rotate(actualInterfaceOrientation: UIInterfaceOrientation) {
-        
-        if lastInterfaceOrientation != nil {
-            let lastTransform = CGAffineTransform(rotationAngle: CGFloat(radians(currentRotation(
-                lastInterfaceOrientation!, newOrientation: actualInterfaceOrientation))))
-            self.setTransform(transform: lastTransform)
-        }
-
-        let transform = CGAffineTransform(rotationAngle: 0)
-        animationRunning = true
-        
-        /**
-         * Dispach delay to avoid any conflict between the CATransaction of rotation of the screen
-         * and CATransaction of animation of buttons.
-         */
-
-        let time: DispatchTime = DispatchTime.now() + Double(1 * UInt64(NSEC_PER_SEC)/10)
-        DispatchQueue.main.asyncAfter(deadline: time) {
-            
-            CATransaction.begin()
-            CATransaction.setDisableActions(false)
-            CATransaction.commit()
-            
-            UIView.animate(
-                withDuration: self.animationDuration,
-                delay: 0.1,
-                usingSpringWithDamping: self.animationSpring,
-                initialSpringVelocity: 0,
-                options: self.rotateAnimation,
-                animations: {
-                self.setTransform(transform: transform)
-                }, completion: { _ in
-                    self.animationRunning = false
-            })
-            
-        }
-    }
+//    internal func rotate(actualInterfaceOrientation: UIInterfaceOrientation) {
+//        
+//        if lastInterfaceOrientation != nil {
+//            let lastTransform = CGAffineTransform(rotationAngle: CGFloat(radians(currentRotation(
+//                lastInterfaceOrientation!, newOrientation: actualInterfaceOrientation))))
+//            self.setTransform(transform: lastTransform)
+//        }
+//
+//        let transform = CGAffineTransform(rotationAngle: 0)
+//        animationRunning = true
+//        
+//        /**
+//         * Dispach delay to avoid any conflict between the CATransaction of rotation of the screen
+//         * and CATransaction of animation of buttons.
+//         */
+//
+//        let time: DispatchTime = DispatchTime.now() + Double(1 * UInt64(NSEC_PER_SEC)/10)
+//        DispatchQueue.main.asyncAfter(deadline: time) {
+//            
+//            CATransaction.begin()
+//            CATransaction.setDisableActions(false)
+//            CATransaction.commit()
+//            
+//            UIView.animate(
+//                withDuration: self.animationDuration,
+//                delay: 0.1,
+//                usingSpringWithDamping: self.animationSpring,
+//                initialSpringVelocity: 0,
+//                options: self.rotateAnimation,
+//                animations: {
+//                self.setTransform(transform: transform)
+//                }, completion: { _ in
+//                    self.animationRunning = false
+//            })
+//            
+//        }
+//    }
     
-    func setTransform(transform: CGAffineTransform) {
-        self.closeButton.transform = transform
-        //self.swapButton.transform = transform
-        self.libraryButton.transform = transform
-        self.flashButton.transform = transform
-    }
+//    func setTransform(transform: CGAffineTransform) {
+//        self.closeButton.transform = transform
+//        //self.swapButton.transform = transform
+//        self.libraryButton.transform = transform
+//        self.flashButton.transform = transform
+//    }
     
     /**
      * Validate the permissions of the camera and
@@ -634,18 +636,10 @@ public class CameraViewController: UIViewController {
     }
     
     internal func saveImage(image: UIImage) {
-        _ = SingleImageSaver()
-            .setImage(image)
-            .onSuccess { asset in
-                self.layoutCameraResult(asset: asset)
-            }
-            .onFailure { error in
-                self.toggleButtons(enabled: true)
-                self.showNoPermissionsView(library: true)
-            }
-            .save()
+        self.layoutCameraResult(image: image)
     }
     
+    // 关闭按钮事件
     internal func close() {
         self.onCompletion?(imageInfo.0 , imageInfo.1)
         self.dismiss(animated: true) { 
@@ -653,6 +647,7 @@ public class CameraViewController: UIViewController {
         }
     }
     
+    // 相册按钮事件
     internal func showLibrary() {
         if libraryButton.title(for: .normal) == "重拍" {
             cameraView.startSession()
@@ -660,6 +655,7 @@ public class CameraViewController: UIViewController {
             flashButton.isHidden = false
             libraryButton.setTitle("相册", for: .normal)
             nextButton.setTitle("取消", for: .normal)
+            nextButton.isHidden = false
             imageInfo = (nil , nil)
         }else{
             let imagePicker = CameraViewController.imagePickerViewController(croppingEnabled: allowCropping) { image, asset in
@@ -676,7 +672,16 @@ public class CameraViewController: UIViewController {
                 self.ivSnap.image = image
                 self.flashButton.isHidden = true
                 self.libraryButton.setTitle("重拍", for: .normal)
-                self.nextButton.setTitle("拍下一张", for: .normal)
+                if self.cameraType > 0 {
+                    let array = self.companyNeed.sorted()
+                    if array.contains(self.nTag) && array.last! != self.nTag {
+                        self.nextButton.setTitle("拍下一张", for: .normal)
+                    }else{
+                        self.nextButton.isHidden = true
+                    }
+                }else{
+                    self.nextButton.isHidden = true
+                }
                 
                 self.imageInfo = (image , asset)
             }
@@ -687,6 +692,7 @@ public class CameraViewController: UIViewController {
         }
     }
     
+    // 闪光灯按钮
     internal func toggleFlash() {
         cameraView.cycleFlash()
         
@@ -706,27 +712,57 @@ public class CameraViewController: UIViewController {
         flashButton.isHidden = cameraView.currentPosition == AVCaptureDevicePosition.front
     }
     
-    internal func layoutCameraResult(asset: PHAsset) {
+    // 按拍照按钮
+    internal func layoutCameraResult(image: UIImage) {
         cameraView.stopSession()
         
         toggleButtons(enabled: true)
         
-        _ = SingleImageFetcher()
-            .setAsset(asset)
-            .setTargetSize(largestPhotoSize())
-            .onSuccess {[weak self] image in
-                self?.ivSnap.isHidden = false
-                self?.ivSnap.image = image
-                self?.flashButton.isHidden = true
-                self?.libraryButton.setTitle("重拍", for: .normal)
-                self?.nextButton.setTitle("拍下一张", for: .normal)
-                self?.imageInfo = (image , asset)
+        self.ivSnap.isHidden = false
+        self.ivSnap.image = image
+        self.flashButton.isHidden = true
+        self.libraryButton.setTitle("重拍", for: .normal)
+        if self.cameraType > 0 {
+            let array = self.companyNeed.sorted()
+            if array.contains(self.nTag) && array.last! != self.nTag {
+                self.nextButton.setTitle("拍下一张", for: .normal)
+            }else{
+                self.nextButton.isHidden = true
             }
-            .onFailure { error in
+        }else{
+            self.nextButton.isHidden = true
+        }
+        self.imageInfo = (image , nil)
+    }
+    
+    // 拍下一张或者取消
+    func doNextOrCancel(button : UIButton)  {
+        if button.title(for: .normal) == "取消" {
+            onCompletion?(nil , nil)
+            self.dismiss(animated: true, completion: { 
                 
+            })
+        }else{
+            if companyNeed.count > 0 {
+                if companyNeed.contains(nTag) {
+                    let array = companyNeed.sorted()
+                    let index = array.index(of: nTag)
+                    nTag = array[index! + 1]
+                    onCompletion?(imageInfo.0 , imageInfo.1)
+                    imageInfo = (nil , nil)
+                    NotificationCenter.default.post(name: Notification.Name("detectionnew"), object: 3, userInfo: ["tag" : nTag])
+                    
+                    cameraView.startSession()
+                    ivSnap.isHidden = true
+                    flashButton.isHidden = false
+                    libraryButton.setTitle("相册", for: .normal)
+                    nextButton.setTitle("取消", for: .normal)
+                }else{
+                    // 添加只能单拍
+                    
+                }
             }
-            .fetch()
-        
+        }
     }
     
     // 设置屏幕方向

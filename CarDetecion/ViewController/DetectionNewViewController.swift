@@ -29,6 +29,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var bSubmit = false // 是否点击了提交
     var companyNo = 0 // 单位代号
     var nTag = 0 // 临时tag
+    var cameraType = 0 // 单拍，连拍
     var waterMarks : [JSON] = []
     let companyOtherNeed : Set<Int> = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4003 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 5000 , 5100 , 5001 , 5101]
     
@@ -40,6 +41,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: nil, action: nil)
         
         getWaterMark(tag: -1)
+        
+        let barButton = UIBarButtonItem(title: "单拍", style: .plain, target: self, action: #selector(DetectionNewViewController.setCameraType))
+        self.navigationItem.rightBarButtonItem = barButton
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +66,20 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         NotificationCenter.default.removeObserver(self)
     }
     
+    // 拍照类型
+    func setCameraType() {
+        let action = UIAlertController(title: "拍照类型", message: nil, preferredStyle: .actionSheet)
+        action.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
+            
+        }))
+        action.addAction(UIAlertAction(title: "单拍", style: .default, handler: {[weak self] (action) in
+            self?.cameraType = 0
+        }))
+        action.addAction(UIAlertAction(title: "连拍", style: .default, handler: {[weak self] (action) in
+            self?.cameraType = 1
+        }))
+    }
+    
     // 通知处理
     func handleNotification(notification : Notification) {
         if let tag = notification.object as? Int {
@@ -71,11 +91,15 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 if let userInfo = notification.userInfo as? [String : String] {
                     remark = userInfo["text"]!
                 }
+            }else if tag == 3 {
+                if let userInfo = notification.userInfo as? [String : Int] {
+                    nTag = userInfo["tag"]!
+                }
             }
         }
     }
     
-    // 拍照代理
+    // tableviewcell的拍照代理
     func cameraModel(tag: Int) {
         nTag = tag
         if let data = images[tag] {
@@ -89,24 +113,42 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             browser.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "delete"), style: .plain, target: self, action: #selector(DetectionNewViewController.pop))
             self.navigationController?.pushViewController(browser, animated: true)
         }else{
-            if waterMarks.count > 0{
-                pushToCamera(tag: tag)
+            if companyOtherNeed.contains(tag) {
+                if waterMarks.count > 0{
+                    pushToCamera(tag: tag)
+                }else{
+                    getWaterMark(tag: tag)
+                }
             }else{
-                getWaterMark(tag: tag)
+                let section = tag / 1000
+                //let row = tag % 1000 % 100
+                //let right = tag % 100 >= 100
+                let array = companyOtherNeed.sorted()
+                for value in array {
+                    if value / 1000 == section {
+                        if value < tag {
+                            if images[value] == nil {
+                                self.showAlert(title: nil, message: "请先拍照：\(titles[value / 1000][((value % 1000) % 100) * 2 + (value % 1000 >= 100 ? 1 : 0)])" , button: "确定")
+                                return
+                            }
+                        }
+                    }
+                }
             }
-            
         }
         
     }
     
     // 跳转到拍照界面
     func pushToCamera(tag : Int) {
+        nTag = tag
         let camera = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) {[weak self] (image, asset) in
             if image != nil {
-                self?.images[tag] = UIImageJPEGRepresentation(image!, 0.2)!
+                self?.images[self!.nTag] = UIImageJPEGRepresentation(image!, 0.2)!
                 self?.tableView.reloadData()
             }
         }
+        camera.cameraType = cameraType
         camera.nTag = nTag
         camera.sectionTiltes = sectionTitles
         camera.titles = titles
@@ -151,13 +193,44 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 保存
     @IBAction func save(_ sender: Any) {
-        
+        if images.count > 0 || price.characters.count > 0 || remark.characters.count > 0 {
+            var orders : [[String : String]] = []
+            if let order = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
+                orders += order
+            }
+            let fileManager = FileManager.default
+            var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+            path = path! + "/\(orders.count + 1)"
+            do{
+                try fileManager.createDirectory(atPath:path! , withIntermediateDirectories: true, attributes: nil)
+                var imageStr = ""
+                for (key , value) in images {
+                    imageStr += "\(key),"
+                    let result = fileManager.createFile(atPath: path! + "/\(key).jpg", contents: value, attributes: nil)
+                    if !result {
+                        print("图片保存失败")
+                    }
+                }
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+                orders.append(["price" : price , "remark" : remark , "images" : imageStr.substring(from: imageStr.index(before: imageStr.endIndex)) , "addtime" : formatter.string(from: Date())])
+                UserDefaults.standard.set(orders, forKey: "orders")
+                UserDefaults.standard.synchronize()
+                
+                showAlert(title: "温馨提示", message: "保存成功", button: "确定")
+                
+            }catch{
+                showAlert(title: "温馨提示", message: "保存失败，数据丢失!", button: "确定")
+            }
+        }else{
+            showAlert(title: "温馨提示", message: "您没有拍摄任何照片，或输入价格，或输入内容！", button: "保存失败")
+        }
     }
     
     // 显示提示框
-    func showAlert(message : String) {
+    func showAlert(title : String?, message : String , button : String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "继续编辑", style: .cancel, handler: { (action) in
+        alert.addAction(UIAlertAction(title: button, style: .cancel, handler: { (action) in
             
         }))
         present(alert, animated: true) { 
@@ -171,7 +244,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         bSubmit = true
         if !checkoutImage(companyNo: companyNo) {
             self.tableView.reloadData()
-            showAlert(message: "您还有内容尚未录入，是否返回继续编辑？")
+            showAlert(title: nil, message: "您还有内容尚未录入，是否返回继续编辑？" , button:"继续编辑")
             return
         }
         if price.characters.count == 0 {
@@ -197,7 +270,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                         let right = key % 1000 >= 100
                         self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                     }
-                    NotificationCenter.default.post(name: Notification.Name("detection"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark])
+                    NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark])
                     _ = self?.navigationController?.popViewController(animated: true)
                 }
             }
@@ -217,7 +290,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             DispatchQueue.global().async {
                 upLoadCount -= 1
                 if upLoadCount == 0 {
-                    NotificationCenter.default.post(name: Notification.Name("detection"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
+                    NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
                 }
             }
         }

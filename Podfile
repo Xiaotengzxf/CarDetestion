@@ -11,5 +11,6 @@ target 'CarDetecion' do
     pod 'MBProgressHUD'
     pod 'SKPhotoBrowser'
     pod 'SDCycleScrollView'
+    pod 'DZNEmptyDataSet'
 end
 

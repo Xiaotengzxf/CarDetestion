@@ -49,7 +49,7 @@
 		8985C7A21E72E7BC0075B6F8 /* Macro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A11E72E7BC0075B6F8 /* Macro.swift */; };
 		8985C7A41E72ED850075B6F8 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A31E72ED850075B6F8 /* Extension.swift */; };
 		8985C7A61E72EECA0075B6F8 /* DetectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A51E72EECA0075B6F8 /* DetectionViewController.swift */; };
-		8985C7A81E72FCE80075B6F8 /* RecordTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A71E72FCE80075B6F8 /* RecordTableViewController.swift */; };
+		8985C7A81E72FCE80075B6F8 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A71E72FCE80075B6F8 /* RecordViewController.swift */; };
 		8985C7D91E7309D60075B6F8 /* DetectionNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */; };
 		898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 898916E41E7E8EBE00BE6848 /* Assets.xcassets */; };
 		898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */; };
@@ -126,7 +126,7 @@
 		8985C7A11E72E7BC0075B6F8 /* Macro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Macro.swift; sourceTree = "<group>"; };
 		8985C7A31E72ED850075B6F8 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		8985C7A51E72EECA0075B6F8 /* DetectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionViewController.swift; sourceTree = "<group>"; };
-		8985C7A71E72FCE80075B6F8 /* RecordTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTableViewController.swift; sourceTree = "<group>"; };
+		8985C7A71E72FCE80075B6F8 /* RecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionNewViewController.swift; sourceTree = "<group>"; };
 		898916E41E7E8EBE00BE6848 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
@@ -312,7 +312,7 @@
 		898916E71E7ECF9100BE6848 /* Record */ = {
 			isa = PBXGroup;
 			children = (
-				8985C7A71E72FCE80075B6F8 /* RecordTableViewController.swift */,
+				8985C7A71E72FCE80075B6F8 /* RecordViewController.swift */,
 			);
 			name = Record;
 			sourceTree = "<group>";
@@ -527,7 +527,7 @@
 				8978CAE71E928EF300BBC926 /* Detection1TableViewCell.swift in Sources */,
 				8953080E1E6D7A67007AF459 /* SingleImageSaver.swift in Sources */,
 				898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */,
-				8985C7A81E72FCE80075B6F8 /* RecordTableViewController.swift in Sources */,
+				8985C7A81E72FCE80075B6F8 /* RecordViewController.swift in Sources */,
 				895308191E6D7A67007AF459 /* CropOverlay.swift in Sources */,
 				8985C79F1E72E63A0075B6F8 /* MineTableViewController.swift in Sources */,
 				8953080A1E6D7A67007AF459 /* CameraShot.swift in Sources */,

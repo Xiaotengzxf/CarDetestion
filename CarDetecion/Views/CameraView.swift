@@ -52,7 +52,7 @@ public class CameraView: UIView {
 
         imageOutput = AVCaptureStillImageOutput()
         imageOutput.outputSettings = outputSettings
-
+        
         session.addOutput(imageOutput)
 
         cameraQueue.sync {
@@ -142,8 +142,8 @@ public class CameraView: UIView {
         preview = AVCaptureVideoPreviewLayer(session: session)
         preview.videoGravity = AVLayerVideoGravityResizeAspectFill
         preview.frame = bounds
-
         layer.addSublayer(preview)
+        rotatePreview()
     }
     
     private func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
