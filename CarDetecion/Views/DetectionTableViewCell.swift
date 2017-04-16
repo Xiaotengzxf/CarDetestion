@@ -22,6 +22,7 @@ class DetectionTableViewCell: UITableViewCell {
     var tap2 : UITapGestureRecognizer?
     var indexPath : IndexPath!
     var delegate : DetectionTableViewCellDelegate?
+    var source = 0
     
     override func awakeFromNib() {
         super.awakeFromNib()

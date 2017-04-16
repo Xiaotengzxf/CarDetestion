@@ -9,6 +9,7 @@
 import UIKit
 import Toaster
 import SwiftyJSON
+import AVFoundation
 
 class DetectionViewController: UIViewController {
 
@@ -94,7 +95,38 @@ class DetectionViewController: UIViewController {
     
     func handleGestureRecognizer(recognizer : UITapGestureRecognizer) {
         if recognizer.view == vDetection {
-            self.performSegue(withIdentifier: "toNewDetection", sender: self)
+            
+            let mediaType = AVMediaTypeVideo
+            let authStatus = AVCaptureDevice.authorizationStatus(forMediaType: mediaType)
+            
+            if authStatus == .restricted || authStatus == .denied {
+                
+                let alert = UIAlertController(title: nil, message: "相机不可用，请到系统设置里更改", preferredStyle: .alert)
+                
+                alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (action) in
+                    
+                    self.dismiss(animated: false, completion: nil)
+                    
+                }))
+                
+                self.present(alert, animated: true, completion: nil)
+                
+                
+                
+            }else if UIImagePickerController.isSourceTypeAvailable(.camera){
+                
+                self.performSegue(withIdentifier: "toNewDetection", sender: self)
+                
+            }else{
+                
+                let alert = UIAlertController(title: nil, message: "相机不可用", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (action) in
+                    self.dismiss(animated: false, completion: nil)
+                }))
+                self.present(alert, animated: true, completion: nil)
+            }
+            
+            
         }
     }
     

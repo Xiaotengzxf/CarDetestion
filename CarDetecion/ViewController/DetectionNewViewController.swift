@@ -14,6 +14,8 @@ import MBProgressHUD
 
 class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate {
 
+    @IBOutlet weak var lcBottom: NSLayoutConstraint!
+    @IBOutlet weak var vBottom: UIView!
     @IBOutlet weak var tableView: UITableView!
     let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "备注"]
     let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
@@ -23,6 +25,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     let bill = "external/carBill/getCarBillIdNextVal.html"
     let upload = "external/app/uploadAppImage.html"
     let operationDesc = "external/source/operation-desc.json" // 水印和接口说明
+    let billImages = "external/app/getAppBillImageList.html"
     var orderNo = ""
     var price = ""
     var remark = ""
@@ -32,6 +35,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var cameraType = 0 // 单拍，连拍
     var waterMarks : [JSON] = []
     let companyOtherNeed : Set<Int> = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4003 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 5000 , 5100 , 5001 , 5101]
+    var source = 0  // 0 创建新的，1 未通过 ， 2 本地的
+    var json : JSON? // 未通过时，获取的数据
+    var arrImageInfo : [JSON] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,11 +46,24 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: nil, action: nil)
         
-        getWaterMark(tag: -1)
-        
-        let barButton = UIBarButtonItem(title: "单拍", style: .plain, target: self, action: #selector(DetectionNewViewController.setCameraType))
-        self.navigationItem.rightBarButtonItem = barButton
-        
+        if source == 1 {
+            loadUnpassData()
+            vBottom.isHidden = true
+            lcBottom.constant = 0
+            if let label = tableView.tableHeaderView?.viewWithTag(10000) as? UILabel {
+                do {
+                    label.attributedText = try NSAttributedString(data: "退回原因：\(json?["applyAllOpinion"].string ?? "")".data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
+                }catch{
+                    
+                }
+            }
+        }else {
+            tableView.tableHeaderView = nil
+            getWaterMark(tag: -1)
+            
+            let barButton = UIBarButtonItem(title: "单拍", style: .plain, target: self, action: #selector(DetectionNewViewController.setCameraType))
+            self.navigationItem.rightBarButtonItem = barButton
+        }
         
     }
     
@@ -64,6 +83,29 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     deinit {
         NotificationCenter.default.removeObserver(self)
+    }
+    
+    func loadUnpassData() {
+        let hud = showHUD(text: "加载中...")
+        let username = UserDefaults.standard.string(forKey: "username")
+        let params = ["userName" : username!, "carBillId": json!["carBillId"].stringValue]
+        NetworkManager.sharedInstall.request(url: billImages, params: params) {[weak self] (json, error) in
+            self?.hideHUD(hud: hud)
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json , data["total"].intValue > 0 {
+                    if let array = data["data"].array {
+                        self?.arrImageInfo += array
+                        self?.tableView.reloadData()
+                    }
+                }else{
+                    if let message = json?["message"].string {
+                        Toast(text: message).show()
+                    }
+                }
+            }
+        }
     }
     
     // 拍照类型
@@ -101,6 +143,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // tableviewcell的拍照代理
     func cameraModel(tag: Int) {
+        if source == 1 {
+            return
+        }
         nTag = tag
         if let data = images[tag] {
             var images = [SKPhoto]()
@@ -141,6 +186,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 跳转到拍照界面
     func pushToCamera(tag : Int) {
+        
         nTag = tag
         let camera = CameraViewController(croppingEnabled: false, allowsLibraryAccess: true) {[weak self] (image, asset) in
             if image != nil {
@@ -304,7 +350,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         if tag >= 0 {
             hud = showHUD(text: "加载中...")
         }
-        NetworkManager.sharedInstall.request(url: operationDesc, params: nil) {[weak self] (json, error) in
+        NetworkManager.sharedInstall.requestString(url: operationDesc, params: nil) {[weak self] (json, error) in
             if hud != nil {
                 hud?.hide(animated: true)
             }
@@ -367,6 +413,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             cell.lbl2.layer.cornerRadius = 3.0
             cell.indexPath = indexPath
             cell.delegate = self
+            cell.source = source
             var count = titles[indexPath.section].count + 1
             if images.count > 0 {
                 let array = images.filter{$0.key >= indexPath.section * 1000 && $0.key < (indexPath.section + 1) * 1000}
@@ -391,56 +438,107 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             cell.iv21.image = UIImage(named: indexPath.row * 2 + 1 < count - 1 ? "icon_camera" : "icon_add_photo")
             cell.vCamera1.layer.borderWidth = 0.5
             cell.vCamera2.layer.borderWidth = 0.5
-            if let data = images[indexPath.section * 1000 + indexPath.row] {
-                cell.iv1.image = UIImage(data: data)
-                cell.lbl1.textColor = UIColor.white
-                cell.lbl1.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-                cell.iv11.isHidden = true
-                cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
-            }else{
-                cell.iv1.image = nil
-                cell.lbl1.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
-
-                cell.lbl1.backgroundColor = UIColor.clear
-                cell.iv11.isHidden = false
-                if bSubmit {
-                    if companyNo == 0 {
-                        if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row) {
-                            cell.vCamera1.layer.borderColor = UIColor.red.cgColor
-                        }else{
-                            cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+            if source == 1 {
+                var bTem = false
+                for  json in arrImageInfo {
+                    if json["imageClass"].string == sectionTitles[indexPath.section] {
+                        if json["imageSeqNum"].intValue == indexPath.row * 2 {
+                            cell.iv1.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
+                            bTem = true
                         }
-                    }else{
-                        cell.vCamera1.layer.borderColor = UIColor.red.cgColor
                     }
-                    
+                }
+                if bTem {
+                    cell.lbl1.textColor = UIColor.white
+                    cell.lbl1.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                    cell.iv11.isHidden = true
+                    cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }else{
+                    cell.iv1.image = nil
+                    cell.lbl1.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
+                    
+                    cell.lbl1.backgroundColor = UIColor.clear
+                    cell.iv11.isHidden = false
                     cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }
-            }
-            if let data = images[indexPath.section * 1000 + indexPath.row + 100] {
-                cell.iv2.image = UIImage(data: data)
-                cell.lbl2.textColor = UIColor.white
-                cell.lbl2.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-                cell.iv21.isHidden = true
-                cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
-            }else{
-                cell.iv2.image = nil
-                cell.lbl2.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
-                cell.lbl2.backgroundColor = UIColor.clear
-                cell.iv21.isHidden = false
-                if bSubmit {
-                    if companyNo == 0 {
-                        if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row + 100) {
-                            cell.vCamera2.layer.borderColor = UIColor.red.cgColor
+                
+            }else {
+                if let data = images[indexPath.section * 1000 + indexPath.row] {
+                    cell.iv1.image = UIImage(data: data)
+                    cell.lbl1.textColor = UIColor.white
+                    cell.lbl1.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                    cell.iv11.isHidden = true
+                    cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                }else{
+                    cell.iv1.image = nil
+                    cell.lbl1.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
+                    
+                    cell.lbl1.backgroundColor = UIColor.clear
+                    cell.iv11.isHidden = false
+                    if bSubmit {
+                        if companyNo == 0 {
+                            if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row) {
+                                cell.vCamera1.layer.borderColor = UIColor.red.cgColor
+                            }else{
+                                cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                            }
                         }else{
-                            cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                            cell.vCamera1.layer.borderColor = UIColor.red.cgColor
+                        }
+                        
+                    }else{
+                        cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                    }
+                }
+            }
+            if source == 1 {
+                var bTem = false
+                for  json in arrImageInfo {
+                    if json["imageClass"].string == sectionTitles[indexPath.section] {
+                        if json["imageSeqNum"].intValue == indexPath.row * 2 + 1 {
+                            cell.iv2.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
+                            bTem = true
+                        }
+                    }
+                }
+                if bTem {
+                    cell.lbl2.textColor = UIColor.white
+                    cell.lbl2.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                    cell.iv21.isHidden = true
+                    cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                }else{
+                    cell.iv2.image = nil
+                    cell.lbl2.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
+                    cell.lbl2.backgroundColor = UIColor.clear
+                    cell.iv21.isHidden = false
+                    cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                }
+                
+            }else{
+                if let data = images[indexPath.section * 1000 + indexPath.row + 100] {
+                    cell.iv2.image = UIImage(data: data)
+                    cell.lbl2.textColor = UIColor.white
+                    cell.lbl2.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                    cell.iv21.isHidden = true
+                    cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                }else{
+                    cell.iv2.image = nil
+                    cell.lbl2.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
+                    cell.lbl2.backgroundColor = UIColor.clear
+                    cell.iv21.isHidden = false
+                    if bSubmit {
+                        if companyNo == 0 {
+                            if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row + 100) {
+                                cell.vCamera2.layer.borderColor = UIColor.red.cgColor
+                            }else{
+                                cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                            }
+                        }else{
+                            cell.vCamera2.layer.borderColor = UIColor.red.cgColor
                         }
                     }else{
-                        cell.vCamera2.layer.borderColor = UIColor.red.cgColor
+                        cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                     }
-                }else{
-                    cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }
             }
             
@@ -448,7 +546,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         }else if indexPath.section == 6 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as! Detection1TableViewCell
             cell.contentView.layer.borderWidth = 0.5
-            if price.characters.count == 0 && bSubmit {
+            if source == 1 {
+                cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                cell.tfPrice.text = json?["preSalePrice"].string
+                cell.tfPrice.isUserInteractionEnabled = false
+            }else if price.characters.count == 0 && bSubmit {
                 cell.contentView.layer.borderColor = UIColor.red.cgColor
             }else{
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
@@ -457,7 +559,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         }else{
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
             cell.contentView.layer.borderWidth = 0.5
-            if remark.characters.count == 0 && bSubmit {
+            if source == 1 {
+                cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                cell.tvMark.text = json?["mark"].string
+                cell.tvMark.isUserInteractionEnabled = false
+            }else if remark.characters.count == 0 && bSubmit {
                 cell.contentView.layer.borderColor = UIColor.red.cgColor
             }else{
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor

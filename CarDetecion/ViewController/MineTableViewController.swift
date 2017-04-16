@@ -16,10 +16,20 @@ class MineTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         titles = [["个人资料"] , ["检查新版本" , "客服电话" , "关于"] , ["账号退出"]]
-        icons = [["user_centre_tutorial"] , ["user_centre_check_version" , "user_centre_announce" , "user_centre_about"] , ["user_centre_quit"]]
+        icons = [["mine_info"] , ["mine_upgrade" , "mine_call" , "mine_setting"] , ["mine_logout"]]
         tableView.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: WIDTH * 553/1080.0)
         tableView.tableFooterView = UIView()
         view.backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0))
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.lt_reset()
     }
 
     override func didReceiveMemoryWarning() {

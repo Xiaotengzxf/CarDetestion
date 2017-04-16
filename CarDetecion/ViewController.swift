@@ -19,6 +19,16 @@ class ViewController: UIViewController , UITableViewDataSource , UITableViewDele
         tableView.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: 244 + 120)
         addBannerView()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0))
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.lt_reset()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

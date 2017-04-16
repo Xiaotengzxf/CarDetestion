@@ -14,21 +14,57 @@ class NetworkManager {
     
     static let sharedInstall = NetworkManager() // 单例
     
-    let domain = "http://119.23.128.214:8080/carWeb/"
+    let domain = "http://119.23.128.214:8080/carWeb"
     
     enum CustomError : Int , Error {
         case Custom
     }
     
-    
     func request(url: String , params : Parameters? , callback : @escaping (_ json : JSON? ,_ error : Error?)->()) {
-        Alamofire.request("\(domain)\(url)", method: .get, parameters: params, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
+        var strUrl = "\(domain)/\(url)?"
+        if let param = params {
+            for (key, value) in param {
+                strUrl += "&\(key)=\(value)"
+            }
+        }
+        print("请求：\(strUrl)")
+        Alamofire.request("\(domain)/\(url)", method: .get, parameters: params, encoding: URLEncoding.default, headers: nil).responseJSON { (response) in
             print("是否为主线程:\(Thread.isMainThread)")
             switch response.result {
             case .success:
                 if let value = response.result.value {
                     print("返回内容：\(value)")
                     callback(JSON(value) , nil)
+                }else{
+                    callback(nil , CustomError.Custom)
+                }
+                
+            case .failure(let error):
+                callback(nil , error)
+            }
+        }
+    }
+    
+    func requestString(url: String , params : Parameters? , callback : @escaping (_ json : JSON? ,_ error : Error?)->()) {
+        var strUrl = "\(domain)/\(url)?"
+        if let param = params {
+            for (key, value) in param {
+                strUrl += "&\(key)=\(value)"
+            }
+        }
+        print("请求：\(strUrl)")
+        Alamofire.request("\(domain)/\(url)", method: .get, parameters: params, encoding: URLEncoding.default, headers: nil).responseString { (response) in
+            print("是否为主线程:\(Thread.isMainThread)")
+            switch response.result {
+            case .success:
+                if let value = response.result.value {
+                    print("返回内容：\(value)")
+                    var json = value.replacingOccurrences(of: "}\n        },", with: "},")
+                    json = json.replacingOccurrences(of: "\n", with: "")
+                    json = json.replacingOccurrences(of: "\t", with: "")
+                    json = json.replacingOccurrences(of: " ", with: "")
+                    json = json.replacingOccurrences(of: ",}", with: "}")
+                    callback(JSON(parseJson: json) , nil)
                 }else{
                     callback(nil , CustomError.Custom)
                 }
@@ -51,7 +87,7 @@ class NetworkManager {
                     }
                 }
         },
-            to: "\(domain)\(url)",
+            to: "\(domain)/\(url)",
             encodingCompletion: { encodingResult in
                 switch encodingResult {
                 case .success(let upload, _, _):

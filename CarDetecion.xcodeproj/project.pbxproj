@@ -53,6 +53,10 @@
 		8985C7D91E7309D60075B6F8 /* DetectionNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */; };
 		898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 898916E41E7E8EBE00BE6848 /* Assets.xcassets */; };
 		898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */; };
+		89965D701EA1196B006560BA /* MNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D6F1EA1196B006560BA /* MNavigationController.swift */; };
+		89965D721EA11AEA006560BA /* RNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D711EA11AEA006560BA /* RNavigationController.swift */; };
+		89965D751EA1A542006560BA /* INavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D741EA1A542006560BA /* INavigationController.swift */; };
+		89965D771EA1B285006560BA /* RecordDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D761EA1B285006560BA /* RecordDetailViewController.swift */; };
 		89B945701E8F37F1009F0B58 /* logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89B9456F1E8F37F1009F0B58 /* logo.jpg */; };
 		927BA23DC90FCA9C2D177731 /* Pods_CarDetecion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */; };
 /* End PBXBuildFile section */
@@ -83,7 +87,7 @@
 		894E4F121E95149100D9BF55 /* DefaultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultViewController.swift; sourceTree = "<group>"; };
 		895307BF1E6D18D9007AF459 /* CarDetecion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarDetecion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		895307C21E6D18D9007AF459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		895307C41E6D18D9007AF459 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		895307C41E6D18D9007AF459 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = CarDetecion/ViewController.swift; sourceTree = SOURCE_ROOT; };
 		895307C71E6D18D9007AF459 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		895307CA1E6D18D9007AF459 /* CarDetecion.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CarDetecion.xcdatamodel; sourceTree = "<group>"; };
 		895307CF1E6D18D9007AF459 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -130,6 +134,10 @@
 		8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionNewViewController.swift; sourceTree = "<group>"; };
 		898916E41E7E8EBE00BE6848 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
+		89965D6F1EA1196B006560BA /* MNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNavigationController.swift; sourceTree = "<group>"; };
+		89965D711EA11AEA006560BA /* RNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNavigationController.swift; sourceTree = "<group>"; };
+		89965D741EA1A542006560BA /* INavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INavigationController.swift; sourceTree = "<group>"; };
+		89965D761EA1B285006560BA /* RecordDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordDetailViewController.swift; sourceTree = "<group>"; };
 		89B9456F1E8F37F1009F0B58 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -198,7 +206,6 @@
 				895307FE1E6D7A67007AF459 /* ViewController */,
 				895308041E6D7A67007AF459 /* Views */,
 				895307C21E6D18D9007AF459 /* AppDelegate.swift */,
-				895307C41E6D18D9007AF459 /* ViewController.swift */,
 				895307C61E6D18D9007AF459 /* Main.storyboard */,
 				895307CE1E6D18D9007AF459 /* LaunchScreen.storyboard */,
 				898916E41E7E8EBE00BE6848 /* Assets.xcassets */,
@@ -248,6 +255,8 @@
 		895307FE1E6D7A67007AF459 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				89965D731EA1A51A006560BA /* Main */,
+				89965D6E1EA118DC006560BA /* Mine */,
 				896AFA711E8B6957008DE6F5 /* Login */,
 				898916E71E7ECF9100BE6848 /* Record */,
 				898916E61E7ECF7B00BE6848 /* Detection */,
@@ -255,7 +264,6 @@
 				895308001E6D7A67007AF459 /* CameraViewControllerConstraint.swift */,
 				895308031E6D7A67007AF459 /* PhotoLibraryViewController.swift */,
 				894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */,
-				8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */,
 				896AFA781E8CFAE1008DE6F5 /* MTabBarController.swift */,
 			);
 			path = ViewController;
@@ -313,8 +321,28 @@
 			isa = PBXGroup;
 			children = (
 				8985C7A71E72FCE80075B6F8 /* RecordViewController.swift */,
+				89965D711EA11AEA006560BA /* RNavigationController.swift */,
+				89965D761EA1B285006560BA /* RecordDetailViewController.swift */,
 			);
 			name = Record;
+			sourceTree = "<group>";
+		};
+		89965D6E1EA118DC006560BA /* Mine */ = {
+			isa = PBXGroup;
+			children = (
+				8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */,
+				89965D6F1EA1196B006560BA /* MNavigationController.swift */,
+			);
+			name = Mine;
+			sourceTree = "<group>";
+		};
+		89965D731EA1A51A006560BA /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				895307C41E6D18D9007AF459 /* ViewController.swift */,
+				89965D741EA1A542006560BA /* INavigationController.swift */,
+			);
+			name = Main;
 			sourceTree = "<group>";
 		};
 		CE73A5DE25C4A173E5A2BDC5 /* Frameworks */ = {
@@ -520,6 +548,7 @@
 				894B4BF21E6EDCE600FE9D90 /* TestViewController.swift in Sources */,
 				896AFA7B1E8D10F2008DE6F5 /* UINavigationBarExtension.swift in Sources */,
 				8953080D1E6D7A67007AF459 /* SingleImageFetcher.swift in Sources */,
+				89965D771EA1B285006560BA /* RecordDetailViewController.swift in Sources */,
 				896AFA771E8C9213008DE6F5 /* DetectionTableViewCell.swift in Sources */,
 				895308181E6D7A67007AF459 /* CameraView.swift in Sources */,
 				896AFA731E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift in Sources */,
@@ -543,10 +572,13 @@
 				895308111E6D7A67007AF459 /* Utilities.swift in Sources */,
 				8953080F1E6D7A67007AF459 /* UIButtonExtensions.swift in Sources */,
 				8985C7A21E72E7BC0075B6F8 /* Macro.swift in Sources */,
+				89965D721EA11AEA006560BA /* RNavigationController.swift in Sources */,
 				8985C7D91E7309D60075B6F8 /* DetectionNewViewController.swift in Sources */,
 				895307CB1E6D18D9007AF459 /* CarDetecion.xcdatamodeld in Sources */,
+				89965D701EA1196B006560BA /* MNavigationController.swift in Sources */,
 				8953080B1E6D7A67007AF459 /* ImageFetcher.swift in Sources */,
 				896232A51E8E48DF00AB4B1E /* TransitionAnimator.swift in Sources */,
+				89965D751EA1A542006560BA /* INavigationController.swift in Sources */,
 				895308131E6D7A67007AF459 /* CameraViewController.swift in Sources */,
 				895307C31E6D18D9007AF459 /* AppDelegate.swift in Sources */,
 				895308091E6D7A67007AF459 /* CameraGlobals.swift in Sources */,

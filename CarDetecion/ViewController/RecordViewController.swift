@@ -11,6 +11,7 @@ import MJRefresh
 import SwiftyJSON
 import Toaster
 import DZNEmptyDataSet
+import SDWebImage
 
 class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmptyDataSetSource , UITableViewDelegate , UITableViewDataSource{
 
@@ -19,12 +20,16 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
     @IBOutlet weak var lcDivideLeft: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     let orderList = "external/app/getAppBillList.html"
-    var curPage = 0
+    var curPage = 1
     var status = ""
-    let pageSize = 20
+    let pageSize = 10
     var data : [JSON] = []
     var nShowEmpty = 0 // 1 无数据 2 加载中 3 无网络
-    
+    var statusInfo : [String : String] = ["21": "等待初审" , "22": "初审中" , "23": "初审驳回" , "24": "初审通过",
+                      "31": "等待初评" , "32": "初评中" , "33": "初评驳回" , "34": "初评通过",
+                      "41": "等待中评" , "42": "中评中" , "43": "中评驳回" , "44": "中评通过",
+                      "51": "等待高评" , "52": "高评中" , "53": "高评驳回" , "54": "高评通过",
+                      "80": "评估完成"] // 0, "提取图片"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +42,7 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         
         tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { 
             [weak self] in
-            self?.curPage = 0
+            self?.curPage = 1
             self?.getBillList()
         })
         
@@ -59,6 +64,20 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             nShowEmpty = 1
             tableView.reloadData()
         }
+        
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0))
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.lt_reset()
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
 
     override func didReceiveMemoryWarning() {
@@ -71,18 +90,18 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         var params = ["userName" : username!]
         params["curPage"] = "\(curPage)"
         params["pageSize"] = "\(pageSize)"
-        params["status"] = ""
+        params["status"] = status
         NetworkManager.sharedInstall.request(url: orderList, params: params) {[weak self] (json, error) in
             self?.tableView.mj_header.endRefreshing()
             self?.tableView.mj_footer.endRefreshing()
             if error != nil {
                 print(error!.localizedDescription)
-                if self!.curPage == 0 {
+                if self!.curPage == 1 {
                     self?.nShowEmpty = 3
                     self?.tableView.reloadData()
                 }
             }else{
-                if self!.curPage == 0 {
+                if self!.curPage == 1 {
                     self!.data.removeAll()
                 }
                 if let total = json?["total"].intValue , total > 0 {
@@ -97,11 +116,11 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                     if total < self!.pageSize {
                         self?.tableView.mj_footer.endRefreshingWithNoMoreData()
                     }
-                    if self!.curPage == 0 && self!.data.count == 0 {
+                    if self!.curPage == 1 && self!.data.count == 0 {
                         self?.nShowEmpty = 1
                     }
                 }else{
-                    if self!.curPage == 0 && self!.data.count == 0 {
+                    if self!.curPage == 1 && self!.data.count == 0 {
                         self?.nShowEmpty = 1
                     }
                 }
@@ -122,14 +141,17 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                     }
                 }
             }
+            if data.count == 0 {
+                nShowEmpty = 1
+            }
             self.tableView.reloadData()
             return
         case 1:
-            status = "21,22,24,31,32,34,41,42,44,51,52,54"
+            status = "21,22,24,31,32,34,41,42,44,51,52"
         case 2:
-            status = "23,33,43,54"
+            status = "23,33,43,53"
         case 3:
-            status = "80"
+            status = "54,80"
         default:
             status = "0"
         }
@@ -153,10 +175,43 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                 label.text = "暂无单号"
             }
             if let label = cell.contentView.viewWithTag(4) as? UILabel {
-                label.text = "添加时间:\(data[indexPath.row]["addtime"].string ?? "") "
+                label.text = "添加时间：\(data[indexPath.row]["addtime"].string ?? "") "
             }
         }else{
-            
+            if let label = cell.contentView.viewWithTag(3) as? UILabel {
+                label.text = "单号：\(data[indexPath.row]["carBillId"].string ?? "")"
+            }
+            if let label = cell.contentView.viewWithTag(5) as? UILabel {
+                if segmentedControl.selectedSegmentIndex == 1 {
+                    label.text = "审核进度：\(statusInfo["\(data[indexPath.row]["status"].int ?? 0)"]!)"
+                    label.textColor = UIColor.rgbColorFromHex(rgb: 0xF86765)
+                }else{
+                    label.text = "创建时间：\(data[indexPath.row]["createTime"].string ?? "")"
+                    label.textColor = UIColor.darkGray
+                }
+                
+            }
+            if let label = cell.contentView.viewWithTag(4) as? UILabel {
+                if segmentedControl.selectedSegmentIndex == 1 {
+                    label.text = "创建时间：\(data[indexPath.row]["createTime"].string ?? "")"
+                    label.textColor = UIColor.darkGray
+                }else if segmentedControl.selectedSegmentIndex == 2 {
+                    label.text = "退回时间：\(data[indexPath.row]["createTime"].string ?? "")"
+                    label.textColor = UIColor.rgbColorFromHex(rgb: 0xF86765)
+                }else{
+                    label.text = "评估价格：\(data[indexPath.row]["evaluatePrice"].int ?? 0) "
+                    label.textColor = UIColor.rgbColorFromHex(rgb: 0x2e8b57)
+                }
+            }
+            if let imageView = cell.contentView.viewWithTag(2) as? UIImageView {
+                let imagePath = data[indexPath.row]["imageThumbPath"].string ?? ""
+                if imagePath.characters.count > 0 {
+                    imageView.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(imagePath)"), placeholderImage: UIImage(named: "defult_image"))
+                }else{
+                    imageView.image = UIImage(named: "defult_image")
+                }
+                
+            }
         }
 
         return cell
@@ -166,17 +221,30 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         tableView.deselectRow(at: indexPath, animated: true)
         if  segmentedControl.selectedSegmentIndex == 0 {
             if let controller = self.storyboard?.instantiateViewController(withIdentifier: "detectionnew") as? DetectionNewViewController {
-//                let json = data[indexPath.row]
-//                if let urls = json["images"].string {
-//                    let array = urls.components(separatedBy: ",")
-//                    var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-//                    path = path! + "/\(indexPath.row + 1)"
-//                }
-//                controller.images = []
+                let json = data[indexPath.row]
+                if let urls = json["images"].string {
+                    let array = urls.components(separatedBy: ",")
+                    var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+                    path = path! + "/\(indexPath.row + 1)"
+                }
+                //controller.images = []
                 self.navigationController?.pushViewController(controller, animated: true)
             }
         }else{
-            
+            if segmentedControl.selectedSegmentIndex == 2 {
+                if let controller = self.storyboard?.instantiateViewController(withIdentifier: "detectionnew") as? DetectionNewViewController {
+                    controller.source = 1
+                    controller.json = data[indexPath.row]
+                    controller.title = "已退回-\(data[indexPath.row]["carBillId"].string ?? "")"
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }else{
+                if let controller = self.storyboard?.instantiateViewController(withIdentifier: "recorddetail") as? RecordDetailViewController {
+                    controller.json = data[indexPath.row]
+                    controller.statusInfo = statusInfo
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }
         }
     }
     
