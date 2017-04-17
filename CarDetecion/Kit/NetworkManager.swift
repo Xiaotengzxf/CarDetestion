@@ -64,7 +64,13 @@ class NetworkManager {
                     json = json.replacingOccurrences(of: "\t", with: "")
                     json = json.replacingOccurrences(of: " ", with: "")
                     json = json.replacingOccurrences(of: ",}", with: "}")
-                    callback(JSON(parseJson: json) , nil)
+                    do{
+                        let data = try JSONSerialization.jsonObject(with: json.data(using: .utf8)!, options: .allowFragments)
+                        callback(JSON(data) , nil)
+                    }catch{
+                        callback(nil , CustomError.Custom)
+                    }
+                    
                 }else{
                     callback(nil , CustomError.Custom)
                 }
