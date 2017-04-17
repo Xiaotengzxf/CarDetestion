@@ -424,7 +424,7 @@
 				TargetAttributes = {
 					895307BE1E6D18D9007AF459 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = YQ94G6GXWQ;
+						DevelopmentTeam = JHBA8HY2R5;
 						ProvisioningStyle = Automatic;
 					};
 					895307D51E6D18D9007AF459 = {
@@ -737,7 +737,7 @@
 			baseConfigurationReference = 559B80C1EF4266A3585E999D /* Pods-CarDetecion.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = YQ94G6GXWQ;
+				DEVELOPMENT_TEAM = JHBA8HY2R5;
 				INFOPLIST_FILE = CarDetecion/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -752,7 +752,7 @@
 			baseConfigurationReference = 7FA2B127C77D69B2B4084750 /* Pods-CarDetecion.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = YQ94G6GXWQ;
+				DEVELOPMENT_TEAM = JHBA8HY2R5;
 				INFOPLIST_FILE = CarDetecion/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

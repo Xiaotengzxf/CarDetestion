@@ -396,6 +396,7 @@ public class CameraViewController: UIViewController {
      */
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.cameraView.startSession()
     }
     
     /**
@@ -404,12 +405,8 @@ public class CameraViewController: UIViewController {
      */
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        DispatchQueue.global().async {
-            [weak self] in
-            self?.cameraView.startSession()
-            if self?.cameraView.session?.isRunning == true {
-                self?.notifyCameraReady()
-            }
+        if self.cameraView.session?.isRunning == true {
+            self.notifyCameraReady()
         }
     }
     
@@ -656,6 +653,7 @@ public class CameraViewController: UIViewController {
             libraryButton.setTitle("相册", for: .normal)
             nextButton.setTitle("取消", for: .normal)
             nextButton.isHidden = false
+            cameraButton.isHidden = false
             imageInfo = (nil , nil)
         }else{
             let imagePicker = CameraViewController.imagePickerViewController(croppingEnabled: allowCropping) { image, asset in
@@ -672,6 +670,7 @@ public class CameraViewController: UIViewController {
                 self.ivSnap.image = image
                 self.flashButton.isHidden = true
                 self.libraryButton.setTitle("重拍", for: .normal)
+                self.cameraButton.isHidden = true
                 if self.cameraType > 0 {
                     let array = self.companyNeed.sorted()
                     if array.contains(self.nTag) && array.last! != self.nTag {
@@ -722,6 +721,7 @@ public class CameraViewController: UIViewController {
         self.ivSnap.image = image
         self.flashButton.isHidden = true
         self.libraryButton.setTitle("重拍", for: .normal)
+        self.cameraButton.isHidden = true
         if self.cameraType > 0 {
             let array = self.companyNeed.sorted()
             if array.contains(self.nTag) && array.last! != self.nTag {
@@ -755,6 +755,7 @@ public class CameraViewController: UIViewController {
                     cameraView.startSession()
                     ivSnap.isHidden = true
                     flashButton.isHidden = false
+                    cameraButton.isHidden = false
                     libraryButton.setTitle("相册", for: .normal)
                     nextButton.setTitle("取消", for: .normal)
                 }else{

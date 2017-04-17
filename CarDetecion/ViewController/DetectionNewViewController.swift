@@ -158,28 +158,33 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             browser.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "delete"), style: .plain, target: self, action: #selector(DetectionNewViewController.pop))
             self.navigationController?.pushViewController(browser, animated: true)
         }else{
-            if companyOtherNeed.contains(tag) {
-                if waterMarks.count > 0{
-                    pushToCamera(tag: tag)
-                }else{
-                    getWaterMark(tag: tag)
-                }
+            if waterMarks.count > 0{
+                pushToCamera(tag: tag)
             }else{
-                let section = tag / 1000
-                //let row = tag % 1000 % 100
-                //let right = tag % 100 >= 100
-                let array = companyOtherNeed.sorted()
-                for value in array {
-                    if value / 1000 == section {
-                        if value < tag {
-                            if images[value] == nil {
-                                self.showAlert(title: nil, message: "请先拍照：\(titles[value / 1000][((value % 1000) % 100) * 2 + (value % 1000 >= 100 ? 1 : 0)])" , button: "确定")
-                                return
-                            }
-                        }
-                    }
-                }
+                getWaterMark(tag: tag)
             }
+//            if companyOtherNeed.contains(tag) {
+//                if waterMarks.count > 0{
+//                    pushToCamera(tag: tag)
+//                }else{
+//                    getWaterMark(tag: tag)
+//                }
+//            }else{
+//                let section = tag / 1000
+//                //let row = tag % 1000 % 100
+//                //let right = tag % 100 >= 100
+//                let array = companyOtherNeed.sorted()
+//                for value in array {
+//                    if value / 1000 == section {
+//                        if value < tag {
+//                            if images[value] == nil {
+//                                self.showAlert(title: nil, message: "请先拍照：\(titles[value / 1000][((value % 1000) % 100) * 2 + (value % 1000 >= 100 ? 1 : 0)])" , button: "确定")
+//                                return
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
         
     }
@@ -317,7 +322,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                         self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                     }
                     NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark])
-                    _ = self?.navigationController?.popViewController(animated: true)
+                    self?.dismiss(animated: true, completion: { 
+                        
+                    })
                 }
             }
         }
