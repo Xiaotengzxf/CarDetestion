@@ -53,25 +53,18 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         })
         tableView.mj_footer.isHidden = true
         
-        if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
-            if orders.count > 0 {
-                for dic in orders {
-                    data.append(JSON(dic))
-                }
-            }
-        }
-        if data.count == 0 {
-            nShowEmpty = 1
-            tableView.reloadData()
-        }
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0))
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        if recordIndex >= 0 {
+            segmentedControl.selectedSegmentIndex = recordIndex
+            changeSegmentControl(segmentedControl)
+            recordIndex = -1
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

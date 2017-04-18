@@ -11,7 +11,7 @@
 		894B4BF21E6EDCE600FE9D90 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */; };
 		894E4F131E95149100D9BF55 /* DefaultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894E4F121E95149100D9BF55 /* DefaultViewController.swift */; };
 		895307C31E6D18D9007AF459 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C21E6D18D9007AF459 /* AppDelegate.swift */; };
-		895307C51E6D18D9007AF459 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C41E6D18D9007AF459 /* ViewController.swift */; };
+		895307C51E6D18D9007AF459 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895307C41E6D18D9007AF459 /* MainViewController.swift */; };
 		895307C81E6D18D9007AF459 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 895307C61E6D18D9007AF459 /* Main.storyboard */; };
 		895307CB1E6D18D9007AF459 /* CarDetecion.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 895307C91E6D18D9007AF459 /* CarDetecion.xcdatamodeld */; };
 		895307D01E6D18D9007AF459 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 895307CE1E6D18D9007AF459 /* LaunchScreen.storyboard */; };
@@ -87,7 +87,7 @@
 		894E4F121E95149100D9BF55 /* DefaultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultViewController.swift; sourceTree = "<group>"; };
 		895307BF1E6D18D9007AF459 /* CarDetecion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CarDetecion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		895307C21E6D18D9007AF459 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		895307C41E6D18D9007AF459 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = CarDetecion/ViewController.swift; sourceTree = SOURCE_ROOT; };
+		895307C41E6D18D9007AF459 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainViewController.swift; path = CarDetecion/MainViewController.swift; sourceTree = SOURCE_ROOT; };
 		895307C71E6D18D9007AF459 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		895307CA1E6D18D9007AF459 /* CarDetecion.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CarDetecion.xcdatamodel; sourceTree = "<group>"; };
 		895307CF1E6D18D9007AF459 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -320,8 +320,8 @@
 		898916E71E7ECF9100BE6848 /* Record */ = {
 			isa = PBXGroup;
 			children = (
-				8985C7A71E72FCE80075B6F8 /* RecordViewController.swift */,
 				89965D711EA11AEA006560BA /* RNavigationController.swift */,
+				8985C7A71E72FCE80075B6F8 /* RecordViewController.swift */,
 				89965D761EA1B285006560BA /* RecordDetailViewController.swift */,
 			);
 			name = Record;
@@ -339,8 +339,8 @@
 		89965D731EA1A51A006560BA /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				895307C41E6D18D9007AF459 /* ViewController.swift */,
 				89965D741EA1A542006560BA /* INavigationController.swift */,
+				895307C41E6D18D9007AF459 /* MainViewController.swift */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -561,7 +561,7 @@
 				8985C79F1E72E63A0075B6F8 /* MineTableViewController.swift in Sources */,
 				8953080A1E6D7A67007AF459 /* CameraShot.swift in Sources */,
 				8985C7A41E72ED850075B6F8 /* Extension.swift in Sources */,
-				895307C51E6D18D9007AF459 /* ViewController.swift in Sources */,
+				895307C51E6D18D9007AF459 /* MainViewController.swift in Sources */,
 				8953081A1E6D7A67007AF459 /* ImageCell.swift in Sources */,
 				896AFA701E8B694E008DE6F5 /* LoginViewController.swift in Sources */,
 				895308171E6D7A67007AF459 /* PhotoLibraryViewController.swift in Sources */,

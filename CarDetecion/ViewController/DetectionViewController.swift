@@ -13,7 +13,11 @@ import AVFoundation
 
 class DetectionViewController: UIViewController {
 
-    @IBOutlet weak var searchBar: UISearchBar!
+    
+    @IBOutlet weak var vPass: UIView!
+    @IBOutlet weak var vReview: UIView!
+    @IBOutlet weak var vUnsubmit: UIView!
+    @IBOutlet weak var vUnpass: UIView!
     @IBOutlet weak var lblUnSubmit: UILabel!
     @IBOutlet weak var lblUnpass: UILabel!
     @IBOutlet weak var lblReview: UILabel!
@@ -34,15 +38,29 @@ class DetectionViewController: UIViewController {
         
         getApplyCount()
         getLatestList(type: "新闻公告")
-        searchBar.backgroundImage = UIImage()
-        searchBar.backgroundColor = UIColor.clear
         let abStr = NSMutableAttributedString(string: "详情...")
         abStr.addAttributes([NSUnderlineStyleAttributeName : 1 , NSForegroundColorAttributeName : UIColor.black , NSFontAttributeName : UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, 2))
         btnAdvertise.setAttributedTitle(abStr, for: .normal)
-        
+        // 点击事件
         let tap = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.handleGestureRecognizer(recognizer:)))
         
         vDetection.addGestureRecognizer(tap)
+        
+        let tap1 = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.tap(recognizer:)))
+        tap1.numberOfTapsRequired = 1
+        vPass.addGestureRecognizer(tap1)
+        
+        let tap2 = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.tap(recognizer:)))
+        tap2.numberOfTapsRequired = 1
+        vReview.addGestureRecognizer(tap2)
+        
+        let tap3 = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.tap(recognizer:)))
+        tap3.numberOfTapsRequired = 1
+        vUnpass.addGestureRecognizer(tap3)
+        
+        let tap4 = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.tap(recognizer:)))
+        tap4.numberOfTapsRequired = 1
+        vUnsubmit.addGestureRecognizer(tap4)
         
         lcRight.constant = (WIDTH - 240) / 4
         lcLeft.constant = (WIDTH - 240) / 4
@@ -118,16 +136,32 @@ class DetectionViewController: UIViewController {
                 self.performSegue(withIdentifier: "toNewDetection", sender: self)
                 
             }else{
-                
-                let alert = UIAlertController(title: nil, message: "相机不可用", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (action) in
-                    self.dismiss(animated: false, completion: nil)
-                }))
-                self.present(alert, animated: true, completion: nil)
+                // 模拟器
+                self.performSegue(withIdentifier: "toNewDetection", sender: self)
+//                let alert = UIAlertController(title: nil, message: "相机不可用", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (action) in
+//                    self.dismiss(animated: false, completion: nil)
+//                }))
+//                self.present(alert, animated: true, completion: nil)
             }
             
             
         }
+    }
+    
+    // 处理点击事件
+    func tap(recognizer : UITapGestureRecognizer) {
+        var index = 0
+        if recognizer.view == vUnsubmit {
+            index = 0
+        }else if recognizer.view == vReview {
+            index = 1
+        }else if recognizer.view == vUnpass {
+            index = 2
+        }else{
+            index = 3
+        }
+        NotificationCenter.default.post(name: Notification.Name("tab"), object: 1, userInfo: ["index" : index])
     }
     
     // 获取审核中，未通过及通过的订单总数
@@ -178,6 +212,9 @@ class DetectionViewController: UIViewController {
         }
     }
 
+    // 搜索功能
+    @IBAction func doSearch(_ sender: Any) {
+    }
     /*
     // MARK: - Navigation
 

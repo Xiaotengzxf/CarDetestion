@@ -8,12 +8,15 @@
 
 import UIKit
 
+var recordIndex = -1
+
 class MTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        NotificationCenter.default.addObserver(self, selector: #selector(MTabBarController.handleNotification(notification:)), name: Notification.Name("tab"), object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,26 +24,20 @@ class MTabBarController: UITabBarController {
         // Dispose of any resources that can be recreated.
     }
     
-    public override var shouldAutorotate: Bool {
-        return true
-    }
-    
-    public override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .portrait
-    }
-    
-    public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .portrait
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func handleNotification(notification : Notification) {
+        if let tag = notification.object as? Int {
+            if tag == 1 {
+                if let userInfo = notification.userInfo as? [String : Int] {
+                    let index = userInfo["index"] ?? 0
+                    recordIndex = index
+                    self.selectedIndex = 3
+                }
+            }
+        }
     }
-    */
 
 }

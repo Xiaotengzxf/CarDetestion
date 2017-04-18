@@ -9,15 +9,20 @@
 import UIKit
 import SDCycleScrollView
 
-class ViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , SDCycleScrollViewDelegate{
+class MainViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , SDCycleScrollViewDelegate{
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var lblTotalCount: UILabel!
+    
+    let applyCount = "external/app/getApplyCountInfo.html"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         tableView.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: 244 + 120)
         addBannerView()
+        
+        getApplyCount() // 获取总单量
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -41,6 +46,34 @@ class ViewController: UIViewController , UITableViewDataSource , UITableViewDele
                               "https://ss0.baidu.com/-Po3dSag_xI4khGko9WTAnF6hhy/super/whfpf%3D425%2C260%2C50/sign=a41eb338dd33c895a62bcb3bb72e47c2/5fdf8db1cb134954a2192ccb524e9258d1094a1e.jpg",
                               "http://c.hiphotos.baidu.com/image/w%3D400/sign=c2318ff84334970a4773112fa5c8d1c0/b7fd5266d0160924c1fae5ccd60735fae7cd340d.jpg"]
         tableView.tableHeaderView?.addSubview(banner!)
+    }
+    
+    // 获取审核中，未通过及通过的订单总数
+    func getApplyCount() {
+        let username = UserDefaults.standard.string(forKey: "username")
+        let params = ["userName" : username!]
+        NetworkManager.sharedInstall.request(url: applyCount, params: params) {[weak self] (json, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json , data["total"].intValue > 0 {
+                    if let array = data["data"].array {
+                        var totalCount = 0
+                        for j in array {
+                            
+                            if j["infoType"].stringValue == "finishCount" {
+                                totalCount += j["countInfo"].int ?? 0
+                            }else if j["infoType"].stringValue == "refuseCount" {
+                                totalCount += j["countInfo"].int ?? 0
+                            }else if j["infoType"].stringValue == "processCount" {
+                                totalCount += j["countInfo"].int ?? 0
+                            }
+                        }
+                        self?.lblTotalCount.text = "总单量：\(totalCount)"
+                    }
+                }
+            }
+        }
     }
     
     // MARK: - UITableView DataSource
