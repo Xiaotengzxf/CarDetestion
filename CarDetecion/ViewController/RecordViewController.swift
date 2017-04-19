@@ -52,7 +52,19 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             self?.getBillList()
         })
         tableView.mj_footer.isHidden = true
-        
+        if recordIndex == -1 {
+            if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
+                if orders.count > 0 {
+                    for dic in orders {
+                        data.append(JSON(dic))
+                    }
+                }
+            }
+            if data.count == 0 {
+                nShowEmpty = 1
+            }
+            self.tableView.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
