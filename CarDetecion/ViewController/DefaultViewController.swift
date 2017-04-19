@@ -9,11 +9,22 @@
 import UIKit
 
 class DefaultViewController: UIViewController {
+    
+    var flag = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.perform(#selector(DefaultViewController.changeWindowRoot), with: nil, afterDelay: 3)
+        if flag == 0 {
+            self.perform(#selector(DefaultViewController.changeWindowRoot), with: nil, afterDelay: 3)
+        }else{
+            
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 55/255.0, green: 70/255.0, blue: 85/255.0, alpha: 1))
     }
 
     override func didReceiveMemoryWarning() {

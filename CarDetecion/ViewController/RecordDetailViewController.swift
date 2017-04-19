@@ -11,6 +11,8 @@ import SwiftyJSON
 
 class RecordDetailViewController: UIViewController {
 
+    @IBOutlet weak var lcTop: NSLayoutConstraint!
+    @IBOutlet weak var lblPriceTip: UILabel!
     @IBOutlet weak var lblBillNo: UILabel!
     @IBOutlet weak var lblBillStatus: UILabel!
     @IBOutlet weak var lblPrice: UILabel!
@@ -21,6 +23,7 @@ class RecordDetailViewController: UIViewController {
     @IBOutlet weak var lblOpinion: UILabel!
     var json : JSON!
     var statusInfo : [String : String]!
+    var flag = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +42,11 @@ class RecordDetailViewController: UIViewController {
             lblOpinion.attributedText = try NSAttributedString(data: json["applyAllOpinion"].stringValue.data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
         }catch{
             
+        }
+        if flag == 1 {
+            lblPrice.isHidden = true
+            lblPriceTip.isHidden = true
+            lcTop.constant = -20
         }
         
     }

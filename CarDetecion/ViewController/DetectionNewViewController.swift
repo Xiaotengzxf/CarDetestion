@@ -265,7 +265,8 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 }
                 let formatter = DateFormatter()
                 formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
-                orders.append(["price" : price , "remark" : remark , "images" : imageStr.substring(from: imageStr.index(before: imageStr.endIndex)) , "addtime" : formatter.string(from: Date())])
+                let str = imageStr.substring(to: imageStr.index(before: imageStr.endIndex))
+                orders.append(["price" : price , "remark" : remark , "images" : str , "addtime" : formatter.string(from: Date())])
                 UserDefaults.standard.set(orders, forKey: "orders")
                 UserDefaults.standard.synchronize()
                 
@@ -417,8 +418,8 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             cell.iv2.layer.cornerRadius = 6.0
             cell.iv1.clipsToBounds = true
             cell.iv2.clipsToBounds = true
-            cell.lbl1.layer.cornerRadius = 3.0
-            cell.lbl2.layer.cornerRadius = 3.0
+            cell.lbl11.layer.cornerRadius = 3.0
+            cell.lbl22.layer.cornerRadius = 3.0
             cell.indexPath = indexPath
             cell.delegate = self
             cell.source = source
@@ -434,13 +435,17 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }
             if indexPath.row * 2 < count - 1 {
                 cell.lbl1.text = titles[indexPath.section][indexPath.row * 2]
+                cell.lbl11.text = titles[indexPath.section][indexPath.row * 2]
             }else{
                 cell.lbl1.text = "添加照片"
+                cell.lbl11.text = "添加照片"
             }
             if indexPath.row * 2 + 1 < count - 1 {
                 cell.lbl2.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
+                cell.lbl22.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
             }else{
                 cell.lbl2.text = "添加照片"
+                cell.lbl22.text = "添加照片"
             }
             cell.iv11.image = UIImage(named: indexPath.row * 2 < count - 1 ? "icon_camera" : "icon_add_photo")
             cell.iv21.image = UIImage(named: indexPath.row * 2 + 1 < count - 1 ? "icon_camera" : "icon_add_photo")
@@ -457,31 +462,29 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     }
                 }
                 if bTem {
-                    cell.lbl1.textColor = UIColor.white
-                    cell.lbl1.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                    cell.lbl11.isHidden = false
+                    cell.lbl1.isHidden = true
                     cell.iv11.isHidden = true
                     cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }else{
                     cell.iv1.image = nil
-                    cell.lbl1.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
-                    
-                    cell.lbl1.backgroundColor = UIColor.clear
+                    cell.lbl1.isHidden = false
                     cell.iv11.isHidden = false
+                    cell.lbl11.isHidden = true
                     cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }
                 
             }else {
                 if let data = images[indexPath.section * 1000 + indexPath.row] {
                     cell.iv1.image = UIImage(data: data)
-                    cell.lbl1.textColor = UIColor.white
-                    cell.lbl1.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                    cell.lbl11.isHidden = false
+                    cell.lbl1.isHidden = true
                     cell.iv11.isHidden = true
                     cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }else{
                     cell.iv1.image = nil
-                    cell.lbl1.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
-                    
-                    cell.lbl1.backgroundColor = UIColor.clear
+                    cell.iv11.isHidden = false
+                    cell.lbl11.isHidden = true
                     cell.iv11.isHidden = false
                     if bSubmit {
                         if companyNo == 0 {
@@ -510,14 +513,14 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     }
                 }
                 if bTem {
-                    cell.lbl2.textColor = UIColor.white
-                    cell.lbl2.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                    cell.lbl2.isHidden = true
+                    cell.lbl22.isHidden = false
                     cell.iv21.isHidden = true
                     cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }else{
                     cell.iv2.image = nil
-                    cell.lbl2.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
-                    cell.lbl2.backgroundColor = UIColor.clear
+                    cell.lbl2.isHidden = false
+                    cell.lbl22.isHidden = true
                     cell.iv21.isHidden = false
                     cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }
@@ -525,14 +528,14 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }else{
                 if let data = images[indexPath.section * 1000 + indexPath.row + 100] {
                     cell.iv2.image = UIImage(data: data)
-                    cell.lbl2.textColor = UIColor.white
-                    cell.lbl2.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                    cell.lbl2.isHidden = true
+                    cell.lbl22.isHidden = false
                     cell.iv21.isHidden = true
                     cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }else{
                     cell.iv2.image = nil
-                    cell.lbl2.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
-                    cell.lbl2.backgroundColor = UIColor.clear
+                    cell.lbl2.isHidden = false
+                    cell.lbl22.isHidden = true
                     cell.iv21.isHidden = false
                     if bSubmit {
                         if companyNo == 0 {
@@ -556,7 +559,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             cell.contentView.layer.borderWidth = 0.5
             if source == 1 {
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
-                cell.tfPrice.text = json?["preSalePrice"].string
+                cell.tfPrice.text = "\(json?["preSalePrice"].int ?? 0)"
                 cell.tfPrice.isUserInteractionEnabled = false
             }else if price.characters.count == 0 && bSubmit {
                 cell.contentView.layer.borderColor = UIColor.red.cgColor

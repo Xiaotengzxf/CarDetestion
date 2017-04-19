@@ -12,11 +12,12 @@ class MineTableViewController: UITableViewController {
     
     var titles : [[String]]!
     var icons : [[String]]!
+    @IBOutlet weak var lblUsername: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        titles = [["个人资料"] , ["检查新版本" , "客服电话" , "关于"] , ["账号退出"]]
-        icons = [["mine_info"] , ["mine_upgrade" , "mine_call" , "mine_setting"] , ["mine_logout"]]
+        titles = [["个人资料"] , ["客服电话" , "关于"] , ["账号退出"]]
+        icons = [["mine_info"] , [ "mine_call" , "mine_setting"] , ["mine_logout"]]
         tableView.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: WIDTH * 553/1080.0)
         tableView.tableFooterView = UIView()
         view.backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1)
@@ -47,7 +48,7 @@ class MineTableViewController: UITableViewController {
         if section == 0 {
             return 1
         }else if section == 1 {
-            return 3
+            return 2
         }else{
             return 1
         }
@@ -63,7 +64,20 @@ class MineTableViewController: UITableViewController {
  
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+        if indexPath.section == 2 {
+            showAlet(title: "提示", message: "您确定退出吗？")
+        }else if indexPath.section == 1 {
+            if indexPath.row == 1 {
+                if let controller = self.storyboard?.instantiateViewController(withIdentifier: "default") as? DefaultViewController {
+                    controller.title = "关于我们"
+                    controller.hidesBottomBarWhenPushed = true
+                    controller.flag = 1
+                    self.navigationController?.pushViewController(controller, animated: true)
+                }
+            }else{
+                makeCall(message: "88888888")
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -79,5 +93,33 @@ class MineTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func showAlet(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
+            
+        }))
+        alert.addAction(UIAlertAction(title: "退出", style: .default, handler: {[weak self] (action) in
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let login = storyboard.instantiateViewController(withIdentifier: "login")
+            self?.view?.window?.rootViewController = login
+        }))
+        present(alert, animated: true) { 
+            
+        }
+    }
+    
+    func makeCall(message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
+            
+        }))
+        alert.addAction(UIAlertAction(title: "拨打", style: .default, handler: {(action) in
+            UIApplication.shared.openURL(URL(string: "tel://\(message)")!)
+        }))
+        present(alert, animated: true) {
+            
+        }
+    }
 
 }

@@ -52,19 +52,6 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             self?.getBillList()
         })
         tableView.mj_footer.isHidden = true
-        if recordIndex == -1 {
-            if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
-                if orders.count > 0 {
-                    for dic in orders {
-                        data.append(JSON(dic))
-                    }
-                }
-            }
-            if data.count == 0 {
-                nShowEmpty = 1
-            }
-            self.tableView.reloadData()
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -76,6 +63,21 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             segmentedControl.selectedSegmentIndex = recordIndex
             changeSegmentControl(segmentedControl)
             recordIndex = -1
+        }else{
+            if segmentedControl.selectedSegmentIndex == 0 {
+                data.removeAll()
+                if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
+                    if orders.count > 0 {
+                        for dic in orders {
+                            data.append(JSON(dic))
+                        }
+                    }
+                }
+                if data.count == 0 {
+                    nShowEmpty = 1
+                }
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -182,6 +184,12 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             if let label = cell.contentView.viewWithTag(4) as? UILabel {
                 label.text = "添加时间：\(data[indexPath.row]["addtime"].string ?? "") "
             }
+            if let label = cell.contentView.viewWithTag(5) as? UILabel {
+                label.text = ""
+            }
+            if let imageView = cell.contentView.viewWithTag(2) as? UIImageView {
+                imageView.image = UIImage(named: "defult_image")
+            }
         }else{
             if let label = cell.contentView.viewWithTag(3) as? UILabel {
                 label.text = "单号：\(data[indexPath.row]["carBillId"].string ?? "")"
@@ -228,11 +236,17 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             if let controller = self.storyboard?.instantiateViewController(withIdentifier: "detectionnew") as? DetectionNewViewController {
                 let json = data[indexPath.row]
                 if let urls = json["images"].string {
+                    var images : [Int : Data] = [:]
                     let array = urls.components(separatedBy: ",")
                     var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
                     path = path! + "/\(indexPath.row + 1)"
+                    for item in array {
+                        if let image = UIImage(contentsOfFile: path! + "/\(item).jpg") {
+                            images[Int(item)!] = UIImageJPEGRepresentation(image, 1)
+                        }
+                    }
+                    controller.images = images
                 }
-                //controller.images = []
                 self.navigationController?.pushViewController(controller, animated: true)
             }
         }else{
@@ -247,6 +261,7 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                 if let controller = self.storyboard?.instantiateViewController(withIdentifier: "recorddetail") as? RecordDetailViewController {
                     controller.json = data[indexPath.row]
                     controller.statusInfo = statusInfo
+                    controller.flag = segmentedControl.selectedSegmentIndex
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             }

@@ -339,11 +339,13 @@
                     <navigationItem key="navigationItem" title="订单结果" id="TgG-Wv-d7G"/>
                     <connections>
                         <outlet property="lblBillNo" destination="qXv-rf-dad" id="l5l-PO-MPN"/>
-                        <outlet property="lblBillStatus" destination="Zay-oa-4yX" id="awt-SO-1dC"/>
+                        <outlet property="lblBillStatus" destination="Zay-oa-4yX" id="9Uk-2t-jJQ"/>
                         <outlet property="lblOpinion" destination="Obe-dP-31d" id="jVq-zH-vTf"/>
                         <outlet property="lblPrice" destination="oiO-hN-7Xn" id="qSX-PN-gvp"/>
+                        <outlet property="lblPriceTip" destination="zp8-LX-2oU" id="WGl-mP-Dvs"/>
                         <outlet property="lblRemark" destination="mye-XV-Pe2" id="QS0-Zi-sc4"/>
                         <outlet property="lblTime" destination="bkz-sF-RjL" id="OZk-EX-eT4"/>
+                        <outlet property="lcTop" destination="mm1-Pj-Z0D" id="Mjn-3a-lWr"/>
                         <outlet property="vAllSuggestion" destination="OJv-ip-Js4" id="EXH-RM-PbF"/>
                         <outlet property="vContent" destination="1H4-oU-X9b" id="CuV-Jz-l77"/>
                     </connections>
@@ -352,7 +354,7 @@
             </objects>
             <point key="canvasLocation" x="2732" y="-513.19340329835086"/>
         </scene>
-        <!--我的-->
+        <!--Mine Table View Controller-->
         <scene sceneID="Khc-qN-DdD">
             <objects>
                 <tableViewController extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="BNo-me-ZUR" customClass="MineTableViewController" customModule="CarDetecion" customModuleProvider="target" sceneMemberID="viewController">
@@ -366,20 +368,16 @@
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mine_logo" translatesAutoresizingMaskIntoConstraints="NO" id="CG2-5D-lvU">
                                     <rect key="frame" x="147" y="59" width="80" height="80"/>
+                                    <color key="backgroundColor" red="0.10193095356225967" green="0.40168175101280212" blue="0.67571526765823364" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="CG2-5D-lvU" secondAttribute="height" id="isW-9B-2Kd"/>
                                         <constraint firstAttribute="width" constant="80" id="uyf-6G-fwj"/>
                                     </constraints>
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                            <integer key="value" value="40"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="zhangxiaofei" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yj2-hg-g2a">
                                     <rect key="frame" x="139" y="149" width="96.5" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FzA-3X-i8X">
@@ -390,7 +388,7 @@
                                     </constraints>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" red="0.24705882352941178" green="0.51764705882352935" blue="0.8666666666666667" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" red="0.51170271635055542" green="0.75650578737258911" blue="0.99764090776443481" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstItem="FzA-3X-i8X" firstAttribute="leading" secondItem="dPM-OD-EvD" secondAttribute="leading" id="Duv-ou-xSZ"/>
                                 <constraint firstItem="FzA-3X-i8X" firstAttribute="top" secondItem="dPM-OD-EvD" secondAttribute="top" id="EKx-Jt-fMj"/>
@@ -416,7 +414,10 @@
                             <outlet property="delegate" destination="BNo-me-ZUR" id="9ce-Ae-7DH"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="我的" id="2g2-J7-za9"/>
+                    <navigationItem key="navigationItem" id="2g2-J7-za9"/>
+                    <connections>
+                        <outlet property="lblUsername" destination="yj2-hg-g2a" id="3uM-bl-td9"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="G1u-bi-HdE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -427,9 +428,13 @@
             <objects>
                 <navigationController id="s7Z-jO-PeD" customClass="MNavigationController" customModule="CarDetecion" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="我的" image="tab50" selectedImage="tab51" id="Njm-V3-wOA"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="zsl-uu-WnV">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="zsl-uu-WnV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="BNo-me-ZUR" kind="relationship" relationship="rootViewController" id="M7E-34-N7h"/>
@@ -1411,9 +1416,17 @@
                                                             <color key="textColor" red="0.41960784313725491" green="0.41960784313725491" blue="0.41960784313725491" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oc1-ix-DoU">
+                                                            <rect key="frame" x="0.0" y="168" width="0.0" height="0.0"/>
+                                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
+                                                        <constraint firstItem="aLf-Sj-Gor" firstAttribute="centerX" secondItem="18P-2U-vmb" secondAttribute="centerX" id="487-fb-0Bc"/>
                                                         <constraint firstItem="FmJ-37-ic1" firstAttribute="centerX" secondItem="18P-2U-vmb" secondAttribute="centerX" id="5Lg-7p-YJc"/>
                                                         <constraint firstItem="PmS-dv-Xet" firstAttribute="leading" secondItem="18P-2U-vmb" secondAttribute="leading" id="FVl-x0-iu7"/>
                                                         <constraint firstItem="aLf-Sj-Gor" firstAttribute="top" secondItem="FmJ-37-ic1" secondAttribute="bottom" constant="5" id="NKT-O0-1UC"/>
@@ -1421,7 +1434,8 @@
                                                         <constraint firstAttribute="bottom" secondItem="PmS-dv-Xet" secondAttribute="bottom" id="cNW-EI-DuE"/>
                                                         <constraint firstAttribute="trailing" secondItem="PmS-dv-Xet" secondAttribute="trailing" id="ciF-TU-0jr"/>
                                                         <constraint firstItem="PmS-dv-Xet" firstAttribute="top" secondItem="18P-2U-vmb" secondAttribute="top" id="gyY-V9-6IQ"/>
-                                                        <constraint firstItem="aLf-Sj-Gor" firstAttribute="centerX" secondItem="FmJ-37-ic1" secondAttribute="centerX" id="vla-GK-afQ"/>
+                                                        <constraint firstItem="oc1-ix-DoU" firstAttribute="leading" secondItem="18P-2U-vmb" secondAttribute="leading" id="nSY-x9-D9X"/>
+                                                        <constraint firstAttribute="bottom" secondItem="oc1-ix-DoU" secondAttribute="bottom" id="qsO-Lo-2Bf"/>
                                                     </constraints>
                                                 </view>
                                                 <view tag="5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gea-lS-ZME">
@@ -1443,10 +1457,19 @@
                                                             <color key="textColor" red="0.41960784313725491" green="0.41960784313725491" blue="0.41960784313725491" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lpi-Hx-Zq8">
+                                                            <rect key="frame" x="0.0" y="168" width="0.0" height="0.0"/>
+                                                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="AZz-i3-BoM" secondAttribute="trailing" id="7g2-QR-gM0"/>
+                                                        <constraint firstItem="lpi-Hx-Zq8" firstAttribute="leading" secondItem="Gea-lS-ZME" secondAttribute="leading" id="9gX-9l-RVc"/>
+                                                        <constraint firstAttribute="bottom" secondItem="lpi-Hx-Zq8" secondAttribute="bottom" id="BJf-PX-t1M"/>
                                                         <constraint firstItem="AZz-i3-BoM" firstAttribute="leading" secondItem="Gea-lS-ZME" secondAttribute="leading" id="F0r-2A-f1Y"/>
                                                         <constraint firstItem="wFf-d7-LHf" firstAttribute="top" secondItem="DBG-bX-Rsc" secondAttribute="bottom" constant="5" id="Ffe-6M-2lg"/>
                                                         <constraint firstItem="DBG-bX-Rsc" firstAttribute="centerY" secondItem="Gea-lS-ZME" secondAttribute="centerY" constant="-10" id="GVS-hA-fDz"/>
@@ -1475,7 +1498,9 @@
                                             <outlet property="iv2" destination="AZz-i3-BoM" id="Brg-CQ-pTw"/>
                                             <outlet property="iv21" destination="DBG-bX-Rsc" id="uD6-TH-DmS"/>
                                             <outlet property="lbl1" destination="aLf-Sj-Gor" id="e8T-JG-C6V"/>
+                                            <outlet property="lbl11" destination="oc1-ix-DoU" id="cKd-Pr-bDW"/>
                                             <outlet property="lbl2" destination="wFf-d7-LHf" id="hWU-qh-ibs"/>
+                                            <outlet property="lbl22" destination="lpi-Hx-Zq8" id="UWC-NX-EuB"/>
                                             <outlet property="vCamera1" destination="18P-2U-vmb" id="3Q4-2j-jJ5"/>
                                             <outlet property="vCamera2" destination="Gea-lS-ZME" id="C4S-5g-OoZ"/>
                                         </connections>
