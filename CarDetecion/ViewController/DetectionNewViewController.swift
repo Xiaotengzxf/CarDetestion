@@ -32,9 +32,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var bSubmit = false // 是否点击了提交
     var companyNo = 0 // 单位代号
     var nTag = 0 // 临时tag
-    var cameraType = 0 // 单拍，连拍
+    //var cameraType = 0 // 单拍，连拍
     var waterMarks : [JSON] = []
-    let companyOtherNeed : Set<Int> = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4003 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 5000 , 5100 , 5001 , 5101]
+    let companyOtherNeed : Set<Int> = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 5000 , 5100 , 5001 , 5101]
     var source = 0  // 0 创建新的，1 未通过 ， 2 本地的
     var json : JSON? // 未通过时，获取的数据
     var arrImageInfo : [JSON] = []
@@ -61,8 +61,8 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             tableView.tableHeaderView = nil
             getWaterMark(tag: -1)
             
-            let barButton = UIBarButtonItem(title: "单拍", style: .plain, target: self, action: #selector(DetectionNewViewController.setCameraType))
-            self.navigationItem.rightBarButtonItem = barButton
+//            let barButton = UIBarButtonItem(title: "单拍", style: .plain, target: self, action: #selector(DetectionNewViewController.setCameraType))
+//            self.navigationItem.rightBarButtonItem = barButton
         }
         
     }
@@ -109,18 +109,18 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     }
     
     // 拍照类型
-    func setCameraType() {
-        let action = UIAlertController(title: "拍照类型", message: nil, preferredStyle: .actionSheet)
-        action.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
-            
-        }))
-        action.addAction(UIAlertAction(title: "单拍", style: .default, handler: {[weak self] (action) in
-            self?.cameraType = 0
-        }))
-        action.addAction(UIAlertAction(title: "连拍", style: .default, handler: {[weak self] (action) in
-            self?.cameraType = 1
-        }))
-    }
+//    func setCameraType() {
+//        let action = UIAlertController(title: "拍照类型", message: nil, preferredStyle: .actionSheet)
+//        action.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
+//            
+//        }))
+//        action.addAction(UIAlertAction(title: "单拍", style: .default, handler: {[weak self] (action) in
+//            self?.cameraType = 0
+//        }))
+//        action.addAction(UIAlertAction(title: "连拍", style: .default, handler: {[weak self] (action) in
+//            self?.cameraType = 1
+//        }))
+//    }
     
     // 通知处理
     func handleNotification(notification : Notification) {
@@ -199,10 +199,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 self?.tableView.reloadData()
             }
         }
-        camera.cameraType = cameraType
+        //camera.cameraType = cameraType
         camera.nTag = nTag
         camera.sectionTiltes = sectionTitles
         camera.titles = titles
+        camera.waterMarks = waterMarks
         //camera.transitioningDelegate = self
         self.present(camera, animated: true) {
             

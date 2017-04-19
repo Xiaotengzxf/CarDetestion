@@ -11,12 +11,14 @@ import AVFoundation
 import Photos
 import Toaster
 import SwiftyJSON
+import SDWebImage
 
 public typealias CameraViewCompletion = (UIImage?, PHAsset?) -> Void
 
 public extension CameraViewController {
     public class func imagePickerViewController(croppingEnabled: Bool, completion: @escaping CameraViewCompletion) -> UINavigationController {
         let imagePicker = PhotoLibraryViewController()
+        imagePicker.title = "相册"
         let navigationController = UINavigationController(rootViewController: imagePicker)
         
         navigationController.navigationBar.barTintColor = UIColor.black
@@ -51,7 +53,7 @@ public class CameraViewController: UIViewController {
     var allowCropping = false
     var animationRunning = false
     var nTag = 0 // 定位当前位置
-    var cameraType = 0
+    //var cameraType = 0
     var sectionTiltes : [String] = []
     var titles : [[String]] = []
     var lcWidth : NSLayoutConstraint!
@@ -141,16 +143,6 @@ public class CameraViewController: UIViewController {
         return button
     }()
     
-//    let swapButton : UIButton = {
-//        let button = UIButton()
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.setImage(UIImage(named: "swapButton",
-//                                in: CameraGlobals.shared.bundle,
-//                                compatibleWith: nil),
-//                        for: .normal)
-//        return button
-//    }()
-    
     let libraryButton : UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -176,12 +168,6 @@ public class CameraViewController: UIViewController {
         return button
     }()
     
-//    let containerSwapLibraryButton : UIView = {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }()
-    
     let middleView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -192,7 +178,7 @@ public class CameraViewController: UIViewController {
     let imageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "mask_dashboard")
+        imageView.image = UIImage(named: "mask_left_45")
         return imageView
     }()
     
@@ -221,6 +207,7 @@ public class CameraViewController: UIViewController {
     
     let ivDetailDesc : UIImageView = { //描述图片
         let imageView = UIImageView()
+        imageView.backgroundColor = UIColor.white
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -287,10 +274,6 @@ public class CameraViewController: UIViewController {
         removeContainerConstraints()
         configContainerEdgeConstraint(statusBarOrientation)
         configContainerGravityConstraint(statusBarOrientation)
-        
-        //removeSwapButtonConstraints()
-        //configSwapButtonEdgeConstraint(statusBarOrientation)
-        //configSwapButtonGravityConstraint(portrait)
 
         removeLibraryButtonConstraints()
         configLibraryEdgeButtonConstraint(statusBarOrientation)
@@ -365,31 +348,43 @@ public class CameraViewController: UIViewController {
         middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .right, relatedBy: .equal, toItem: hintButton, attribute: .right, multiplier: 1, constant: -22))
         lcWidth = NSLayoutConstraint(item: ivDetailDesc, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
         lcHeight = NSLayoutConstraint(item: ivDetailDesc, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
-        
+        middleView.addConstraint(lcWidth)
+        middleView.addConstraint(lcHeight)
         
         ivSnap.isHidden = true
         
         addCameraObserver()
-        //addRotateObserver()
+        addRotateObserver()
         setupVolumeControl()
         setupActions()
         checkPermissions()
         cameraView.configureFocus()
         
+        
         let section = nTag / 1000
         let row = nTag % 1000 % 100
-        if titles.count > section && titles[section].count > row {
-            lblName.text = titles[section][row]
+        let bright = nTag % 1000 >= 100 ? 1 : 0
+        let index = row * 2 + bright
+        if titles.count > section && titles[section].count > index {
+            lblName.text = titles[section][row * 2 + bright]
+            lblCurrentPage.text = "\(index + 1)/\(titles[section].count)"
+            for json in waterMarks {
+                if json["imageClass"].stringValue == sectionTiltes[section] && index == json["imageSeqNum"].intValue {
+                    var imageUrl = "\(NetworkManager.sharedInstall.domain)\(json["imageDesc"].stringValue)"
+                    var url = URL(string: imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                    ivDetailDesc.sd_setImage(with: url)
+                    imageUrl = "\(NetworkManager.sharedInstall.domain)\(json["waterMark"].stringValue)"
+                    print("水印：\(imageUrl)")
+                    url = URL(string: imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                    imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "mask_left_45"))
+                }
+            }
         }else{
-            lblName.text = "其他照片"
+            lblName.text = "添加照片"
+            lblCurrentPage.text = "\(row * 2 + bright + 1)/\(row * 2 + bright + 1)"
         }
         
     }
-    
-    /* "imageClass": "登记证",
-     "imageSeqNum": 0,
-     "imageDesc": "/source/upload/users/642/2017/03/24/cy/NS201703240001/thumb_cut_a0beb4882ae84aa7b808600bbe2c89b8.png",
-     "waterMark": "/source/upload/users/642/2017/03/24/cy/NS201703240001/thumb_cut_a0beb4882ae84aa7b808600bbe2c89b8.png"*/
 
     /**
      * Start the session of the camera.
@@ -405,6 +400,8 @@ public class CameraViewController: UIViewController {
      */
     public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        
         if self.cameraView.session?.isRunning == true {
             self.notifyCameraReady()
         }
@@ -478,7 +475,6 @@ public class CameraViewController: UIViewController {
      */
     private func setupActions() {
         cameraButton.action = { [weak self] in self?.capturePhoto() }
-        //swapButton.action = { [weak self] in self?.swapCamera() }
         libraryButton.action = { [weak self] in self?.showLibrary() }
         closeButton.action = { [weak self] in self?.close() }
         flashButton.action = { [weak self] in self?.toggleFlash() }
@@ -638,7 +634,6 @@ public class CameraViewController: UIViewController {
     
     // 关闭按钮事件
     internal func close() {
-        self.onCompletion?(imageInfo.0 , imageInfo.1)
         self.dismiss(animated: true) { 
             
         }
@@ -652,9 +647,24 @@ public class CameraViewController: UIViewController {
             flashButton.isHidden = false
             libraryButton.setTitle("相册", for: .normal)
             nextButton.setTitle("取消", for: .normal)
-            nextButton.isHidden = false
             cameraButton.isHidden = false
             imageInfo = (nil , nil)
+            
+            let section = self.nTag / 1000
+            let row = self.nTag % 1000 % 100
+            let bright = self.nTag % 1000 >= 100 ? 1 : 0
+            
+            if self.titles.count > section && self.titles[section].count > (row * 2 + bright) + 1 {
+                let array = self.companyNeed.sorted()
+                if array.contains(self.nTag) && array.last! != self.nTag {
+                    self.nextButton.setTitle("拍下一张", for: .normal)
+                }else{
+                    self.nextButton.setTitle("完成", for: .normal)
+                }
+            }else{
+                self.nextButton.setTitle("完成", for: .normal)
+            }
+            
         }else{
             let imagePicker = CameraViewController.imagePickerViewController(croppingEnabled: allowCropping) { image, asset in
                 
@@ -671,15 +681,20 @@ public class CameraViewController: UIViewController {
                 self.flashButton.isHidden = true
                 self.libraryButton.setTitle("重拍", for: .normal)
                 self.cameraButton.isHidden = true
-                if self.cameraType > 0 {
+                
+                let section = self.nTag / 1000
+                let row = self.nTag % 1000 % 100
+                let bright = self.nTag % 1000 >= 100 ? 1 : 0
+                
+                if self.titles.count > section && self.titles[section].count > (row * 2 + bright) + 1 {
                     let array = self.companyNeed.sorted()
                     if array.contains(self.nTag) && array.last! != self.nTag {
                         self.nextButton.setTitle("拍下一张", for: .normal)
                     }else{
-                        self.nextButton.isHidden = true
+                        self.nextButton.setTitle("完成", for: .normal)
                     }
                 }else{
-                    self.nextButton.isHidden = true
+                    self.nextButton.setTitle("完成", for: .normal)
                 }
                 
                 self.imageInfo = (image , asset)
@@ -722,15 +737,20 @@ public class CameraViewController: UIViewController {
         self.flashButton.isHidden = true
         self.libraryButton.setTitle("重拍", for: .normal)
         self.cameraButton.isHidden = true
-        if self.cameraType > 0 {
+        
+        let section = self.nTag / 1000
+        let row = self.nTag % 1000 % 100
+        let bright = self.nTag % 1000 >= 100 ? 1 : 0
+        
+        if self.titles.count > section && self.titles[section].count > (row * 2 + bright) + 1 {
             let array = self.companyNeed.sorted()
             if array.contains(self.nTag) && array.last! != self.nTag {
                 self.nextButton.setTitle("拍下一张", for: .normal)
             }else{
-                self.nextButton.isHidden = true
+                self.nextButton.setTitle("完成", for: .normal)
             }
         }else{
-            self.nextButton.isHidden = true
+            self.nextButton.setTitle("完成", for: .normal)
         }
         self.imageInfo = (image , nil)
     }
@@ -740,6 +760,11 @@ public class CameraViewController: UIViewController {
         if button.title(for: .normal) == "取消" {
             onCompletion?(nil , nil)
             self.dismiss(animated: true, completion: { 
+                
+            })
+        }else if button.title(for: .normal) == "完成" {
+            onCompletion?(imageInfo.0 , imageInfo.1)
+            self.dismiss(animated: true, completion: {
                 
             })
         }else{
@@ -757,7 +782,23 @@ public class CameraViewController: UIViewController {
                     flashButton.isHidden = false
                     cameraButton.isHidden = false
                     libraryButton.setTitle("相册", for: .normal)
-                    nextButton.setTitle("取消", for: .normal)
+                    
+                    let section = self.nTag / 1000
+                    let row = self.nTag % 1000 % 100
+                    let bright = self.nTag % 1000 >= 100 ? 1 : 0
+                    
+                    if self.titles.count > section && self.titles[section].count > (row * 2 + bright) + 1 {
+                        let array = self.companyNeed.sorted()
+                        if array.contains(self.nTag) && array.last! != self.nTag {
+                            self.nextButton.setTitle("拍下一张", for: .normal)
+                        }else{
+                            self.nextButton.setTitle("完成", for: .normal)
+                        }
+                    }else{
+                        self.nextButton.setTitle("完成", for: .normal)
+                    }
+                    
+                    
                 }else{
                     // 添加只能单拍
                     

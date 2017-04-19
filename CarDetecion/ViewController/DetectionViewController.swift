@@ -197,15 +197,13 @@ class DetectionViewController: UIViewController {
     
     // 获取最新公告
     func getLatestList(type : String) {
-        NetworkManager.sharedInstall.request(url: latestList, params: ["classType" : type]) {(json, error) in
+        NetworkManager.sharedInstall.request(url: latestList, params: ["classType" : type]) {[weak self](json, error) in
             if error != nil {
                 print(error!.localizedDescription)
             }else{
-                if let data = json , data["success"].boolValue {
-                    print(data)
-                }else{
-                    if let message = json?["message"].string {
-                        Toast(text: message).show()
+                if let data = json , data["total"].intValue > 0 {
+                    if let array = data["data"].array {
+                        self?.lblAdvertise.text = array[0]["title"].string
                     }
                 }
             }
