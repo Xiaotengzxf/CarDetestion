@@ -34,7 +34,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var nTag = 0 // 临时tag
     //var cameraType = 0 // 单拍，连拍
     var waterMarks : [JSON] = []
-    let companyOtherNeed : Set<Int> = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 5000 , 5100 , 5001 , 5101]
+    let companyOtherNeed : [Int] = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 5000 , 5100 , 5001 , 5101]
     var source = 0  // 0 创建新的，1 未通过 ， 2 本地的
     var json : JSON? // 未通过时，获取的数据
     var arrImageInfo : [JSON] = []
@@ -204,6 +204,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         camera.sectionTiltes = sectionTitles
         camera.titles = titles
         camera.waterMarks = waterMarks
+        camera.companyNeed = companyOtherNeed
         //camera.transitioningDelegate = self
         self.present(camera, animated: true) {
             
@@ -381,7 +382,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         if images.count > 0 {
             if companyNo == 0 {
                 let keys = Set<Int>(images.keys)
-                if companyOtherNeed.isSubset(of: keys) {
+                if Set(companyOtherNeed).isSubset(of: keys) {
                     return true
                 }else{
                     return false
@@ -483,7 +484,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 }else{
                     cell.iv1.image = nil
-                    cell.iv11.isHidden = false
+                    cell.lbl1.isHidden = false
                     cell.lbl11.isHidden = true
                     cell.iv11.isHidden = false
                     if bSubmit {

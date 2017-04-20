@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = login
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(DetectionViewController.handleNotification(notification:)), name: Notification.Name("app"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.handleNotification(notification:)), name: Notification.Name("app"), object: nil)
         
         return true
     }
@@ -121,7 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if tag == 1 {
                 if let userinfo = notification.userInfo as? [String : String] {
                     orderInfo[userinfo["orderNo"]!] = ["price" : userinfo["price"]! , "remark" : userinfo["remark"]!]
-                    self.showAlert(title: "温馨提示", message: "评估单：\(userinfo["orderNo"]!)，在提交中", button: "确认")
+                    self.showAlert(title: "温馨提示", message: "评估单：\(userinfo["orderNo"]!)，在后台提交中", button: "确认")
                 }
             }else if tag == 2 {
                 if let userinfo = notification.userInfo as? [String : String] {

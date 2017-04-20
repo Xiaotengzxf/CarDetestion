@@ -12,6 +12,7 @@ import Photos
 import Toaster
 import SwiftyJSON
 import SDWebImage
+import AssetsLibrary
 
 public typealias CameraViewCompletion = (UIImage?, PHAsset?) -> Void
 
@@ -59,7 +60,7 @@ public class CameraViewController: UIViewController {
     var lcWidth : NSLayoutConstraint!
     var lcHeight : NSLayoutConstraint!
     var imageInfo : (UIImage? , PHAsset?)
-    var companyNeed : Set<Int> = []
+    var companyNeed : [Int] = []
     
     var lastInterfaceOrientation : UIInterfaceOrientation?
     var onCompletion: CameraViewCompletion?
@@ -655,7 +656,7 @@ public class CameraViewController: UIViewController {
             let bright = self.nTag % 1000 >= 100 ? 1 : 0
             
             if self.titles.count > section && self.titles[section].count > (row * 2 + bright) + 1 {
-                let array = self.companyNeed.sorted()
+                let array = Array(self.companyNeed)
                 if array.contains(self.nTag) && array.last! != self.nTag {
                     self.nextButton.setTitle("拍下一张", for: .normal)
                 }else{
@@ -666,6 +667,19 @@ public class CameraViewController: UIViewController {
             }
             
         }else{
+            
+            let status = ALAssetsLibrary.authorizationStatus()
+            if status == ALAuthorizationStatus.restricted || status == ALAuthorizationStatus.denied {
+                let alert = UIAlertController(title: "提示", message: "请至设置里开启相册功能", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: { (action) in
+                    
+                }))
+                self.present(alert, animated: true, completion: { 
+                    
+                })
+                return
+            }
+            
             let imagePicker = CameraViewController.imagePickerViewController(croppingEnabled: allowCropping) { image, asset in
                 
                 defer {
@@ -687,7 +701,7 @@ public class CameraViewController: UIViewController {
                 let bright = self.nTag % 1000 >= 100 ? 1 : 0
                 
                 if self.titles.count > section && self.titles[section].count > (row * 2 + bright) + 1 {
-                    let array = self.companyNeed.sorted()
+                    let array = Array(self.companyNeed)
                     if array.contains(self.nTag) && array.last! != self.nTag {
                         self.nextButton.setTitle("拍下一张", for: .normal)
                     }else{
@@ -743,7 +757,7 @@ public class CameraViewController: UIViewController {
         let bright = self.nTag % 1000 >= 100 ? 1 : 0
         
         if self.titles.count > section && self.titles[section].count > (row * 2 + bright) + 1 {
-            let array = self.companyNeed.sorted()
+            let array = Array(self.companyNeed)
             if array.contains(self.nTag) && array.last! != self.nTag {
                 self.nextButton.setTitle("拍下一张", for: .normal)
             }else{
@@ -770,7 +784,7 @@ public class CameraViewController: UIViewController {
         }else{
             if companyNeed.count > 0 {
                 if companyNeed.contains(nTag) {
-                    let array = companyNeed.sorted()
+                    let array = Array(companyNeed)
                     let index = array.index(of: nTag)
                     nTag = array[index! + 1]
                     onCompletion?(imageInfo.0 , imageInfo.1)
@@ -783,19 +797,29 @@ public class CameraViewController: UIViewController {
                     cameraButton.isHidden = false
                     libraryButton.setTitle("相册", for: .normal)
                     
-                    let section = self.nTag / 1000
-                    let row = self.nTag % 1000 % 100
-                    let bright = self.nTag % 1000 >= 100 ? 1 : 0
+                    self.nextButton.setTitle("取消", for: .normal)
                     
-                    if self.titles.count > section && self.titles[section].count > (row * 2 + bright) + 1 {
-                        let array = self.companyNeed.sorted()
-                        if array.contains(self.nTag) && array.last! != self.nTag {
-                            self.nextButton.setTitle("拍下一张", for: .normal)
-                        }else{
-                            self.nextButton.setTitle("完成", for: .normal)
+                    let section = nTag / 1000
+                    let row = nTag % 1000 % 100
+                    let bright = nTag % 1000 >= 100 ? 1 : 0
+                    let index2 = row * 2 + bright
+                    if titles.count > section && titles[section].count > index2 {
+                        lblName.text = titles[section][row * 2 + bright]
+                        lblCurrentPage.text = "\(index2 + 1)/\(titles[section].count)"
+                        for json in waterMarks {
+                            if json["imageClass"].stringValue == sectionTiltes[section] && index2 == json["imageSeqNum"].intValue {
+                                var imageUrl = "\(NetworkManager.sharedInstall.domain)\(json["imageDesc"].stringValue)"
+                                var url = URL(string: imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                                ivDetailDesc.sd_setImage(with: url)
+                                imageUrl = "\(NetworkManager.sharedInstall.domain)\(json["waterMark"].stringValue)"
+                                print("水印：\(imageUrl)")
+                                url = URL(string: imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                                imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "mask_left_45"))
+                            }
                         }
                     }else{
-                        self.nextButton.setTitle("完成", for: .normal)
+                        lblName.text = "添加照片"
+                        lblCurrentPage.text = "\(row * 2 + bright + 1)/\(row * 2 + bright + 1)"
                     }
                     
                     
