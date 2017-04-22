@@ -16,7 +16,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var tfPwd: UITextField!
     @IBOutlet weak var btnLogin: UIButton!
     @IBOutlet weak var ivTriangle: UIImageView!
-    let login = "external/checkUser.html"
+    let login = "external/app/checkUser.html"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,6 +70,9 @@ class LoginViewController: UIViewController {
                 Toast(text: "网络故障，请检查网络").show()
             }else{
                 if let data = json , data["success"].boolValue {
+                    if let dic = data["object"].dictionaryObject {
+                        UserDefaults.standard.set(dic, forKey: "userinfo")
+                    }
                     UserDefaults.standard.set(username, forKey: "username")
                     UserDefaults.standard.synchronize()
                     if let controller = self?.storyboard?.instantiateViewController(withIdentifier: "default") as? DefaultViewController {
@@ -87,6 +90,15 @@ class LoginViewController: UIViewController {
             }
         }
     }
+    /*{
+     companyName = "\U5b89\U9633\U5e02\U65b0\U7eaa\U5143\U6c7d\U8f66\U9500\U552e\U670d\U52a1\U6709\U9650\U516c\U53f8--\U5e7f\U6c47";
+     superCompanyName = "\U5e7f\U6c47\U6c7d\U8f66\U670d\U52a1\U80a1\U4efd\U516c\U53f8";
+     userChineseName = "\U5f6d\U5a01";
+     userCompany = 642;
+     userId = 19720;
+     userLoginName = cy;
+     userSuperCompany = 8;
+     }*/
     /*
     // MARK: - Navigation
 

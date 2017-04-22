@@ -79,12 +79,14 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                 self.tableView.reloadData()
             }
         }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.navigationBar.lt_reset()
         self.navigationController?.setNavigationBarHidden(false, animated: false)
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -235,16 +237,22 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         if  segmentedControl.selectedSegmentIndex == 0 {
             if let controller = self.storyboard?.instantiateViewController(withIdentifier: "detectionnew") as? DetectionNewViewController {
                 let json = data[indexPath.row]
+                var orderKeys : [String] = []
+                if let keys = UserDefaults.standard.object(forKey: "orderKeys") as? [String] {
+                    orderKeys += keys
+                }
                 if let urls = json["images"].string {
                     var images : [Int : Data] = [:]
                     let array = urls.components(separatedBy: ",")
                     var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-                    path = path! + "/\(indexPath.row + 1)"
+                    path = path! + "/\(orderKeys[indexPath.row])"
                     for item in array {
                         if let image = UIImage(contentsOfFile: path! + "/\(item).jpg") {
                             images[Int(item)!] = UIImageJPEGRepresentation(image, 1)
                         }
                     }
+                    
+                    controller.pathName = orderKeys[indexPath.row]
                     controller.images = images
                 }
                 self.navigationController?.pushViewController(controller, animated: true)
@@ -301,7 +309,7 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
     }
     
     func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
-        return UIImage(named: "empty")
+        return UIImage(named: "ad_empty")
     }
     
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {

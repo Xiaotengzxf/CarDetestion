@@ -121,7 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if tag == 1 {
                 if let userinfo = notification.userInfo as? [String : String] {
                     orderInfo[userinfo["orderNo"]!] = ["price" : userinfo["price"]! , "remark" : userinfo["remark"]!]
-                    self.showAlert(title: "温馨提示", message: "评估单：\(userinfo["orderNo"]!)，在后台提交中", button: "确认")
+                    self.perform(#selector(AppDelegate.showAlertView(userinfo:)), with: userinfo, afterDelay: 0.1)
                 }
             }else if tag == 2 {
                 if let userinfo = notification.userInfo as? [String : String] {
@@ -131,13 +131,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    func showAlertView(userinfo : [String : String]) {
+        self.showAlert(title: "温馨提示", message: "评估单：\(userinfo["orderNo"]!)，在后台提交中", button: "确认")
+    }
+    
     // 提交订单
     func submitBill(orderNo : String)  {
         if orderNo.characters.count > 0 {
             DispatchQueue.global().async {
                 [weak self] in
                 let username = UserDefaults.standard.string(forKey: "username")
-                var params = ["createUser" : username!]
+                var params = ["userName" : username!]
                 params["carBillId"] = orderNo
                 params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? ""
                 params["mark"] = self?.orderInfo[orderNo]?["remark"] ?? ""

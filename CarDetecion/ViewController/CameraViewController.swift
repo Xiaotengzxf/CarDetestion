@@ -406,6 +406,14 @@ public class CameraViewController: UIViewController {
         if self.cameraView.session?.isRunning == true {
             self.notifyCameraReady()
         }
+        
+        guard let device = cameraView.device else {
+            return
+        }
+        
+        let image = UIImage(named: flashImage(device.flashMode))
+        
+        flashButton.setImage(image, for: .normal)
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -728,9 +736,7 @@ public class CameraViewController: UIViewController {
             return
         }
   
-        let image = UIImage(named: flashImage(device.flashMode),
-                            in: Bundle(for: CameraViewController.self),
-                            compatibleWith: nil)
+        let image = UIImage(named: flashImage(device.flashMode))
         
         flashButton.setImage(image, for: .normal)
     }

@@ -67,17 +67,17 @@ class DetectionViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self, selector: #selector(DetectionViewController.handleNotification(notification:)), name: Notification.Name("detection"), object: nil)
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0))
         
         if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
             lblUnSubmit.text = "共有\(orders.count)单"
         }else{
             lblUnSubmit.text = "共有0单"
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0))
         
     }
     

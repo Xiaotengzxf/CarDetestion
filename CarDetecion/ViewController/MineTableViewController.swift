@@ -21,6 +21,10 @@ class MineTableViewController: UITableViewController {
         tableView.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: WIDTH * 553/1080.0)
         tableView.tableFooterView = UIView()
         view.backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1)
+        
+        if let userinfo = UserDefaults.standard.object(forKey: "userinfo") as? [String : Any] {
+            lblUsername.text = userinfo["userChineseName"] as? String
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,6 +81,8 @@ class MineTableViewController: UITableViewController {
             }else{
                 makeCall(message: "88888888")
             }
+        }else{
+            self.performSegue(withIdentifier: "info", sender: self)
         }
     }
     
@@ -100,6 +106,8 @@ class MineTableViewController: UITableViewController {
             
         }))
         alert.addAction(UIAlertAction(title: "退出", style: .default, handler: {[weak self] (action) in
+            UserDefaults.standard.removeObject(forKey: "userinfo")
+            UserDefaults.standard.removeObject(forKey: "username")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let login = storyboard.instantiateViewController(withIdentifier: "login")
             self?.view?.window?.rootViewController = login

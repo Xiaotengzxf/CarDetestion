@@ -85,7 +85,7 @@ class NetworkManager {
         Alamofire.upload(
             multipartFormData: { multipartFormData in
                 if data != nil {
-                    multipartFormData.append(data!, withName: "image", fileName: "image.jpg", mimeType: "image/jpg")
+                    multipartFormData.append(data!, withName: "image", fileName: "\(Date().timeIntervalSince1970).jpeg", mimeType: "image/jpeg")
                 }
                 if params != nil {
                     for (key , value) in params! {
@@ -98,7 +98,14 @@ class NetworkManager {
                 switch encodingResult {
                 case .success(let upload, _, _):
                     upload.responseJSON { response in
-                        callback(JSON(data: response.data!), nil)
+                        if let value = response.result.value {
+                            print("返回内容：\(value)")
+                            callback(JSON(value), nil)
+                        }else{
+                            print("返回错误")
+                            callback(nil, nil)
+                        }
+                        
                     }
                 case .failure(let encodingError):
                     callback(nil , encodingError)

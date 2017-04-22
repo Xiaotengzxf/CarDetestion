@@ -57,6 +57,8 @@
 		89965D721EA11AEA006560BA /* RNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D711EA11AEA006560BA /* RNavigationController.swift */; };
 		89965D751EA1A542006560BA /* INavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D741EA1A542006560BA /* INavigationController.swift */; };
 		89965D771EA1B285006560BA /* RecordDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D761EA1B285006560BA /* RecordDetailViewController.swift */; };
+		89B3A5E01EAADC7000949757 /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3A5DF1EAADC7000949757 /* InfoTableViewController.swift */; };
+		89B3A5E31EAB148100949757 /* MessageListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3A5E21EAB148100949757 /* MessageListTableViewController.swift */; };
 		89B945701E8F37F1009F0B58 /* logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89B9456F1E8F37F1009F0B58 /* logo.jpg */; };
 		927BA23DC90FCA9C2D177731 /* Pods_CarDetecion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */; };
 /* End PBXBuildFile section */
@@ -138,6 +140,8 @@
 		89965D711EA11AEA006560BA /* RNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNavigationController.swift; sourceTree = "<group>"; };
 		89965D741EA1A542006560BA /* INavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INavigationController.swift; sourceTree = "<group>"; };
 		89965D761EA1B285006560BA /* RecordDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordDetailViewController.swift; sourceTree = "<group>"; };
+		89B3A5DF1EAADC7000949757 /* InfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
+		89B3A5E21EAB148100949757 /* MessageListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListTableViewController.swift; sourceTree = "<group>"; };
 		89B9456F1E8F37F1009F0B58 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -255,6 +259,7 @@
 		895307FE1E6D7A67007AF459 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				89B3A5E11EAB146C00949757 /* Message */,
 				89965D731EA1A51A006560BA /* Main */,
 				89965D6E1EA118DC006560BA /* Mine */,
 				896AFA711E8B6957008DE6F5 /* Login */,
@@ -332,6 +337,7 @@
 			children = (
 				8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */,
 				89965D6F1EA1196B006560BA /* MNavigationController.swift */,
+				89B3A5DF1EAADC7000949757 /* InfoTableViewController.swift */,
 			);
 			name = Mine;
 			sourceTree = "<group>";
@@ -343,6 +349,14 @@
 				895307C41E6D18D9007AF459 /* MainViewController.swift */,
 			);
 			name = Main;
+			sourceTree = "<group>";
+		};
+		89B3A5E11EAB146C00949757 /* Message */ = {
+			isa = PBXGroup;
+			children = (
+				89B3A5E21EAB148100949757 /* MessageListTableViewController.swift */,
+			);
+			name = Message;
 			sourceTree = "<group>";
 		};
 		CE73A5DE25C4A173E5A2BDC5 /* Frameworks */ = {
@@ -546,6 +560,7 @@
 				896AFA791E8CFAE1008DE6F5 /* MTabBarController.swift in Sources */,
 				8953080C1E6D7A67007AF459 /* PhotoLibraryAuthorizer.swift in Sources */,
 				894B4BF21E6EDCE600FE9D90 /* TestViewController.swift in Sources */,
+				89B3A5E31EAB148100949757 /* MessageListTableViewController.swift in Sources */,
 				896AFA7B1E8D10F2008DE6F5 /* UINavigationBarExtension.swift in Sources */,
 				8953080D1E6D7A67007AF459 /* SingleImageFetcher.swift in Sources */,
 				89965D771EA1B285006560BA /* RecordDetailViewController.swift in Sources */,
@@ -561,6 +576,7 @@
 				8985C79F1E72E63A0075B6F8 /* MineTableViewController.swift in Sources */,
 				8953080A1E6D7A67007AF459 /* CameraShot.swift in Sources */,
 				8985C7A41E72ED850075B6F8 /* Extension.swift in Sources */,
+				89B3A5E01EAADC7000949757 /* InfoTableViewController.swift in Sources */,
 				895307C51E6D18D9007AF459 /* MainViewController.swift in Sources */,
 				8953081A1E6D7A67007AF459 /* ImageCell.swift in Sources */,
 				896AFA701E8B694E008DE6F5 /* LoginViewController.swift in Sources */,

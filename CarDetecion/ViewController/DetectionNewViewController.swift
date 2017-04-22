@@ -15,10 +15,11 @@ import MBProgressHUD
 class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate {
 
     @IBOutlet weak var lcBottom: NSLayoutConstraint!
+    @IBOutlet weak var btnSave: UIButton!
     @IBOutlet weak var vBottom: UIView!
     @IBOutlet weak var tableView: UITableView!
     let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "备注"]
-    let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
+    let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门" , "右前门铰链"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
     var images : [Int : Data] = [:]
     let presentAnimator = PresentAnimator()
     let dismissAnimator = DismisssAnimator()
@@ -34,10 +35,12 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var nTag = 0 // 临时tag
     //var cameraType = 0 // 单拍，连拍
     var waterMarks : [JSON] = []
-    let companyOtherNeed : [Int] = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 5000 , 5100 , 5001 , 5101]
+    let companyOtherNeed : [Int] = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 4007 , 5000 , 5100 , 5001 , 5101]
     var source = 0  // 0 创建新的，1 未通过 ， 2 本地的
     var json : JSON? // 未通过时，获取的数据
     var arrImageInfo : [JSON] = []
+    var pathName = ""
+    var bSave = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,6 +77,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        if (!self.navigationController!.viewControllers.contains(self)) && bSave == false {
+            self.save(UIButton())
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -246,15 +252,27 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 保存
     @IBAction func save(_ sender: Any) {
+        bSave = true
         if images.count > 0 || price.characters.count > 0 || remark.characters.count > 0 {
             var orders : [[String : String]] = []
             if let order = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
                 orders += order
             }
+            var orderKeys : [String] = []
+            if let keys = UserDefaults.standard.object(forKey: "orderKeys") as? [String] {
+                orderKeys += keys
+            }
             let fileManager = FileManager.default
             var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-            path = path! + "/\(orders.count + 1)"
+            let name = pathName.characters.count > 0 ? pathName : "\(Date().timeIntervalSince1970)"
+            if pathName != name {
+                orderKeys.append(name)
+            }
+            path = path! + "/\(name)"
             do{
+                if pathName == name {
+                    try fileManager.removeItem(atPath: path!)
+                }
                 try fileManager.createDirectory(atPath:path! , withIntermediateDirectories: true, attributes: nil)
                 var imageStr = ""
                 for (key , value) in images {
@@ -267,25 +285,40 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 let formatter = DateFormatter()
                 formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
                 let str = imageStr.substring(to: imageStr.index(before: imageStr.endIndex))
-                orders.append(["price" : price , "remark" : remark , "images" : str , "addtime" : formatter.string(from: Date())])
+                if pathName == name {
+                    let i = orderKeys.index(of: pathName) ?? 0
+                    orders.replaceSubrange(i..<(i+1), with: [["price" : price , "remark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]])
+                }else{
+                    orders.append(["price" : price , "remark" : remark , "images" : str , "addtime" : formatter.string(from: Date())])
+                }
                 UserDefaults.standard.set(orders, forKey: "orders")
+                UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
                 UserDefaults.standard.synchronize()
-                
-                showAlert(title: "温馨提示", message: "保存成功", button: "确定")
+                if let button = sender as? UIButton , button == btnSave {
+                    showAlert(title: "温馨提示", message: "保存成功", button: "确定")
+                }
                 
             }catch{
-                showAlert(title: "温馨提示", message: "保存失败，数据丢失!", button: "确定")
+                if let button = sender as? UIButton , button == btnSave {
+                    showAlert(title: "温馨提示", message: "保存失败，数据丢失!", button: "确定")
+                }
+                
             }
         }else{
-            showAlert(title: "温馨提示", message: "您没有拍摄任何照片，或输入价格，或输入内容！", button: "保存失败")
+            if let button = sender as? UIButton , button == btnSave {
+                showAlert(title: "温馨提示", message: "您没有拍摄任何照片，或输入价格，或输入内容！", button: "保存失败")
+            }
+            
         }
     }
     
     // 显示提示框
     func showAlert(title : String?, message : String , button : String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: button, style: .cancel, handler: { (action) in
-            
+        alert.addAction(UIAlertAction(title: button, style: .cancel, handler: {[weak self] (action) in
+            if message == "保存成功" {
+                self?.navigationController?.popViewController(animated: true)
+            }
         }))
         present(alert, animated: true) { 
             
@@ -325,9 +358,17 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                         self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                     }
                     NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark])
-                    self?.dismiss(animated: true, completion: { 
-                        
-                    })
+                    if self!.pathName.characters.count > 0 {
+                        var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+                        var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
+                        let i = orderKeys.index(of: self!.pathName) ?? 0
+                        orderKeys.remove(at: i)
+                        orders.remove(at: i)
+                        UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
+                        UserDefaults.standard.set(orders, forKey: "orders")
+                        UserDefaults.standard.synchronize()
+                    }
+                    self?.navigationController?.popViewController(animated: true)
                 }
             }
         }
@@ -335,18 +376,23 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 上传图片
     func uploadImage(imageClass : String , imageSeqNum : Int , data : Data) {
-        
+        print("上传图片：\(imageClass)---\(imageSeqNum)")
         let username = UserDefaults.standard.string(forKey: "username")
         var params = ["createUser" : username!]
         params["clientName"] = "iOS"
         params["carBillId"] = orderNo
         params["imageClass"] = imageClass
         params["imageSeqNum"] = "\(imageSeqNum)"
-        NetworkManager.sharedInstall.upload(url: upload, params: params, data: data) { (json, error) in
+        NetworkManager.sharedInstall.upload(url: upload, params: params, data: data) {[weak self] (json, error) in
             DispatchQueue.global().async {
-                upLoadCount -= 1
-                if upLoadCount == 0 {
-                    NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
+                if json?["success"].boolValue == true {
+                    upLoadCount -= 1
+                    if upLoadCount == 0 {
+                        NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
+                    }
+                }else{
+                    print("上传失败:\(imageClass)---\(imageSeqNum)")
+                    self?.uploadImage(imageClass: imageClass, imageSeqNum: imageSeqNum, data: data)
                 }
             }
         }
@@ -401,8 +447,20 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         if section < 6 {
             var count = titles[section].count + 1
             if images.count > 0 {
-                let array = images.filter{$0.key >= section * 1000 && $0.key < (section + 1) * 1000}
-                count = max(count, array.count)
+                let array = images.keys.filter{$0 >= section * 1000 && $0 < (section + 1) * 1000}
+                let array1 = companyOtherNeed.filter{$0 >= section * 1000 && $0 < (section + 1) * 1000}
+                var n = 0
+                if array.count > 0 {
+                    for key in array {
+                        if !array1.contains(key) {
+                            n += 1
+                        }
+                    }
+                }
+                if n > 0 {
+                    n += 1
+                }
+                count = max(count, array1.count + n)
             }
             return (count % 2 > 0) ? (count / 2 + 1) : (count / 2)
         }else {
@@ -424,24 +482,37 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             cell.indexPath = indexPath
             cell.delegate = self
             cell.source = source
+            let c = titles[indexPath.section].count
             var count = titles[indexPath.section].count + 1
             if images.count > 0 {
-                let array = images.filter{$0.key >= indexPath.section * 1000 && $0.key < (indexPath.section + 1) * 1000}
-                count = max(count, array.count)
+                let array = images.keys.filter{$0 >= indexPath.section * 1000 && $0 < (indexPath.section + 1) * 1000}
+                let array1 = companyOtherNeed.filter{$0 >= indexPath.section * 1000 && $0 < (indexPath.section + 1) * 1000}
+                var n = 0
+                if array.count > 0 {
+                    for key in array {
+                        if !array1.contains(key) {
+                            n += 1
+                        }
+                    }
+                }
+                if n > 0 {
+                    n += 1
+                }
+                count = max(count, array1.count + n)
             }
             if count % 2 > 0 && indexPath.row == count / 2 {
                 cell.vCamera2.isHidden = true
             }else{
                 cell.vCamera2.isHidden = false
             }
-            if indexPath.row * 2 < count - 1 {
+            if indexPath.row * 2 < c {
                 cell.lbl1.text = titles[indexPath.section][indexPath.row * 2]
                 cell.lbl11.text = titles[indexPath.section][indexPath.row * 2]
             }else{
                 cell.lbl1.text = "添加照片"
                 cell.lbl11.text = "添加照片"
             }
-            if indexPath.row * 2 + 1 < count - 1 {
+            if indexPath.row * 2 + 1 < c {
                 cell.lbl2.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
                 cell.lbl22.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
             }else{
