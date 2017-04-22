@@ -60,6 +60,7 @@
 		89B3A5E01EAADC7000949757 /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3A5DF1EAADC7000949757 /* InfoTableViewController.swift */; };
 		89B3A5E31EAB148100949757 /* MessageListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3A5E21EAB148100949757 /* MessageListTableViewController.swift */; };
 		89B945701E8F37F1009F0B58 /* logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89B9456F1E8F37F1009F0B58 /* logo.jpg */; };
+		89CB16901EABA54A00768787 /* RecordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CB168F1EABA54A00768787 /* RecordTableViewCell.swift */; };
 		927BA23DC90FCA9C2D177731 /* Pods_CarDetecion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */; };
 /* End PBXBuildFile section */
 
@@ -143,6 +144,7 @@
 		89B3A5DF1EAADC7000949757 /* InfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
 		89B3A5E21EAB148100949757 /* MessageListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListTableViewController.swift; sourceTree = "<group>"; };
 		89B9456F1E8F37F1009F0B58 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
+		89CB168F1EABA54A00768787 /* RecordTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,6 +289,7 @@
 				896AFA761E8C9213008DE6F5 /* DetectionTableViewCell.swift */,
 				8978CAE61E928EF300BBC926 /* Detection1TableViewCell.swift */,
 				8978CAE81E928F0400BBC926 /* Detection2TableViewCell.swift */,
+				89CB168F1EABA54A00768787 /* RecordTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -592,6 +595,7 @@
 				8985C7D91E7309D60075B6F8 /* DetectionNewViewController.swift in Sources */,
 				895307CB1E6D18D9007AF459 /* CarDetecion.xcdatamodeld in Sources */,
 				89965D701EA1196B006560BA /* MNavigationController.swift in Sources */,
+				89CB16901EABA54A00768787 /* RecordTableViewCell.swift in Sources */,
 				8953080B1E6D7A67007AF459 /* ImageFetcher.swift in Sources */,
 				896232A51E8E48DF00AB4B1E /* TransitionAnimator.swift in Sources */,
 				89965D751EA1A542006560BA /* INavigationController.swift in Sources */,

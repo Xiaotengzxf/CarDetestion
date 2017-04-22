@@ -327,10 +327,14 @@ public class CameraViewController: UIViewController {
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[middleView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["middleView" : middleView]))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[cameraButton(90)]", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraButton" : cameraButton]))
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[cameraButton(79)]", options: .directionLeadingToTrailing, metrics: nil, views: ["cameraButton" : cameraButton]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[closeButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[closeButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[flashButton(44)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[nextButton(114)]", options: .directionLeadingToTrailing, metrics: nil, views: ["nextButton" : nextButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[nextButton(60)]", options: .directionLeadingToTrailing, metrics: nil, views: ["nextButton" : nextButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[libraryButton(114)]", options: .directionLeadingToTrailing, metrics: nil, views: ["libraryButton" : libraryButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[libraryButton(60)]", options: .directionLeadingToTrailing, metrics: nil, views: ["libraryButton" : libraryButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[closeButton(50)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[closeButton(50)]", options: .directionLeadingToTrailing, metrics: nil, views: ["closeButton" : closeButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[flashButton(50)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[flashButton(50)]", options: .directionLeadingToTrailing, metrics: nil, views: ["flashButton" : flashButton]))
         
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[ivSnap]|", options: .directionLeadingToTrailing, metrics: nil, views: ["ivSnap" : ivSnap]))
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[ivSnap]|", options: .directionLeadingToTrailing, metrics: nil, views: ["ivSnap" : ivSnap]))
@@ -342,11 +346,11 @@ public class CameraViewController: UIViewController {
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblName]-(40)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblName" : lblName]))
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[lblCurrentPage]|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblCurrentPage" : lblCurrentPage]))
         middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblCurrentPage]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["lblCurrentPage" : lblCurrentPage]))
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
-        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[hintButton(44)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[hintButton(80)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
+        middleView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[hintButton(80)]-(10)-|", options: .directionLeadingToTrailing, metrics: nil, views: ["hintButton" : hintButton]))
         
-        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .bottom, relatedBy: .equal, toItem: hintButton, attribute: .top, multiplier: 1, constant: -5))
-        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .right, relatedBy: .equal, toItem: hintButton, attribute: .right, multiplier: 1, constant: -22))
+        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .bottom, relatedBy: .equal, toItem: hintButton, attribute: .top, multiplier: 1, constant: 20))
+        middleView.addConstraint(NSLayoutConstraint(item: ivDetailDesc, attribute: .right, relatedBy: .equal, toItem: hintButton, attribute: .right, multiplier: 1, constant: -15))
         lcWidth = NSLayoutConstraint(item: ivDetailDesc, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
         lcHeight = NSLayoutConstraint(item: ivDetailDesc, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 0)
         middleView.addConstraint(lcWidth)
@@ -499,17 +503,22 @@ public class CameraViewController: UIViewController {
                         
                 })
             }else{
-                self?.lcWidth.constant = 0
-                self?.lcHeight.constant = 0
-                UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveLinear, animations: {
-                    [weak self] in
-                    self?.view.layoutIfNeeded()
-                    }, completion: { (finish) in
-                        
-                })
+                self?.hideDesc()
             }
         }
     }
+    
+    func hideDesc() {
+        self.lcWidth.constant = 0
+        self.lcHeight.constant = 0
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.8, options: .curveLinear, animations: {
+            [weak self] in
+            self?.view.layoutIfNeeded()
+            }, completion: { (finish) in
+                
+        })
+    }
+
     
     /**
      * Toggle the buttons status, based on the actual
@@ -620,6 +629,10 @@ public class CameraViewController: UIViewController {
      * the picture on the device.
      */
     internal func capturePhoto() {
+        if self.lcWidth.constant != 0 {
+            self.hideDesc()
+            return
+        }
         guard let output = cameraView.imageOutput,
             let connection = output.connection(withMediaType: AVMediaTypeVideo) else {
             return
@@ -643,6 +656,11 @@ public class CameraViewController: UIViewController {
     
     // 关闭按钮事件
     internal func close() {
+        if self.lcWidth.constant != 0 {
+            self.hideDesc()
+            return
+        }
+        onCompletion?(imageInfo.0, imageInfo.1)
         self.dismiss(animated: true) { 
             
         }
@@ -650,6 +668,10 @@ public class CameraViewController: UIViewController {
     
     // 相册按钮事件
     internal func showLibrary() {
+        if self.lcWidth.constant != 0 {
+            self.hideDesc()
+            return
+        }
         if libraryButton.title(for: .normal) == "重拍" {
             cameraView.startSession()
             ivSnap.isHidden = true
@@ -730,6 +752,10 @@ public class CameraViewController: UIViewController {
     
     // 闪光灯按钮
     internal func toggleFlash() {
+        if self.lcWidth.constant != 0 {
+            self.hideDesc()
+            return
+        }
         cameraView.cycleFlash()
         
         guard let device = cameraView.device else {
@@ -777,6 +803,10 @@ public class CameraViewController: UIViewController {
     
     // 拍下一张或者取消
     func doNextOrCancel(button : UIButton)  {
+        if self.lcWidth.constant != 0 {
+            self.hideDesc()
+            return
+        }
         if button.title(for: .normal) == "取消" {
             onCompletion?(nil , nil)
             self.dismiss(animated: true, completion: { 

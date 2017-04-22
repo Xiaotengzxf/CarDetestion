@@ -13,7 +13,7 @@ import Toaster
 import DZNEmptyDataSet
 import SDWebImage
 
-class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmptyDataSetSource , UITableViewDelegate , UITableViewDataSource{
+class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmptyDataSetSource , UITableViewDelegate , UITableViewDataSource , RecordTableViewCellDelegate{
 
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var ivDivide: UIImageView!
@@ -42,8 +42,12 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         
         tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { 
             [weak self] in
-            self?.curPage = 1
-            self?.getBillList()
+            if self!.segmentedControl.selectedSegmentIndex == 0 {
+                self?.tableView.mj_header.endRefreshing()
+            }else{
+                self?.curPage = 1
+                self?.getBillList()
+            }
         })
         
         tableView.mj_footer = MJRefreshBackNormalFooter(refreshingBlock: { 
@@ -177,7 +181,10 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! RecordTableViewCell
+        cell.delegate = self
+        cell.tag = indexPath.row
+        cell.addLongTap()
 
         if segmentedControl.selectedSegmentIndex == 0 {
             if let label = cell.contentView.viewWithTag(3) as? UILabel {
@@ -275,23 +282,6 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             }
         }
     }
-    
-    func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        if segmentedControl.selectedSegmentIndex == 0 {
-            return "删除"
-        }else{
-            return nil
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if segmentedControl.selectedSegmentIndex == 0 {
-            data.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .left)
-        }else{
-            
-        }
-    }
 
     /*
     // MARK: - Navigation
@@ -336,6 +326,44 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
     
     func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
         return nShowEmpty > 0
+    }
+    
+    
+    func tapCell(tag: Int) {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            let alert = UIAlertController(title: "提示", message: "您想删除该条记录，还是置顶该条记录？", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "删除", style: .default, handler: {[weak self] (action) in
+                self?.data.remove(at: tag)
+                if self!.data.count == 0 {
+                    self!.nShowEmpty = 1
+                }
+                self?.tableView.reloadData()
+                var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
+                var orderkeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+                orders.remove(at: tag)
+                orderkeys.remove(at: tag)
+                UserDefaults.standard.set(orders, forKey: "orders")
+                UserDefaults.standard.set(orderkeys, forKey: "orderKeys")
+                UserDefaults.standard.synchronize()
+            }))
+            alert.addAction(UIAlertAction(title: "置顶", style: .default, handler: {[weak self] (action) in
+                let json = self?.data.remove(at: tag)
+                self?.data.insert(json!, at: 0)
+                self?.tableView.reloadData()
+                var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
+                var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+                let value = orders.remove(at: tag)
+                orders.insert(value, at: 0)
+                let valueKey = orderKeys.remove(at: tag)
+                orderKeys.insert(valueKey, at: 0)
+                UserDefaults.standard.set(orders, forKey: "orders")
+                UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
+                UserDefaults.standard.synchronize()
+            }))
+            self.present(alert, animated: true, completion: { 
+                
+            })
+        }
     }
 
 }

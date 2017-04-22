@@ -51,8 +51,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         
         if source == 1 {
             loadUnpassData()
-            vBottom.isHidden = true
-            lcBottom.constant = 0
             if let label = tableView.tableHeaderView?.viewWithTag(10000) as? UILabel {
                 do {
                     label.attributedText = try NSAttributedString(data: "退回原因：\(json?["applyAllOpinion"].string ?? "")".data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
@@ -149,9 +147,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // tableviewcell的拍照代理
     func cameraModel(tag: Int) {
-        if source == 1 {
-            return
-        }
         nTag = tag
         if let data = images[tag] {
             var images = [SKPhoto]()
@@ -160,7 +155,13 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             SKPhotoBrowserOptions.displayAction = false
             SKPhotoBrowserOptions.displayCloseButton = false
             let browser = SKPhotoBrowser(photos: images)
-            browser.title = titles[tag / 1000][((tag % 1000) % 100) * 2 + (tag % 1000 >= 100 ? 1 : 0)]
+            let row = ((tag % 1000) % 100) * 2 + (tag % 1000 >= 100 ? 1 : 0)
+            if row < titles[tag / 1000].count {
+                browser.title = titles[tag / 1000][row]
+            }else{
+                browser.title = "添加图片"
+            }
+            
             browser.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "delete"), style: .plain, target: self, action: #selector(DetectionNewViewController.pop))
             self.navigationController?.pushViewController(browser, animated: true)
         }else{
@@ -252,6 +253,10 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 保存
     @IBAction func save(_ sender: Any) {
+        if source == 1 {
+            self.navigationController?.popViewController(animated: true)
+            return
+        }
         bSave = true
         if images.count > 0 || price.characters.count > 0 || remark.characters.count > 0 {
             var orders : [[String : String]] = []
@@ -283,7 +288,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     }
                 }
                 let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 let str = imageStr.substring(to: imageStr.index(before: imageStr.endIndex))
                 if pathName == name {
                     let i = orderKeys.index(of: pathName) ?? 0

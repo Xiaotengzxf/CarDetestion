@@ -25,6 +25,10 @@ class MineTableViewController: UITableViewController {
         if let userinfo = UserDefaults.standard.object(forKey: "userinfo") as? [String : Any] {
             lblUsername.text = userinfo["userChineseName"] as? String
         }
+        
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: version, style: .plain, target: nil, action: nil)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
