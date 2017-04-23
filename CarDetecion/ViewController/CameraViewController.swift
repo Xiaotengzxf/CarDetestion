@@ -645,12 +645,6 @@ public class CameraViewController: UIViewController {
                     self?.toggleButtons(enabled: true)
                     return
                 }
-                if image.imageOrientation != .up {
-                    self?.cameraView.isUserInteractionEnabled = false
-                    self?.toggleButtons(enabled: true)
-                    Toast(text:"请将手机横屏，再进行拍摄！").show()
-                    return
-                }
                 self?.saveImage(image: image)
             }
         }

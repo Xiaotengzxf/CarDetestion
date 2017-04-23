@@ -156,7 +156,7 @@ public class CameraView: UIView {
     public func capturePhoto(completion: @escaping CameraShotCompletion) {
         isUserInteractionEnabled = false
         cameraQueue.sync {
-            let orientation = AVCaptureVideoOrientation(rawValue: UIDevice.current.orientation.rawValue)!
+            let orientation = AVCaptureVideoOrientation(rawValue: UIApplication.shared.statusBarOrientation.rawValue)!
             takePhoto(self.imageOutput, videoOrientation: orientation, cropSize: self.frame.size) { image in
                 DispatchQueue.main.async() {
                     self.isUserInteractionEnabled = true
@@ -308,7 +308,7 @@ extension UIImage {
         default:
             break
         }
-        
+        print("宽：\(self.size.width) 高：\(self.size.height)")
         let ctx = CGContext(data: nil, width: Int(self.size.width), height: Int(self.size.height), bitsPerComponent: self.cgImage!.bitsPerComponent, bytesPerRow: 0, space: self.cgImage!.colorSpace!, bitmapInfo: self.cgImage!.bitmapInfo.rawValue)
         ctx?.concatenate(transform)
         

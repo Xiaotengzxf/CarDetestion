@@ -273,7 +273,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
             let name = pathName.characters.count > 0 ? pathName : "\(Date().timeIntervalSince1970)"
             if pathName != name {
-                orderKeys.append(name)
+                orderKeys.insert(name, at: 0)
             }
             path = path! + "/\(name)"
             do{
@@ -296,7 +296,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     let i = orderKeys.index(of: pathName) ?? 0
                     orders.replaceSubrange(i..<(i+1), with: [["price" : price , "remark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]])
                 }else{
-                    orders.append(["price" : price , "remark" : remark , "images" : str , "addtime" : formatter.string(from: Date())])
+                    orders.insert(["price" : price , "remark" : remark , "images" : str , "addtime" : formatter.string(from: Date())], at: 0)
                 }
                 UserDefaults.standard.set(orders, forKey: "orders")
                 UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
@@ -349,33 +349,58 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             Toast(text : "请输入预售价格").show()
             return
         }
-        let hud = self.showHUD(text: "创建中...")
-        NetworkManager.sharedInstall.request(url: bill, params: nil) {[weak self] (json, error) in
-            self?.hideHUD(hud: hud)
-            if error != nil {
-                Toast(text: "网络故障，请检查网络").show()
-            }else{
-                if let data = json {
-                    self?.orderNo = data.stringValue
-                    for (key , value) in self!.images {
-                        upLoadCount = self!.images.count
-                        let section = key / 1000
-                        let row = (key % 1000) % 100
-                        let right = key % 1000 >= 100
-                        self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+        if source == 1 {
+            orderNo = json?["carBillId"].string ?? ""
+            if orderNo.characters.count > 0 {
+                for (key , value) in self.images {
+                    upLoadCount = self.images.count
+                    let section = key / 1000
+                    let row = (key % 1000) % 100
+                    let right = key % 1000 >= 100
+                    self.uploadImage(imageClass: self.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+                }
+                NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self.orderNo , "price" : self.price , "remark" : self.remark])
+                if self.pathName.characters.count > 0 {
+                    var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+                    var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
+                    let i = orderKeys.index(of: self.pathName) ?? 0
+                    orderKeys.remove(at: i)
+                    orders.remove(at: i)
+                    UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
+                    UserDefaults.standard.set(orders, forKey: "orders")
+                    UserDefaults.standard.synchronize()
+                }
+                self.navigationController?.popViewController(animated: true)
+            }
+        }else{
+            let hud = self.showHUD(text: "创建中...")
+            NetworkManager.sharedInstall.request(url: bill, params: nil) {[weak self] (json, error) in
+                self?.hideHUD(hud: hud)
+                if error != nil {
+                    Toast(text: "网络故障，请检查网络").show()
+                }else{
+                    if let data = json {
+                        self?.orderNo = data.stringValue
+                        for (key , value) in self!.images {
+                            upLoadCount = self!.images.count
+                            let section = key / 1000
+                            let row = (key % 1000) % 100
+                            let right = key % 1000 >= 100
+                            self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+                        }
+                        NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark])
+                        if self!.pathName.characters.count > 0 {
+                            var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+                            var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
+                            let i = orderKeys.index(of: self!.pathName) ?? 0
+                            orderKeys.remove(at: i)
+                            orders.remove(at: i)
+                            UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
+                            UserDefaults.standard.set(orders, forKey: "orders")
+                            UserDefaults.standard.synchronize()
+                        }
+                        self?.navigationController?.popViewController(animated: true)
                     }
-                    NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark])
-                    if self!.pathName.characters.count > 0 {
-                        var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
-                        var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
-                        let i = orderKeys.index(of: self!.pathName) ?? 0
-                        orderKeys.remove(at: i)
-                        orders.remove(at: i)
-                        UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
-                        UserDefaults.standard.set(orders, forKey: "orders")
-                        UserDefaults.standard.synchronize()
-                    }
-                    self?.navigationController?.popViewController(animated: true)
                 }
             }
         }

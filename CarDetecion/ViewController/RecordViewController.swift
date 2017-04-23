@@ -192,6 +192,7 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             }
             if let label = cell.contentView.viewWithTag(4) as? UILabel {
                 label.text = "添加时间：\(data[indexPath.row]["addtime"].string ?? "") "
+                label.textColor = UIColor.rgbColorFromHex(rgb: 0xF86765)
             }
             if let label = cell.contentView.viewWithTag(5) as? UILabel {
                 label.text = ""
@@ -372,6 +373,9 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                 UserDefaults.standard.set(orders, forKey: "orders")
                 UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
                 UserDefaults.standard.synchronize()
+            }))
+            alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
+                
             }))
             self.present(alert, animated: true, completion: { 
                 
