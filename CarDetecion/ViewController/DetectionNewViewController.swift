@@ -50,6 +50,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: nil, action: nil)
         
         if source == 1 {
+            let p = json?["preSalePrice"].int ?? 0
+            price = p > 0 ? "\(p)" : ""
+            remark = json?["mark"].string ?? ""
             loadUnpassData()
             if let label = tableView.tableHeaderView?.viewWithTag(10000) as? UILabel {
                 do {
@@ -161,7 +164,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }else{
                 browser.title = "添加图片"
             }
-            
             browser.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "delete"), style: .plain, target: self, action: #selector(DetectionNewViewController.pop))
             self.navigationController?.pushViewController(browser, animated: true)
         }else{
@@ -339,12 +341,12 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             showAlert(title: nil, message: "您还有内容尚未录入，是否返回继续编辑？" , button:"继续编辑")
             return
         }
-        if price.characters.count == 0 {
-            Toast(text : "请输入预售价格").show()
+        if source == 1 && images.count == 0 {
+            showAlert(title: nil, message: "您没有做任何图片修改，无法提交！" , button:"确定")
             return
         }
-        if remark.characters.count == 0 {
-            Toast(text : "请输入备注").show()
+        if price.characters.count == 0 {
+            Toast(text : "请输入预售价格").show()
             return
         }
         let hud = self.showHUD(text: "创建中...")
@@ -430,17 +432,21 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 检查公司必传的照片
     func checkoutImage(companyNo : Int) -> Bool {
-        if images.count > 0 {
-            if companyNo == 0 {
-                let keys = Set<Int>(images.keys)
-                if Set(companyOtherNeed).isSubset(of: keys) {
-                    return true
-                }else{
-                    return false
+        if source != 1 {
+            if images.count > 0 {
+                if companyNo == 0 {
+                    let keys = Set<Int>(images.keys)
+                    if Set(companyOtherNeed).isSubset(of: keys) {
+                        return true
+                    }else{
+                        return false
+                    }
                 }
             }
+            return false
+        }else{
+            return true
         }
-        return false
     }
     
     // MARK: - UITableView DataSource
@@ -530,11 +536,19 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             cell.vCamera2.layer.borderWidth = 0.5
             if source == 1 {
                 var bTem = false
-                for  json in arrImageInfo {
-                    if json["imageClass"].string == sectionTitles[indexPath.section] {
-                        if json["imageSeqNum"].intValue == indexPath.row * 2 {
-                            cell.iv1.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
-                            bTem = true
+                if images.count > 0 {
+                    if let data = images[indexPath.section * 1000 + indexPath.row] {
+                        cell.iv1.image = UIImage(data: data)
+                        bTem = true
+                    }
+                }
+                if !bTem {
+                    for  json in arrImageInfo {
+                        if json["imageClass"].string == sectionTitles[indexPath.section] {
+                            if json["imageSeqNum"].intValue == indexPath.row * 2 {
+                                cell.iv1.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
+                                bTem = true
+                            }
                         }
                     }
                 }
@@ -581,11 +595,19 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }
             if source == 1 {
                 var bTem = false
-                for  json in arrImageInfo {
-                    if json["imageClass"].string == sectionTitles[indexPath.section] {
-                        if json["imageSeqNum"].intValue == indexPath.row * 2 + 1 {
-                            cell.iv2.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
-                            bTem = true
+                if images.count > 0 {
+                    if let data = images[indexPath.section * 1000 + indexPath.row + 100] {
+                        cell.iv2.image = UIImage(data: data)
+                        bTem = true
+                    }
+                }
+                if !bTem {
+                    for  json in arrImageInfo {
+                        if json["imageClass"].string == sectionTitles[indexPath.section] {
+                            if json["imageSeqNum"].intValue == indexPath.row * 2 + 1 {
+                                cell.iv2.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
+                                bTem = true
+                            }
                         }
                     }
                 }
@@ -637,7 +659,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             if source == 1 {
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 cell.tfPrice.text = "\(json?["preSalePrice"].int ?? 0)"
-                cell.tfPrice.isUserInteractionEnabled = false
             }else if price.characters.count == 0 && bSubmit {
                 cell.contentView.layer.borderColor = UIColor.red.cgColor
             }else{
@@ -650,7 +671,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             if source == 1 {
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                 cell.tvMark.text = json?["mark"].string
-                cell.tvMark.isUserInteractionEnabled = false
             }else if remark.characters.count == 0 && bSubmit {
                 cell.contentView.layer.borderColor = UIColor.red.cgColor
             }else{

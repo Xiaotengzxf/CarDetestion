@@ -27,7 +27,7 @@ class MineTableViewController: UITableViewController {
         }
         
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: version, style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "V\(version)", style: .plain, target: nil, action: nil)
         
     }
     

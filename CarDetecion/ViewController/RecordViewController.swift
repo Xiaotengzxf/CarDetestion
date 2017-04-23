@@ -197,7 +197,20 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                 label.text = ""
             }
             if let imageView = cell.contentView.viewWithTag(2) as? UIImageView {
-                imageView.image = UIImage(named: "defult_image")
+                let json = data[indexPath.row]
+                var orderKeys : [String] = []
+                if let keys = UserDefaults.standard.object(forKey: "orderKeys") as? [String] {
+                    orderKeys += keys
+                }
+                if let urls = json["images"].string , urls.contains("3000") {
+                    var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+                    path = path! + "/\(orderKeys[indexPath.row])"
+                    if let image = UIImage(contentsOfFile: path! + "/3000.jpg") {
+                        imageView.image = image
+                    }
+                }else{
+                    imageView.image = UIImage(named: "defult_image")
+                }
             }
         }else{
             if let label = cell.contentView.viewWithTag(3) as? UILabel {

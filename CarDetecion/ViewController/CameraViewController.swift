@@ -640,12 +640,18 @@ public class CameraViewController: UIViewController {
         
         if connection.isEnabled {
             toggleButtons(enabled: false)
-            cameraView.capturePhoto { image in
+            cameraView.capturePhoto {[weak self] image in
                 guard let image = image else {
-                    self.toggleButtons(enabled: true)
+                    self?.toggleButtons(enabled: true)
                     return
                 }
-                self.saveImage(image: image)
+                if image.imageOrientation != .up {
+                    self?.cameraView.isUserInteractionEnabled = false
+                    self?.toggleButtons(enabled: true)
+                    Toast(text:"请将手机横屏，再进行拍摄！").show()
+                    return
+                }
+                self?.saveImage(image: image)
             }
         }
     }
@@ -680,21 +686,6 @@ public class CameraViewController: UIViewController {
             nextButton.setTitle("取消", for: .normal)
             cameraButton.isHidden = false
             imageInfo = (nil , nil)
-            
-            let section = self.nTag / 1000
-            let row = self.nTag % 1000 % 100
-            let bright = self.nTag % 1000 >= 100 ? 1 : 0
-            
-            if self.titles.count > section && self.titles[section].count > (row * 2 + bright) + 1 {
-                let array = Array(self.companyNeed)
-                if array.contains(self.nTag) && array.last! != self.nTag {
-                    self.nextButton.setTitle("拍下一张", for: .normal)
-                }else{
-                    self.nextButton.setTitle("完成", for: .normal)
-                }
-            }else{
-                self.nextButton.setTitle("完成", for: .normal)
-            }
             
         }else{
             
