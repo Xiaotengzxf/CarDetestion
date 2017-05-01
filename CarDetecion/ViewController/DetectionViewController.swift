@@ -46,6 +46,10 @@ class DetectionViewController: UIViewController {
         
         vDetection.addGestureRecognizer(tap)
         
+        let tapB = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.handleGestureRecognizer(recognizer:)))
+        
+        vPreDetection.addGestureRecognizer(tapB)
+        
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.tap(recognizer:)))
         tap1.numberOfTapsRequired = 1
         vPass.addGestureRecognizer(tap1)
@@ -146,6 +150,18 @@ class DetectionViewController: UIViewController {
             }
             
             
+        }else if recognizer.view == vPreDetection {
+            let tabPage = TabPageViewController.create()
+            let preDetection = storyboard?.instantiateViewController(withIdentifier: "predetection") as! PreDetectionTVController
+            preDetection.tableView.contentInset = UIEdgeInsetsMake(108, 0, 0, 0)
+            tabPage.tabItems = [(preDetection, "预评估"), (preDetection, "预评估状态")]
+            var option = TabPageOption()
+            option.tabWidth = view.frame.width / CGFloat(tabPage.tabItems.count)
+            option.tabHeight = 44
+            tabPage.option = option
+            tabPage.title = "预评估"
+            tabPage.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(tabPage, animated: true)
         }
     }
     

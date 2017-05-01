@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		893CDB2A1EB6D10E00AEB5D7 /* TabCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */; };
+		893CDB2B1EB6D10E00AEB5D7 /* TabPageOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB241EB6D10E00AEB5D7 /* TabPageOption.swift */; };
+		893CDB2C1EB6D10E00AEB5D7 /* TabPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB251EB6D10E00AEB5D7 /* TabPageViewController.swift */; };
+		893CDB2D1EB6D10E00AEB5D7 /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB261EB6D10E00AEB5D7 /* TabView.swift */; };
+		893CDB2E1EB6D10E00AEB5D7 /* TabCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 893CDB271EB6D10E00AEB5D7 /* TabCollectionCell.xib */; };
+		893CDB2F1EB6D10E00AEB5D7 /* TabPageViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 893CDB281EB6D10E00AEB5D7 /* TabPageViewController.storyboard */; };
+		893CDB301EB6D10E00AEB5D7 /* TabView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 893CDB291EB6D10E00AEB5D7 /* TabView.xib */; };
+		893CDB321EB6D38100AEB5D7 /* PreDetectionTVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB311EB6D38100AEB5D7 /* PreDetectionTVController.swift */; };
+		893CDB341EB6D7C600AEB5D7 /* PreDetectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB331EB6D7C600AEB5D7 /* PreDetectionCell.swift */; };
 		893F5F6B1E76EE3100834FA1 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893F5F6A1E76EE3100834FA1 /* NetworkManager.swift */; };
 		894B4BF21E6EDCE600FE9D90 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */; };
 		894E4F131E95149100D9BF55 /* DefaultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894E4F121E95149100D9BF55 /* DefaultViewController.swift */; };
@@ -85,6 +94,15 @@
 		1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CarDetecion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		559B80C1EF4266A3585E999D /* Pods-CarDetecion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarDetecion.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CarDetecion/Pods-CarDetecion.debug.xcconfig"; sourceTree = "<group>"; };
 		7FA2B127C77D69B2B4084750 /* Pods-CarDetecion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarDetecion.release.xcconfig"; path = "Pods/Target Support Files/Pods-CarDetecion/Pods-CarDetecion.release.xcconfig"; sourceTree = "<group>"; };
+		893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabCollectionCell.swift; sourceTree = "<group>"; };
+		893CDB241EB6D10E00AEB5D7 /* TabPageOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageOption.swift; sourceTree = "<group>"; };
+		893CDB251EB6D10E00AEB5D7 /* TabPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageViewController.swift; sourceTree = "<group>"; };
+		893CDB261EB6D10E00AEB5D7 /* TabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
+		893CDB271EB6D10E00AEB5D7 /* TabCollectionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TabCollectionCell.xib; sourceTree = "<group>"; };
+		893CDB281EB6D10E00AEB5D7 /* TabPageViewController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = TabPageViewController.storyboard; sourceTree = "<group>"; };
+		893CDB291EB6D10E00AEB5D7 /* TabView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TabView.xib; sourceTree = "<group>"; };
+		893CDB311EB6D38100AEB5D7 /* PreDetectionTVController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreDetectionTVController.swift; sourceTree = "<group>"; };
+		893CDB331EB6D7C600AEB5D7 /* PreDetectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreDetectionCell.swift; sourceTree = "<group>"; };
 		893F5F6A1E76EE3100834FA1 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		894B4BF11E6EDCE600FE9D90 /* TestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		894E4F121E95149100D9BF55 /* DefaultViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultViewController.swift; sourceTree = "<group>"; };
@@ -182,6 +200,29 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		893CDB211EB5F2FC00AEB5D7 /* PreDetection */ = {
+			isa = PBXGroup;
+			children = (
+				893CDB311EB6D38100AEB5D7 /* PreDetectionTVController.swift */,
+				893CDB331EB6D7C600AEB5D7 /* PreDetectionCell.swift */,
+			);
+			name = PreDetection;
+			sourceTree = "<group>";
+		};
+		893CDB221EB6D0F200AEB5D7 /* TabPage */ = {
+			isa = PBXGroup;
+			children = (
+				893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */,
+				893CDB241EB6D10E00AEB5D7 /* TabPageOption.swift */,
+				893CDB251EB6D10E00AEB5D7 /* TabPageViewController.swift */,
+				893CDB261EB6D10E00AEB5D7 /* TabView.swift */,
+				893CDB271EB6D10E00AEB5D7 /* TabCollectionCell.xib */,
+				893CDB281EB6D10E00AEB5D7 /* TabPageViewController.storyboard */,
+				893CDB291EB6D10E00AEB5D7 /* TabView.xib */,
+			);
+			name = TabPage;
+			sourceTree = "<group>";
+		};
 		895307B61E6D18D9007AF459 = {
 			isa = PBXGroup;
 			children = (
@@ -207,6 +248,7 @@
 		895307C11E6D18D9007AF459 /* CarDetecion */ = {
 			isa = PBXGroup;
 			children = (
+				893CDB221EB6D0F200AEB5D7 /* TabPage */,
 				8985C7A01E72E7800075B6F8 /* Kit */,
 				895307F31E6D7A67007AF459 /* Utilities */,
 				895307FE1E6D7A67007AF459 /* ViewController */,
@@ -261,6 +303,7 @@
 		895307FE1E6D7A67007AF459 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
+				893CDB211EB5F2FC00AEB5D7 /* PreDetection */,
 				89B3A5E11EAB146C00949757 /* Message */,
 				89965D731EA1A51A006560BA /* Main */,
 				89965D6E1EA118DC006560BA /* Mine */,
@@ -483,8 +526,11 @@
 			files = (
 				895307D01E6D18D9007AF459 /* LaunchScreen.storyboard in Resources */,
 				8953081F1E6D7CEC007AF459 /* CameraView.strings in Resources */,
+				893CDB301EB6D10E00AEB5D7 /* TabView.xib in Resources */,
 				895307C81E6D18D9007AF459 /* Main.storyboard in Resources */,
 				89B945701E8F37F1009F0B58 /* logo.jpg in Resources */,
+				893CDB2F1EB6D10E00AEB5D7 /* TabPageViewController.storyboard in Resources */,
+				893CDB2E1EB6D10E00AEB5D7 /* TabCollectionCell.xib in Resources */,
 				898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */,
 				896AFA751E8BC283008DE6F5 /* ReUseHeaderFooterView.xib in Resources */,
 			);
@@ -564,11 +610,13 @@
 				8953080C1E6D7A67007AF459 /* PhotoLibraryAuthorizer.swift in Sources */,
 				894B4BF21E6EDCE600FE9D90 /* TestViewController.swift in Sources */,
 				89B3A5E31EAB148100949757 /* MessageListTableViewController.swift in Sources */,
+				893CDB321EB6D38100AEB5D7 /* PreDetectionTVController.swift in Sources */,
 				896AFA7B1E8D10F2008DE6F5 /* UINavigationBarExtension.swift in Sources */,
 				8953080D1E6D7A67007AF459 /* SingleImageFetcher.swift in Sources */,
 				89965D771EA1B285006560BA /* RecordDetailViewController.swift in Sources */,
 				896AFA771E8C9213008DE6F5 /* DetectionTableViewCell.swift in Sources */,
 				895308181E6D7A67007AF459 /* CameraView.swift in Sources */,
+				893CDB2A1EB6D10E00AEB5D7 /* TabCollectionCell.swift in Sources */,
 				896AFA731E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift in Sources */,
 				894E4F131E95149100D9BF55 /* DefaultViewController.swift in Sources */,
 				8978CAE71E928EF300BBC926 /* Detection1TableViewCell.swift in Sources */,
@@ -576,7 +624,9 @@
 				898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */,
 				8985C7A81E72FCE80075B6F8 /* RecordViewController.swift in Sources */,
 				895308191E6D7A67007AF459 /* CropOverlay.swift in Sources */,
+				893CDB2C1EB6D10E00AEB5D7 /* TabPageViewController.swift in Sources */,
 				8985C79F1E72E63A0075B6F8 /* MineTableViewController.swift in Sources */,
+				893CDB2D1EB6D10E00AEB5D7 /* TabView.swift in Sources */,
 				8953080A1E6D7A67007AF459 /* CameraShot.swift in Sources */,
 				8985C7A41E72ED850075B6F8 /* Extension.swift in Sources */,
 				89B3A5E01EAADC7000949757 /* InfoTableViewController.swift in Sources */,
@@ -585,6 +635,7 @@
 				896AFA701E8B694E008DE6F5 /* LoginViewController.swift in Sources */,
 				895308171E6D7A67007AF459 /* PhotoLibraryViewController.swift in Sources */,
 				8985C7A61E72EECA0075B6F8 /* DetectionViewController.swift in Sources */,
+				893CDB2B1EB6D10E00AEB5D7 /* TabPageOption.swift in Sources */,
 				895308121E6D7A67007AF459 /* VolumeControl.swift in Sources */,
 				8978CAE91E928F0400BBC926 /* Detection2TableViewCell.swift in Sources */,
 				893F5F6B1E76EE3100834FA1 /* NetworkManager.swift in Sources */,
@@ -597,6 +648,7 @@
 				89965D701EA1196B006560BA /* MNavigationController.swift in Sources */,
 				89CB16901EABA54A00768787 /* RecordTableViewCell.swift in Sources */,
 				8953080B1E6D7A67007AF459 /* ImageFetcher.swift in Sources */,
+				893CDB341EB6D7C600AEB5D7 /* PreDetectionCell.swift in Sources */,
 				896232A51E8E48DF00AB4B1E /* TransitionAnimator.swift in Sources */,
 				89965D751EA1A542006560BA /* INavigationController.swift in Sources */,
 				895308131E6D7A67007AF459 /* CameraViewController.swift in Sources */,
