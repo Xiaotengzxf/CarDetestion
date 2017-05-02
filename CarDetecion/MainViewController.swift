@@ -15,6 +15,7 @@ class MainViewController: UIViewController , UITableViewDataSource , UITableView
     @IBOutlet weak var lblTotalCount: UILabel!
     
     let applyCount = "external/app/getApplyCountInfo.html"
+    let latest = "external/pageelement/latestList.html"
 
     override func viewDidLoad() {
         super.viewDidLoad()

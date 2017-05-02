@@ -62,6 +62,8 @@
 		8985C7A61E72EECA0075B6F8 /* DetectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A51E72EECA0075B6F8 /* DetectionViewController.swift */; };
 		8985C7A81E72FCE80075B6F8 /* RecordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A71E72FCE80075B6F8 /* RecordViewController.swift */; };
 		8985C7D91E7309D60075B6F8 /* DetectionNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */; };
+		8985F3791EB8B18A0028E70E /* CityTVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985F3781EB8B1890028E70E /* CityTVController.swift */; };
+		8985F37B1EB8DC9E0028E70E /* CarModelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */; };
 		898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 898916E41E7E8EBE00BE6848 /* Assets.xcassets */; };
 		898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */; };
 		89965D701EA1196B006560BA /* MNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D6F1EA1196B006560BA /* MNavigationController.swift */; };
@@ -157,6 +159,8 @@
 		8985C7A51E72EECA0075B6F8 /* DetectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionViewController.swift; sourceTree = "<group>"; };
 		8985C7A71E72FCE80075B6F8 /* RecordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordViewController.swift; sourceTree = "<group>"; };
 		8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionNewViewController.swift; sourceTree = "<group>"; };
+		8985F3781EB8B1890028E70E /* CityTVController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityTVController.swift; sourceTree = "<group>"; };
+		8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarModelCell.swift; sourceTree = "<group>"; };
 		898916E41E7E8EBE00BE6848 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		89965D6F1EA1196B006560BA /* MNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNavigationController.swift; sourceTree = "<group>"; };
@@ -211,6 +215,8 @@
 				893CDB331EB6D7C600AEB5D7 /* PreDetectionCell.swift */,
 				8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */,
 				8920A31E1EB8964E005DC01B /* CarModelTVController.swift */,
+				8985F3781EB8B1890028E70E /* CityTVController.swift */,
+				8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */,
 			);
 			name = PreDetection;
 			sourceTree = "<group>";
@@ -639,6 +645,7 @@
 				8985C7A41E72ED850075B6F8 /* Extension.swift in Sources */,
 				89B3A5E01EAADC7000949757 /* InfoTableViewController.swift in Sources */,
 				895307C51E6D18D9007AF459 /* MainViewController.swift in Sources */,
+				8985F3791EB8B18A0028E70E /* CityTVController.swift in Sources */,
 				8953081A1E6D7A67007AF459 /* ImageCell.swift in Sources */,
 				896AFA701E8B694E008DE6F5 /* LoginViewController.swift in Sources */,
 				895308171E6D7A67007AF459 /* PhotoLibraryViewController.swift in Sources */,
@@ -646,6 +653,7 @@
 				893CDB2B1EB6D10E00AEB5D7 /* TabPageOption.swift in Sources */,
 				895308121E6D7A67007AF459 /* VolumeControl.swift in Sources */,
 				8978CAE91E928F0400BBC926 /* Detection2TableViewCell.swift in Sources */,
+				8985F37B1EB8DC9E0028E70E /* CarModelCell.swift in Sources */,
 				893F5F6B1E76EE3100834FA1 /* NetworkManager.swift in Sources */,
 				895308111E6D7A67007AF459 /* Utilities.swift in Sources */,
 				8953080F1E6D7A67007AF459 /* UIButtonExtensions.swift in Sources */,

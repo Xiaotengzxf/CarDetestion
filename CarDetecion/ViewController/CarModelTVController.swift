@@ -7,15 +7,29 @@
 //
 
 import UIKit
+import SwiftyJSON
+import DZNEmptyDataSet
 
-class CarModelTVController: UITableViewController {
+class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNEmptyDataSetDelegate{
     
-    let carType = "external/app/getCarTypeCommonList.html"
+    let carType = "external/app/getCarBrandCommonList.html"
+    let carSet = "external/app/getCarSetCommonList.html"
+    let carType2 = "external/app/getCarTypeCommonList.html"
+    var arrCarBrand : [JSON] = []
+    var nShowEmpty = 0 // 1 无数据 2 加载中 3 无网络
+    var arrKey : [String] = []
+    var carBrandId = ""
+    var carSetId = ""
+    var carSetName = ""
+    var brandName = ""
+    var car1 : CarModelTVController?
+    var car2 : CarModelTVController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         getCarTypeList()
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
 
     override func didReceiveMemoryWarning() {
@@ -24,73 +38,195 @@ class CarModelTVController: UITableViewController {
     }
     
     func getCarTypeList() {
-        NetworkManager.sharedInstall.request(url: carType, params: nil) {[weak self](json, error) in
+        var params : [String : String]?
+        if carBrandId.characters.count > 0 {
+            params = ["carBrandId" : carBrandId]
+        }
+        if carSetId.characters.count > 0 {
+            params?["carSetId"] = carSetId
+        }
+        var url = carType
+        if carSetId.characters.count > 0 {
+            url = carType2
+        }else if carBrandId.characters.count > 0 {
+            url = carSet
+        }
+        NetworkManager.sharedInstall.request(url: url, params: params) {[weak self](json, error) in
             if error != nil {
                 print(error!.localizedDescription)
+                self?.nShowEmpty = 3
+                self?.tableView.reloadData()
             }else{
                 if let data = json , data["total"].intValue > 0 {
-                    
+                    if let arr = data["data"].array {
+                        self?.arrCarBrand.removeAll()
+                        self?.arrCarBrand += arr
+                        for j in arr {
+                            if self!.carSetId.characters.count > 0 {
+                                if self!.arrKey.count == 0 {
+                                    self?.arrKey.append("车型")
+                                }
+                            }else if self!.carBrandId.characters.count > 0 {
+                                if let carSetFirstName = j["carSetFirstName"].string {
+                                    if !self!.arrKey.contains(carSetFirstName) {
+                                        self!.arrKey.append(carSetFirstName)
+                                    }
+                                }
+                            }else{
+                                if let carSetFirstName = j["brandFirstName"].string {
+                                    if !self!.arrKey.contains(carSetFirstName) {
+                                        self!.arrKey.append(carSetFirstName)
+                                    }
+                                }
+                            }
+                        }
+                        self?.tableView.reloadData()
+                    }else{
+                        if self!.arrCarBrand.count == 0 {
+                            self?.nShowEmpty = 1
+                            self?.tableView.reloadData()
+                        }
+                    }
+                }else{
+                    if self!.arrCarBrand.count == 0 {
+                        self?.nShowEmpty = 1
+                        self?.tableView.reloadData()
+                    }
                 }
             }
+        }
+    }
+    
+    func addSelf() {
+        if carSetId.characters.count > 0 {
+            car2 = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelTVController
+            car2?.carSetId = carSetId
+            car2?.carBrandId = carBrandId
+            carSetId = ""
+            car2?.brandName = brandName
+            car2?.carSetName = carSetName
+            self.addChildViewController(car2!)
+            car2?.view.frame = CGRect(x: WIDTH, y: 0, width: WIDTH, height: HEIGHT)
+            self.view.addSubview(car2!.view)
+            UIView.animate(withDuration: 0.3, animations: {
+                [weak self] in
+                self?.car2?.view.transform = CGAffineTransform(translationX: -WIDTH * 2 / 3, y: 0)
+                }, completion: { (finished) in
+                    
+            })
+        }else{
+            car1 = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelTVController
+            car1?.carSetId = carSetId
+            car1?.carBrandId = carBrandId
+            carBrandId = ""
+            car1?.brandName = brandName
+            car1?.carSetName = carSetName
+            self.addChildViewController(car1!)
+            car1?.view.frame = CGRect(x: WIDTH, y: 0, width: WIDTH, height: HEIGHT)
+            self.view.addSubview(car1!.view)
+            UIView.animate(withDuration: 0.3, animations: {
+                [weak self] in
+                self?.car1?.view.transform = CGAffineTransform(translationX: -WIDTH * 2 / 3, y: 0)
+            }, completion: { (finished) in
+                
+            })
         }
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return arrKey.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        if carSetId.characters.count > 0 {
+            return self.arrCarBrand.count
+        }else if carBrandId.characters.count > 0 {
+            return arrCarBrand.filter{$0["carSetFirstName"].stringValue == arrKey[section]}.count
+        }else{
+            return arrCarBrand.filter{$0["brandFirstName"].stringValue == arrKey[section]}.count
+        }
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CarModelCell
+        if  carSetId.characters.count > 0 {
+            cell.lblCar?.text = arrCarBrand[indexPath.row]["carTypeName"].string
+            cell.lcRight.constant = WIDTH / 3 - 20
+        }else if carBrandId.characters.count > 0 {
+            let arr = arrCarBrand.filter{$0["carSetFirstName"].stringValue == arrKey[indexPath.section]}
+            let json = arr[indexPath.row]
+            cell.lblCar?.text = json["carSetName"].string
+        }else{
+            let arr = arrCarBrand.filter{$0["brandFirstName"].stringValue == arrKey[indexPath.section]}
+            let json = arr[indexPath.row]
+            //cell.imageView?.image = UIImage(named: "ad_empty")
+            cell.lblCar?.text = json["brandName"].string
+            //cell.imageView?.bounds = CGRect(x: 0, y: 0, width: 40, height: 40)
+        }
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return arrKey[section]
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        if carSetId.characters.count > 0 {
+            
+            let json = arrCarBrand[indexPath.row]
+            NotificationCenter.default.post(name: Notification.Name("preDetection"), object: 1, userInfo: ["json" : json.dictionaryObject!, "brandName" : brandName , "carSetName" : carSetName])
+            self.navigationController?.popViewController(animated: true)
+            
+        }else {
+            if carBrandId.characters.count == 0 {
+                if car1 != nil {
+                    UIView.animate(withDuration: 0.3, animations: {
+                        [weak self] in
+                        self?.car1?.view.transform = CGAffineTransform(translationX: WIDTH * 2 / 3, y: 0)
+                        }, completion: {[weak self] (finished) in
+                            self?.car1?.removeFromParentViewController()
+                            self?.car1?.view.removeFromSuperview()
+                            self?.car1 = nil
+                            self?.carBrandId = ""
+                    })
+                }else{
+                    let arr = arrCarBrand.filter{$0["brandFirstName"].stringValue == arrKey[indexPath.section]}
+                    let json = arr[indexPath.row]
+                    carBrandId = json["id"].stringValue
+                    brandName = json["brandName"].stringValue
+                    addSelf()
+                }
+                
+            }else{
+                if car2 != nil {
+                    UIView.animate(withDuration: 0.3, animations: {
+                        [weak self] in
+                        self?.car2?.view.transform = CGAffineTransform(translationX: WIDTH * 2 / 3, y: 0)
+                        }, completion: {[weak self] (finished) in
+                            self?.car2?.removeFromParentViewController()
+                            self?.car2?.view.removeFromSuperview()
+                            self?.car2 = nil
+                            self?.carSetId = ""
+                    })
+                }else{
+                    let arr = arrCarBrand.filter{$0["carSetFirstName"].stringValue == arrKey[indexPath.section]}
+                    let json = arr[indexPath.row]
+                    carSetId = json["id"].stringValue
+                    carSetName = json["carSetName"].stringValue
+                    addSelf()
+                }
+            }
+            
+        }
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
 
     /*
     // MARK: - Navigation
@@ -101,5 +237,40 @@ class CarModelTVController: UITableViewController {
         // Pass the selected object to the new view controller.
     }
     */
+    
+    // MARK: - 空数据
+    func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
+        return UIColor.white
+    }
+    
+    func image(forEmptyDataSet scrollView: UIScrollView!) -> UIImage! {
+        return UIImage(named: "ad_empty")
+    }
+    
+    func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
+        var message = ""
+        if nShowEmpty == 1 {
+            message = "空空如也，啥子都没有噢！"
+        }else if nShowEmpty == 2 {
+            message = "加载是件正经事儿，走心加载中..."
+        }else if nShowEmpty == 3 {
+            message = "世界上最遥远的距离就是没有网络..."
+        }
+        let att = NSMutableAttributedString(string: message)
+        att.addAttributes([NSFontAttributeName : UIFont.systemFont(ofSize: 13)], range: NSMakeRange(0, att.length))
+        return att
+    }
+    
+    func emptyDataSet(_ scrollView: UIScrollView!, didTap view: UIView!) {
+        //        if nShowEmpty > 0 {
+        //            nShowEmpty = 0
+        //            tableView.reloadData()
+        //            tableView.mj_header.beginRefreshing()
+        //        }
+    }
+    
+    func emptyDataSetShouldDisplay(_ scrollView: UIScrollView!) -> Bool {
+        return nShowEmpty > 0
+    }
 
 }

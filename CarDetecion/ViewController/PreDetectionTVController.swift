@@ -7,24 +7,113 @@
 //
 
 import UIKit
+import SwiftyJSON
+import DatePickerDialog
+import Toaster
 
 class PreDetectionTVController: UITableViewController {
     
     var arrIcon = ["icon_pinpai", "icon_licheng", "icon_shijian", "icon_licheng", "icon_weizhi"]
     var arrTitle = ["品牌车型", "车颜色", "上牌时间", "行驶里程", "选择城市", "备注输入"]
     var tabPage : TabPageViewController?
+    var carType : JSON?
+    var city : JSON?
+    var strDate = ""
+    let submitPre = "external/app/addPreCarBill.html"
+    var carSetName = ""
+    var brandName = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         tableView.tableFooterView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: 64)
+        NotificationCenter.default.addObserver(self, selector: #selector(PreDetectionTVController.handleNotification(notification:)), name: Notification.Name("preDetection"), object: nil)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    func handleNotification(notification : Notification) {
+        if let tag = notification.object as? Int {
+            if let userInfo = notification.userInfo as? [String : Any] {
+                if tag == 1 {
+                    carType = JSON(userInfo["json"]!)
+                    tableView.reloadData()
+                    carSetName = userInfo["carSetName"] as? String ?? ""
+                    brandName = userInfo["brandName"] as? String ?? ""
+                }else if tag == 2 {
+                    city = JSON(userInfo["json"]!)
+                    tableView.reloadData()
+                }
+            }
+        }
+    }
 
+    @IBAction func doSubmit(_ sender: Any) {
+        self.view.endEditing(true)
+        if carType == nil {
+            Toast(text: "请选择品牌车型").show()
+            return
+        }
+        var cell = tableView.cellForRow(at: IndexPath(row: 1, section: 0)) as! PreDetectionCell
+        let carColor = cell.tfContent.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if carColor == nil || carColor!.characters.count == 0 {
+            Toast(text: "请输入车颜色").show()
+            return
+        }
+        if strDate.characters.count == 0 {
+            Toast(text: "请选择上牌时间").show()
+            return
+        }
+        cell = tableView.cellForRow(at: IndexPath(row: 3, section: 0)) as! PreDetectionCell
+        let gongli = cell.tfContent.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if gongli == nil || gongli!.characters.count == 0 {
+            Toast(text: "请输入公里数").show()
+            return
+        }
+        if city == nil {
+            Toast(text: "请选择上牌城市").show()
+            return
+        }
+        cell = tableView.cellForRow(at: IndexPath(row: 5, section: 0)) as! PreDetectionCell
+        let remark = cell.tvContent.text.trimmingCharacters(in: .whitespacesAndNewlines)
+    
+        let username = UserDefaults.standard.string(forKey: "username")
+        var params = ["createUser" : username!]
+        params["carTypeId"] = carType!["id"].stringValue
+        params["cityId"] = city!["code"].stringValue
+        params["color"] = carColor!
+        let year = strDate.components(separatedBy: "年").first
+        let month = strDate.components(separatedBy: "年").last?.components(separatedBy: "月").first
+        params["regDate"] = "\(year!)年\(Int(month!)!)月"
+        let fomatter = DateFormatter()
+        fomatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        params["createTime"] = fomatter.string(from: Date())
+        params["runNum"] = gongli
+        params["mark"] = remark
+        let hud = self.showHUD(text: "提交中...")
+        NetworkManager.sharedInstall.request(url: submitPre, params: params) {[weak self] (json, error) in
+            self?.hideHUD(hud: hud)
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json , data["success"].boolValue {
+                    Toast(text: "提交成功").show()
+                    self?.tabPage?.navigationController?.popViewController(animated: true)
+                }else{
+                    if let message = json?["message"].string {
+                        Toast(text: message).show()
+                    }
+                }
+            }
+        }
+    }
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -50,7 +139,11 @@ class PreDetectionTVController: UITableViewController {
             cell.tfContent.isHidden = true
             cell.lblContent.isHidden = false
             cell.tvContent.isHidden = true
-            cell.lblContent.text = "请选择品牌车型"
+            if carType != nil {
+                cell.lblContent.text = brandName + carSetName + carType!["carTypeName"].stringValue
+            }else{
+                cell.lblContent.text = "请选择品牌车型"
+            }
             cell.tfContent.rightView = nil
             cell.lcIconWidth.constant = 30
             cell.lcIconHeight.constant = 22
@@ -60,6 +153,7 @@ class PreDetectionTVController: UITableViewController {
             cell.lblContent.isHidden = true
             cell.tvContent.isHidden = true
             cell.tfContent.placeholder = "请输入车颜色"
+            cell.tfContent.keyboardType = .default
             cell.tfContent.rightView = nil
             cell.lcIconWidth.constant = 28
             cell.lcIconHeight.constant = 24
@@ -68,7 +162,11 @@ class PreDetectionTVController: UITableViewController {
             cell.tfContent.isHidden = true
             cell.lblContent.isHidden = false
             cell.tvContent.isHidden = true
-            cell.lblContent.text = "请选择上牌时间"
+            if strDate.characters.count > 0 {
+                cell.lblContent.text = strDate
+            }else{
+                cell.lblContent.text = "请选择上牌时间"
+            }
             cell.tfContent.rightView = nil
             cell.lcIconWidth.constant = 35
             cell.lcIconHeight.constant = 31
@@ -78,10 +176,15 @@ class PreDetectionTVController: UITableViewController {
             cell.lblContent.isHidden = true
             cell.tvContent.isHidden = true
             cell.tfContent.placeholder = "请输入"
-            let label = UILabel()
-            label.text = "公里"
+            cell.tfContent.keyboardType = .numbersAndPunctuation
             if cell.tfContent.rightView == nil {
+                let label = UILabel()
+                label.text = "公里"
+                label.textColor = UIColor.black
+                label.font = UIFont.systemFont(ofSize: 14)
+                label.bounds = CGRect(x: 0, y: 0, width: 30, height: 20)
                 cell.tfContent.rightView = label
+                cell.tfContent.rightViewMode = .always
             }
             cell.lcIconWidth.constant = 28
             cell.lcIconHeight.constant = 24
@@ -90,7 +193,12 @@ class PreDetectionTVController: UITableViewController {
             cell.tfContent.isHidden = true
             cell.lblContent.isHidden = false
             cell.tvContent.isHidden = true
-            cell.lblContent.text = "请选择上牌城市"
+            if city != nil {
+                cell.lblContent.text = city?["cityName"].string
+            }else{
+                cell.lblContent.text = "请选择上牌城市"
+            }
+            
             cell.tfContent.rightView = nil
             cell.lcIconWidth.constant = 30
             cell.lcIconHeight.constant = 37
@@ -118,6 +226,21 @@ class PreDetectionTVController: UITableViewController {
         if indexPath.row == 0 {
             if let controller = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelTVController {
                 tabPage?.navigationController?.pushViewController(controller, animated: true)
+            }
+        }else if indexPath.row == 4 {
+            if let controller = self.storyboard?.instantiateViewController(withIdentifier: "city") as? CityTVController {
+                controller.title = "选择城市"
+                tabPage?.navigationController?.pushViewController(controller, animated: true)
+            }
+        }else if indexPath.row == 2 {
+            DatePickerDialog().show(title: "请选择上牌时间", doneButtonTitle: "确定", cancelButtonTitle: "取消", datePickerMode: .date) {
+                [weak self] (date) -> Void in
+                if date != nil {
+                    let fomatter = DateFormatter()
+                    fomatter.dateFormat = "yyyy年MM月dd日"
+                    self?.strDate = fomatter.string(from: date!)
+                    self?.tableView.reloadData()
+                }
             }
         }
     }

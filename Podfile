@@ -12,5 +12,6 @@ target 'CarDetecion' do
     pod 'SKPhotoBrowser'
     pod 'SDCycleScrollView'
     pod 'DZNEmptyDataSet'
+    pod 'DatePickerDialog'
 end
 

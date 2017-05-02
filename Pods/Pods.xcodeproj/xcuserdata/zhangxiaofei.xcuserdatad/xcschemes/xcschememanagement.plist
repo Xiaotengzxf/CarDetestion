@@ -14,6 +14,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>DatePickerDialog.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>IQKeyboardManagerSwift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -62,7 +67,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>4142336F5FE62E2E7C52919958CC239A</key>
+		<key>184A1650DC0B648BD756068E60BF2C59</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2503890DEC106180418E0FBE8149C0BC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2681A3C2FE3987CD7F66D3FEA8937AF0</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>27A6BA9949271170327A5B8A2ACFEDA2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>32786E7F969D78F9D9541303C3620C86</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -77,27 +102,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>766B757F2B8661D812E5D57343B00FE7</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
 		<key>88E9EC28B8B46C3631E6B242B50F4442</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8DC9F5E7FD9C5835581785637FC2A66C</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>B5B4DD99276C93D8C4666F79B39FF97F</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>C77D124B56498E1E3A1159751EB12C5C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -107,12 +112,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DC3B2529EEB04D5C35AD8BABD8D833B3</key>
+		<key>E14A62900910444707A5504D25EC98DC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E14A62900910444707A5504D25EC98DC</key>
+		<key>EB4D7FC4482E442467C637A8946BBE31</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FD554610C4730B61400C959A438AD1EE</key>
 		<dict>
 			<key>primary</key>
 			<true/>
