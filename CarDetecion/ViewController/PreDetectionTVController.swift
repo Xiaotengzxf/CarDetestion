@@ -12,6 +12,7 @@ class PreDetectionTVController: UITableViewController {
     
     var arrIcon = ["icon_pinpai", "icon_licheng", "icon_shijian", "icon_licheng", "icon_weizhi"]
     var arrTitle = ["品牌车型", "车颜色", "上牌时间", "行驶里程", "选择城市", "备注输入"]
+    var tabPage : TabPageViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,6 +110,15 @@ class PreDetectionTVController: UITableViewController {
             return 100
         }else{
             return 60
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.row == 0 {
+            if let controller = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelTVController {
+                tabPage?.navigationController?.pushViewController(controller, animated: true)
+            }
         }
     }
 

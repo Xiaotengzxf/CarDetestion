@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8920A31D1EB84B1B005DC01B /* PreDetectionListTVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */; };
+		8920A31F1EB8964E005DC01B /* CarModelTVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8920A31E1EB8964E005DC01B /* CarModelTVController.swift */; };
 		893CDB2A1EB6D10E00AEB5D7 /* TabCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */; };
 		893CDB2B1EB6D10E00AEB5D7 /* TabPageOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB241EB6D10E00AEB5D7 /* TabPageOption.swift */; };
 		893CDB2C1EB6D10E00AEB5D7 /* TabPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB251EB6D10E00AEB5D7 /* TabPageViewController.swift */; };
@@ -94,6 +96,8 @@
 		1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CarDetecion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		559B80C1EF4266A3585E999D /* Pods-CarDetecion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarDetecion.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CarDetecion/Pods-CarDetecion.debug.xcconfig"; sourceTree = "<group>"; };
 		7FA2B127C77D69B2B4084750 /* Pods-CarDetecion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CarDetecion.release.xcconfig"; path = "Pods/Target Support Files/Pods-CarDetecion/Pods-CarDetecion.release.xcconfig"; sourceTree = "<group>"; };
+		8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreDetectionListTVController.swift; sourceTree = "<group>"; };
+		8920A31E1EB8964E005DC01B /* CarModelTVController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarModelTVController.swift; sourceTree = "<group>"; };
 		893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabCollectionCell.swift; sourceTree = "<group>"; };
 		893CDB241EB6D10E00AEB5D7 /* TabPageOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageOption.swift; sourceTree = "<group>"; };
 		893CDB251EB6D10E00AEB5D7 /* TabPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageViewController.swift; sourceTree = "<group>"; };
@@ -205,6 +209,8 @@
 			children = (
 				893CDB311EB6D38100AEB5D7 /* PreDetectionTVController.swift */,
 				893CDB331EB6D7C600AEB5D7 /* PreDetectionCell.swift */,
+				8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */,
+				8920A31E1EB8964E005DC01B /* CarModelTVController.swift */,
 			);
 			name = PreDetection;
 			sourceTree = "<group>";
@@ -613,11 +619,13 @@
 				893CDB321EB6D38100AEB5D7 /* PreDetectionTVController.swift in Sources */,
 				896AFA7B1E8D10F2008DE6F5 /* UINavigationBarExtension.swift in Sources */,
 				8953080D1E6D7A67007AF459 /* SingleImageFetcher.swift in Sources */,
+				8920A31D1EB84B1B005DC01B /* PreDetectionListTVController.swift in Sources */,
 				89965D771EA1B285006560BA /* RecordDetailViewController.swift in Sources */,
 				896AFA771E8C9213008DE6F5 /* DetectionTableViewCell.swift in Sources */,
 				895308181E6D7A67007AF459 /* CameraView.swift in Sources */,
 				893CDB2A1EB6D10E00AEB5D7 /* TabCollectionCell.swift in Sources */,
 				896AFA731E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift in Sources */,
+				8920A31F1EB8964E005DC01B /* CarModelTVController.swift in Sources */,
 				894E4F131E95149100D9BF55 /* DefaultViewController.swift in Sources */,
 				8978CAE71E928EF300BBC926 /* Detection1TableViewCell.swift in Sources */,
 				8953080E1E6D7A67007AF459 /* SingleImageSaver.swift in Sources */,

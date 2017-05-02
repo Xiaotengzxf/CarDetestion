@@ -153,8 +153,11 @@ class DetectionViewController: UIViewController {
         }else if recognizer.view == vPreDetection {
             let tabPage = TabPageViewController.create()
             let preDetection = storyboard?.instantiateViewController(withIdentifier: "predetection") as! PreDetectionTVController
+            let preDetectionList = storyboard?.instantiateViewController(withIdentifier: "predetectionlist") as! PreDetectionListTVController
+            preDetection.tabPage = tabPage
             preDetection.tableView.contentInset = UIEdgeInsetsMake(108, 0, 0, 0)
-            tabPage.tabItems = [(preDetection, "预评估"), (preDetection, "预评估状态")]
+            preDetectionList.tableView.contentInset = UIEdgeInsetsMake(108, 0, 0, 0)
+            tabPage.tabItems = [(preDetection, "预评估"), (preDetectionList, "预评估状态")]
             var option = TabPageOption()
             option.tabWidth = view.frame.width / CGFloat(tabPage.tabItems.count)
             option.tabHeight = 44
