@@ -13,5 +13,6 @@ target 'CarDetecion' do
     pod 'SDCycleScrollView'
     pod 'DZNEmptyDataSet'
     pod 'DatePickerDialog'
+    pod 'Bugly'
 end
 

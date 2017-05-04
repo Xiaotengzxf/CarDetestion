@@ -9,6 +9,7 @@
 import UIKit
 import SwiftyJSON
 import DZNEmptyDataSet
+import SDWebImage
 
 class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNEmptyDataSetDelegate{
     
@@ -154,16 +155,26 @@ class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNE
         if  carSetId.characters.count > 0 {
             cell.lblCar?.text = arrCarBrand[indexPath.row]["carTypeName"].string
             cell.lcRight.constant = WIDTH / 3 - 20
+            cell.imageView?.image = nil
+            cell.lcLeft.constant = 16
         }else if carBrandId.characters.count > 0 {
             let arr = arrCarBrand.filter{$0["carSetFirstName"].stringValue == arrKey[indexPath.section]}
             let json = arr[indexPath.row]
             cell.lblCar?.text = json["carSetName"].string
+            cell.imageView?.image = nil
+            cell.lcLeft.constant = 16
         }else{
             let arr = arrCarBrand.filter{$0["brandFirstName"].stringValue == arrKey[indexPath.section]}
             let json = arr[indexPath.row]
-            //cell.imageView?.image = UIImage(named: "ad_empty")
+            let strUrl = "\(NetworkManager.sharedInstall.domain)/external/source/autologos/\(json["brandName"].stringValue).jpg"
+            if let url = URL(string:strUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!) {
+                cell.imageView?.sd_setImage(with: url, placeholderImage: UIImage(named: "ad_empty"))
+            }else{
+                cell.imageView?.image = UIImage(named: "ad_empty")
+            }
+            
             cell.lblCar?.text = json["brandName"].string
-            //cell.imageView?.bounds = CGRect(x: 0, y: 0, width: 40, height: 40)
+            cell.lcLeft.constant = 80
         }
         return cell
     }

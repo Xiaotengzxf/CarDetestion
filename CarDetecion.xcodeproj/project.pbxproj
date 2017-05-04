@@ -163,6 +163,7 @@
 		8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarModelCell.swift; sourceTree = "<group>"; };
 		898916E41E7E8EBE00BE6848 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
+		899601421EBA2DF500BE9436 /* CarDetecion-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CarDetecion-Bridging-Header.h"; sourceTree = "<group>"; };
 		89965D6F1EA1196B006560BA /* MNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNavigationController.swift; sourceTree = "<group>"; };
 		89965D711EA11AEA006560BA /* RNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNavigationController.swift; sourceTree = "<group>"; };
 		89965D741EA1A542006560BA /* INavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INavigationController.swift; sourceTree = "<group>"; };
@@ -273,6 +274,7 @@
 				8953081E1E6D7CEC007AF459 /* CameraView.strings */,
 				895307C91E6D18D9007AF459 /* CarDetecion.xcdatamodeld */,
 				89B9456F1E8F37F1009F0B58 /* logo.jpg */,
+				899601421EBA2DF500BE9436 /* CarDetecion-Bridging-Header.h */,
 			);
 			path = CarDetecion;
 			sourceTree = "<group>";
@@ -497,6 +499,7 @@
 					895307BE1E6D18D9007AF459 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = JHBA8HY2R5;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					895307D51E6D18D9007AF459 = {
@@ -825,6 +828,7 @@
 			baseConfigurationReference = 559B80C1EF4266A3585E999D /* Pods-CarDetecion.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = JHBA8HY2R5;
 				INFOPLIST_FILE = CarDetecion/Info.plist;
@@ -833,6 +837,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cd.CarDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "CarDetecion/CarDetecion-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -842,6 +848,7 @@
 			baseConfigurationReference = 7FA2B127C77D69B2B4084750 /* Pods-CarDetecion.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = JHBA8HY2R5;
 				INFOPLIST_FILE = CarDetecion/Info.plist;
@@ -850,6 +857,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.cd.CarDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "CarDetecion/CarDetecion-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

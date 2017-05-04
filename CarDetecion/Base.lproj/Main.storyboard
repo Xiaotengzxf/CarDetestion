@@ -2030,6 +2030,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="lblCar" destination="wkI-1Y-JK0" id="ZxH-vf-IKN"/>
+                                    <outlet property="lcLeft" destination="tGX-iQ-uBJ" id="IQd-G3-0gV"/>
                                     <outlet property="lcRight" destination="7Ku-gO-7PA" id="ano-kt-Tpl"/>
                                 </connections>
                             </tableViewCell>
