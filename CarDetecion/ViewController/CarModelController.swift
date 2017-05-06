@@ -1,5 +1,5 @@
 //
-//  CarModelTVController.swift
+//  CarModelController.swift
 //  CarDetecion
 //
 //  Created by 张晓飞 on 2017/5/2.
@@ -11,8 +11,9 @@ import SwiftyJSON
 import DZNEmptyDataSet
 import SDWebImage
 
-class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNEmptyDataSetDelegate{
+class CarModelController: UIViewController , UITableViewDataSource , UITableViewDelegate , DZNEmptyDataSetSource , DZNEmptyDataSetDelegate{
     
+    @IBOutlet weak var tableView: UITableView!
     let carType = "external/app/getCarBrandCommonList.html"
     let carSet = "external/app/getCarSetCommonList.html"
     let carType2 = "external/app/getCarTypeCommonList.html"
@@ -23,8 +24,8 @@ class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNE
     var carSetId = ""
     var carSetName = ""
     var brandName = ""
-    var car1 : CarModelTVController?
-    var car2 : CarModelTVController?
+    var car1 : CarModelController?
+    var car2 : CarModelController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,14 +101,14 @@ class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNE
     
     func addSelf() {
         if carSetId.characters.count > 0 {
-            car2 = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelTVController
+            car2 = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelController
             car2?.carSetId = carSetId
             car2?.carBrandId = carBrandId
             carSetId = ""
             car2?.brandName = brandName
             car2?.carSetName = carSetName
             self.addChildViewController(car2!)
-            car2?.view.frame = CGRect(x: WIDTH, y: 0, width: WIDTH, height: HEIGHT)
+            car2?.view.frame = CGRect(x: WIDTH, y: 0, width: WIDTH, height: HEIGHT - 64)
             self.view.addSubview(car2!.view)
             UIView.animate(withDuration: 0.3, animations: {
                 [weak self] in
@@ -116,14 +117,14 @@ class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNE
                     
             })
         }else{
-            car1 = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelTVController
+            car1 = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelController
             car1?.carSetId = carSetId
             car1?.carBrandId = carBrandId
             carBrandId = ""
             car1?.brandName = brandName
             car1?.carSetName = carSetName
             self.addChildViewController(car1!)
-            car1?.view.frame = CGRect(x: WIDTH, y: 0, width: WIDTH, height: HEIGHT)
+            car1?.view.frame = CGRect(x: WIDTH, y: 64, width: WIDTH, height: HEIGHT - 64)
             self.view.addSubview(car1!.view)
             UIView.animate(withDuration: 0.3, animations: {
                 [weak self] in
@@ -136,11 +137,11 @@ class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNE
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return arrKey.count
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if carSetId.characters.count > 0 {
             return self.arrCarBrand.count
         }else if carBrandId.characters.count > 0 {
@@ -150,27 +151,27 @@ class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNE
         }
     }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CarModelCell
         if  carSetId.characters.count > 0 {
             cell.lblCar?.text = arrCarBrand[indexPath.row]["carTypeName"].string
             cell.lcRight.constant = WIDTH / 3 - 20
-            cell.imageView?.image = nil
+            cell.ivIcon?.image = nil
             cell.lcLeft.constant = 16
         }else if carBrandId.characters.count > 0 {
             let arr = arrCarBrand.filter{$0["carSetFirstName"].stringValue == arrKey[indexPath.section]}
             let json = arr[indexPath.row]
             cell.lblCar?.text = json["carSetName"].string
-            cell.imageView?.image = nil
+            cell.ivIcon?.image = nil
             cell.lcLeft.constant = 16
         }else{
             let arr = arrCarBrand.filter{$0["brandFirstName"].stringValue == arrKey[indexPath.section]}
             let json = arr[indexPath.row]
             let strUrl = "\(NetworkManager.sharedInstall.domain)/external/source/autologos/\(json["brandName"].stringValue).jpg"
             if let url = URL(string:strUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!) {
-                cell.imageView?.sd_setImage(with: url, placeholderImage: UIImage(named: "ad_empty"))
+                cell.ivIcon?.sd_setImage(with: url, placeholderImage: UIImage(named: "ad_empty"))
             }else{
-                cell.imageView?.image = UIImage(named: "ad_empty")
+                cell.ivIcon?.image = UIImage(named: "ad_empty")
             }
             
             cell.lblCar?.text = json["brandName"].string
@@ -179,11 +180,11 @@ class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNE
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return arrKey[section]
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         if carSetId.characters.count > 0 {
@@ -235,7 +236,7 @@ class CarModelTVController: UITableViewController , DZNEmptyDataSetSource , DZNE
         }
     }
     
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 44
     }
 

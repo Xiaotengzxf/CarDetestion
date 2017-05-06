@@ -8,22 +8,34 @@
 
 import UIKit
 import SDCycleScrollView
+import SwiftyJSON
 
 class MainViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , SDCycleScrollViewDelegate{
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var lblTotalCount: UILabel!
+    @IBOutlet weak var vNewsMore: UIView!
     
     let applyCount = "external/app/getApplyCountInfo.html"
     let latest = "external/pageelement/latestList.html"
+    let news = "external/news/latestList.html"
+    var banner : SDCycleScrollView?
+    var arrBannerData : [JSON] = []
+    var arrNewsData : [JSON] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         tableView.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: 244 + 120)
+        tableView.rowHeight = UITableViewAutomaticDimension
         addBannerView()
         
         getApplyCount() // 获取总单量
+        
+        loadNewsData()
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(MainViewController.handleTap(recognizer:)))
+        vNewsMore.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,11 +54,10 @@ class MainViewController: UIViewController , UITableViewDataSource , UITableView
     }
 
     func addBannerView() -> Void {
-        let banner = SDCycleScrollView(frame: CGRect(x: 0, y: 120, width: WIDTH, height: 200), delegate: self, placeholderImage: nil)
-        banner?.imageURLStringsGroup = ["https://ss2.baidu.com/-vo3dSag_xI4khGko9WTAnF6hhy/super/whfpf%3D425%2C260%2C50/sign=a4b3d7085dee3d6d2293d48b252b5910/0e2442a7d933c89524cd5cd4d51373f0830200ea.jpg",
-                              "https://ss0.baidu.com/-Po3dSag_xI4khGko9WTAnF6hhy/super/whfpf%3D425%2C260%2C50/sign=a41eb338dd33c895a62bcb3bb72e47c2/5fdf8db1cb134954a2192ccb524e9258d1094a1e.jpg",
-                              "http://c.hiphotos.baidu.com/image/w%3D400/sign=c2318ff84334970a4773112fa5c8d1c0/b7fd5266d0160924c1fae5ccd60735fae7cd340d.jpg"]
+        banner = SDCycleScrollView(frame: CGRect(x: 0, y: 120, width: WIDTH, height: 200), delegate: self, placeholderImage: nil)
+        banner?.delegate = self
         tableView.tableHeaderView?.addSubview(banner!)
+        loadBannerData()
     }
     
     // 获取审核中，未通过及通过的订单总数
@@ -77,15 +88,90 @@ class MainViewController: UIViewController , UITableViewDataSource , UITableView
         }
     }
     
+    func loadBannerData() {
+        //http://119.23.128.214:8080/carWeb/external/pageelement/latestList.html?classType=%E8%BD%AE%E6%92%AD%E5%9B%BE
+        NetworkManager.sharedInstall.request(url: latest, params: ["classType" : "轮播图"]) {[weak self] (json, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json , data["total"].intValue > 0 {
+                    if let array = data["data"].array {
+                        self?.arrBannerData += array
+                        self?.banner?.imageURLStringsGroup = array.map{$0["previewMedia"].stringValue}
+                    }
+                }
+            }
+        }
+    }
+    
+    func loadNewsData() {
+        //	GET /carWeb/external/news/latestList.html?classType=%E6%9C%80%E6%96%B0%E8%B5%84%E8%AE%AF HTTP/1.1
+        NetworkManager.sharedInstall.request(url: news, params: ["classType" : "最新资讯"]) {[weak self] (json, error) in
+            if error != nil {
+                print(error!.localizedDescription)
+            }else{
+                if let data = json , data["total"].intValue > 0 {
+                    if let array = data["data"].array {
+                        self?.arrNewsData += array
+                        self?.tableView.reloadData()
+                    }
+                }
+            }
+        }
+    }
+    
+    func handleTap(recognizer : UITapGestureRecognizer) {
+        if let controller = self.storyboard?.instantiateViewController(withIdentifier: "newslist") as? NewsListController {
+            controller.title = "所有新闻"
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
+    //	GET /carWeb/external/news/moreList.html?classType=%E6%9C%80%E6%96%B0%E8%B5%84%E8%AE%AF&curPage=1&pageSize=10 HTTP/1.1
+    
+    
     // MARK: - UITableView DataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return arrNewsData.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
+        if let imageView = cell.contentView.viewWithTag(2) as? UIImageView {
+            imageView.sd_setImage(with: URL(string: arrNewsData[indexPath.row]["imageThumb"].stringValue), placeholderImage: UIImage(named: "defult_image"))
+        }
+        if let label = cell.contentView.viewWithTag(3) as? UILabel {
+            label.text = arrNewsData[indexPath.row]["title"].string
+        }
+        if let label = cell.contentView.viewWithTag(4) as? UILabel {
+            label.text = arrNewsData[indexPath.row]["createTime"].string
+        }
+        if let label = cell.contentView.viewWithTag(5) as? UILabel {
+            label.text = arrNewsData[indexPath.row]["shortContent"].string
+        }
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        if let controller = self.storyboard?.instantiateViewController(withIdentifier: "newsdetail") as? NewsDetailController {
+            controller.title = "新闻详情"
+            controller.json = arrNewsData[indexPath.row]
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
+    }
+    
+    // MARK: - SDCycleScrollViewDelegate
+    func cycleScrollView(_ cycleScrollView: SDCycleScrollView!, didSelectItemAt index: Int) {
+        if let controller = self.storyboard?.instantiateViewController(withIdentifier: "newsdetail") as? NewsDetailController {
+            controller.title = "活动详情"
+            controller.json = arrBannerData[index]
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
 
 }

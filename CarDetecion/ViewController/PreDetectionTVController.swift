@@ -224,7 +224,8 @@ class PreDetectionTVController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 {
-            if let controller = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelTVController {
+            if let controller = self.storyboard?.instantiateViewController(withIdentifier: "carmodel") as? CarModelController {
+                controller.title = "车型"
                 tabPage?.navigationController?.pushViewController(controller, animated: true)
             }
         }else if indexPath.row == 4 {

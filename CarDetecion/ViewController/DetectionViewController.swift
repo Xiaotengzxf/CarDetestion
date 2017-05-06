@@ -32,13 +32,14 @@ class DetectionViewController: UIViewController {
     
     let applyCount = "external/app/getApplyCountInfo.html"
     let latestList = "external/news/latestList.html"
+    var arrNews : [JSON] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         getApplyCount()
         getLatestList(type: "新闻公告")
-        let abStr = NSMutableAttributedString(string: "详情...")
+        let abStr = NSMutableAttributedString(string: "详情")
         abStr.addAttributes([NSUnderlineStyleAttributeName : 1 , NSForegroundColorAttributeName : UIColor.black , NSFontAttributeName : UIFont.systemFont(ofSize: 14)], range: NSMakeRange(0, 2))
         btnAdvertise.setAttributedTitle(abStr, for: .normal)
         // 点击事件
@@ -108,6 +109,11 @@ class DetectionViewController: UIViewController {
     }
     
     @IBAction func showAdvertiseDetail(_ sender: Any) {
+        if let controller = self.storyboard?.instantiateViewController(withIdentifier: "newsdetail") as? NewsDetailController {
+            controller.title = "新闻详情"
+            controller.json = arrNews[0]
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
     }
     
     // 处理通知
@@ -222,6 +228,7 @@ class DetectionViewController: UIViewController {
             }else{
                 if let data = json , data["total"].intValue > 0 {
                     if let array = data["data"].array {
+                        self?.arrNews += array
                         self?.lblAdvertise.text = array[0]["title"].string
                     }
                 }
