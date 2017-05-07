@@ -3,3 +3,6 @@
 //
 
 #import <Bugly/Bugly.h>
+
+#import "helpdesk_sdk.h"
+#import "HelpDeskUI.h"

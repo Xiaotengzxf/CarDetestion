@@ -29,6 +29,7 @@ class PreDetectionListTVController: UITableViewController {
             self?.getPreDetectionList()
         })
         tableView.mj_footer.isHidden = true
+        tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -87,20 +88,32 @@ class PreDetectionListTVController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
-        if let label = cell.contentView.viewWithTag(2) as? UILabel {
-            label.text = arrPreDetection[indexPath.row]["title"].string
-        }
         if let label = cell.contentView.viewWithTag(3) as? UILabel {
-            label.text = "创建时间：\(arrPreDetection[indexPath.row]["createTime"].string ?? "")"
+            label.text = "\(arrPreDetection[indexPath.row]["carBrandName"].stringValue) \(arrPreDetection[indexPath.row]["carSetName"].stringValue) \(arrPreDetection[indexPath.row]["carTypeName"].stringValue)"
         }
-        if let imageView = cell.contentView.viewWithTag(4) as? UIImageView {
-            if let imageUrl = arrPreDetection[indexPath.row]["imageThumb"].string , imageUrl.hasPrefix("http") {
-                imageView.sd_setImage(with: URL(string: imageUrl)!, placeholderImage: UIImage(named: "ad_empty"))
-            }else{
-                imageView.image = UIImage(named: "ad_empty")
-            }
-            
+        if let label = cell.contentView.viewWithTag(4) as? UILabel {
+            label.text = arrPreDetection[indexPath.row]["cityName"].string
         }
+        if let label = cell.contentView.viewWithTag(5) as? UILabel {
+            label.text = arrPreDetection[indexPath.row]["regDate"].string
+        }
+        if let label = cell.contentView.viewWithTag(6) as? UILabel {
+            label.text = "\(arrPreDetection[indexPath.row]["runNum"].stringValue)公里"
+        }
+        if let label = cell.contentView.viewWithTag(7) as? UILabel {
+            label.text = arrPreDetection[indexPath.row]["color"].string
+        }
+        if let label = cell.contentView.viewWithTag(8) as? UILabel {
+            label.text = arrPreDetection[indexPath.row]["mark"].string
+        }
+//        if let imageView = cell.contentView.viewWithTag(4) as? UIImageView {
+//            if let imageUrl = arrPreDetection[indexPath.row]["imageThumb"].string , imageUrl.hasPrefix("http") {
+//                imageView.sd_setImage(with: URL(string: imageUrl)!, placeholderImage: UIImage(named: "ad_empty"))
+//            }else{
+//                imageView.image = UIImage(named: "ad_empty")
+//            }
+//            
+//        }
 
         return cell
     }
@@ -108,6 +121,10 @@ class PreDetectionListTVController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
+    }
+    
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
     }
 
     /*
