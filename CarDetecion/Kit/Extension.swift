@@ -42,11 +42,11 @@ extension UIViewController : MBProgressHUDDelegate
     func showHUD(text : String) -> MBProgressHUD {
         let hud = MBProgressHUD.showAdded(to: self.view, animated: true)
         hud.delegate = self
-        hud.label.text = text
+        hud.labelText = text
         return hud
     }
     func hideHUD(hud : MBProgressHUD) {
-        hud.hide(animated: true)
+        hud.hide(true)
     }
     public func hudWasHidden(_ hud: MBProgressHUD) {
         hud.removeFromSuperview()

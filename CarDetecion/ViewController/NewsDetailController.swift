@@ -21,8 +21,11 @@ class NewsDetailController: UIViewController {
         super.viewDidLoad()
 
         //创建wkwebview
-        webView = WKWebView(frame: CGRect(x: 0, y: 0, width: WIDTH, height: HEIGHT - 64))
+        webView = WKWebView()
+        webView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(webView)
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[webView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["webView" : webView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[webView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["webView" : webView]))
         loadDetailData()
     }
     

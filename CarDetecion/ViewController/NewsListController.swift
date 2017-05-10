@@ -33,7 +33,6 @@ class NewsListController: UITableViewController , DZNEmptyDataSetSource , DZNEmp
         })
         self.tableView.mj_header.beginRefreshing()
         self.tableView.mj_footer.isHidden = true
-        self.tableView.rowHeight = UITableViewAutomaticDimension
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -120,10 +119,6 @@ class NewsListController: UITableViewController , DZNEmptyDataSetSource , DZNEmp
             controller.json = arrNewsData[indexPath.row]
             self.navigationController?.pushViewController(controller, animated: true)
         }
-    }
-    
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
     }
 
     /*

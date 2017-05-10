@@ -15,14 +15,11 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var tfUserName: UITextField!
     @IBOutlet weak var tfPwd: UITextField!
     @IBOutlet weak var btnLogin: UIButton!
-    @IBOutlet weak var ivTriangle: UIImageView!
     let login = "external/app/checkUser.html"
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //btnLogin.layer.cornerRadius = 6.0
-        ivTriangle.image = drawTriangle()
     }
 
     override func didReceiveMemoryWarning() {
@@ -90,6 +87,13 @@ class LoginViewController: UIViewController {
             }
         }
     }
+    @IBAction func doRegister(_ sender: Any) {
+        if let controller = self.storyboard?.instantiateViewController(withIdentifier: "register") as? RegisterController {
+            self.present(controller, animated: true, completion: { 
+                
+            })
+        }
+    }
     /*{
      companyName = "\U5b89\U9633\U5e02\U65b0\U7eaa\U5143\U6c7d\U8f66\U9500\U552e\U670d\U52a1\U6709\U9650\U516c\U53f8--\U5e7f\U6c47";
      superCompanyName = "\U5e7f\U6c47\U6c7d\U8f66\U670d\U52a1\U80a1\U4efd\U516c\U53f8";
@@ -108,5 +112,5 @@ class LoginViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    //http://119.23.128.214:8080/carWeb/view/common/register.jsp
 }

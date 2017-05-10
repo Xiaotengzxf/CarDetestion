@@ -13,7 +13,6 @@ import SwiftyJSON
 class MainViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , SDCycleScrollViewDelegate{
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var lblTotalCount: UILabel!
     @IBOutlet weak var vNewsMore: UIView!
     
     let applyCount = "external/app/getApplyCountInfo.html"
@@ -27,10 +26,9 @@ class MainViewController: UIViewController , UITableViewDataSource , UITableView
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         tableView.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: 244 + 120)
-        tableView.rowHeight = UITableViewAutomaticDimension
         addBannerView()
         
-        getApplyCount() // 获取总单量
+        //getApplyCount() // 获取总单量
         
         loadNewsData()
         
@@ -62,30 +60,30 @@ class MainViewController: UIViewController , UITableViewDataSource , UITableView
     
     // 获取审核中，未通过及通过的订单总数
     func getApplyCount() {
-        let username = UserDefaults.standard.string(forKey: "username")
-        let params = ["userName" : username!]
-        NetworkManager.sharedInstall.request(url: applyCount, params: params) {[weak self] (json, error) in
-            if error != nil {
-                print(error!.localizedDescription)
-            }else{
-                if let data = json , data["total"].intValue > 0 {
-                    if let array = data["data"].array {
-                        var totalCount = 0
-                        for j in array {
-                            
-                            if j["infoType"].stringValue == "finishCount" {
-                                totalCount += j["countInfo"].int ?? 0
-                            }else if j["infoType"].stringValue == "refuseCount" {
-                                totalCount += j["countInfo"].int ?? 0
-                            }else if j["infoType"].stringValue == "processCount" {
-                                totalCount += j["countInfo"].int ?? 0
-                            }
-                        }
-                        self?.lblTotalCount.text = "总单量：\(totalCount)"
-                    }
-                }
-            }
-        }
+//        let username = UserDefaults.standard.string(forKey: "username")
+//        let params = ["userName" : username!]
+//        NetworkManager.sharedInstall.request(url: applyCount, params: params) {[weak self] (json, error) in
+//            if error != nil {
+//                print(error!.localizedDescription)
+//            }else{
+//                if let data = json , data["total"].intValue > 0 {
+//                    if let array = data["data"].array {
+//                        var totalCount = 0
+//                        for j in array {
+//                            
+//                            if j["infoType"].stringValue == "finishCount" {
+//                                totalCount += j["countInfo"].int ?? 0
+//                            }else if j["infoType"].stringValue == "refuseCount" {
+//                                totalCount += j["countInfo"].int ?? 0
+//                            }else if j["infoType"].stringValue == "processCount" {
+//                                totalCount += j["countInfo"].int ?? 0
+//                            }
+//                        }
+//                        //self?.lblTotalCount.text = "总单量：\(totalCount)"
+//                    }
+//                }
+//            }
+//        }
     }
     
     func loadBannerData() {
@@ -159,10 +157,6 @@ class MainViewController: UIViewController , UITableViewDataSource , UITableView
             controller.json = arrNewsData[indexPath.row]
             self.navigationController?.pushViewController(controller, animated: true)
         }
-    }
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 90
     }
     
     // MARK: - SDCycleScrollViewDelegate

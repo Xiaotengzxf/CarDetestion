@@ -206,9 +206,11 @@
 		89965D771EA1B285006560BA /* RecordDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D761EA1B285006560BA /* RecordDetailViewController.swift */; };
 		899ADFC31EBE070D00E92B0E /* NewsDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899ADFC21EBE070D00E92B0E /* NewsDetailController.swift */; };
 		899ADFC51EBE15EE00E92B0E /* NewsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899ADFC41EBE15EE00E92B0E /* NewsListController.swift */; };
+		89A37B491EC3543F006A4D07 /* logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89A37B481EC3543F006A4D07 /* logo.jpg */; };
+		89A37B4B1EC35456006A4D07 /* d_logo_l.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89A37B4A1EC35456006A4D07 /* d_logo_l.jpg */; };
+		89A37B4D1EC35754006A4D07 /* RegisterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A37B4C1EC35754006A4D07 /* RegisterController.swift */; };
 		89B3A5E01EAADC7000949757 /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3A5DF1EAADC7000949757 /* InfoTableViewController.swift */; };
 		89B3A5E31EAB148100949757 /* MessageListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3A5E21EAB148100949757 /* MessageListTableViewController.swift */; };
-		89B945701E8F37F1009F0B58 /* logo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 89B9456F1E8F37F1009F0B58 /* logo.jpg */; };
 		89CB16901EABA54A00768787 /* RecordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CB168F1EABA54A00768787 /* RecordTableViewCell.swift */; };
 		927BA23DC90FCA9C2D177731 /* Pods_CarDetecion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */; };
 /* End PBXBuildFile section */
@@ -624,9 +626,11 @@
 		89965D761EA1B285006560BA /* RecordDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordDetailViewController.swift; sourceTree = "<group>"; };
 		899ADFC21EBE070D00E92B0E /* NewsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDetailController.swift; sourceTree = "<group>"; };
 		899ADFC41EBE15EE00E92B0E /* NewsListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsListController.swift; sourceTree = "<group>"; };
+		89A37B481EC3543F006A4D07 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
+		89A37B4A1EC35456006A4D07 /* d_logo_l.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = d_logo_l.jpg; sourceTree = "<group>"; };
+		89A37B4C1EC35754006A4D07 /* RegisterController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterController.swift; sourceTree = "<group>"; };
 		89B3A5DF1EAADC7000949757 /* InfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
 		89B3A5E21EAB148100949757 /* MessageListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListTableViewController.swift; sourceTree = "<group>"; };
-		89B9456F1E8F37F1009F0B58 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
 		89CB168F1EABA54A00768787 /* RecordTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -738,10 +742,11 @@
 				895307C61E6D18D9007AF459 /* Main.storyboard */,
 				895307CE1E6D18D9007AF459 /* LaunchScreen.storyboard */,
 				898916E41E7E8EBE00BE6848 /* Assets.xcassets */,
+				89A37B481EC3543F006A4D07 /* logo.jpg */,
+				89A37B4A1EC35456006A4D07 /* d_logo_l.jpg */,
 				895307D11E6D18D9007AF459 /* Info.plist */,
 				8953081E1E6D7CEC007AF459 /* CameraView.strings */,
 				895307C91E6D18D9007AF459 /* CarDetecion.xcdatamodeld */,
-				89B9456F1E8F37F1009F0B58 /* logo.jpg */,
 				899601421EBA2DF500BE9436 /* CarDetecion-Bridging-Header.h */,
 				897C6E2C1EBF59C900B22203 /* PrefixHeader.pch */,
 			);
@@ -825,6 +830,7 @@
 			children = (
 				896AFA6F1E8B694E008DE6F5 /* LoginViewController.swift */,
 				894E4F121E95149100D9BF55 /* DefaultViewController.swift */,
+				89A37B4C1EC35754006A4D07 /* RegisterController.swift */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -1686,15 +1692,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				895307D01E6D18D9007AF459 /* LaunchScreen.storyboard in Resources */,
+				89A37B491EC3543F006A4D07 /* logo.jpg in Resources */,
 				8953081F1E6D7CEC007AF459 /* CameraView.strings in Resources */,
 				893CDB301EB6D10E00AEB5D7 /* TabView.xib in Resources */,
 				895307C81E6D18D9007AF459 /* Main.storyboard in Resources */,
-				89B945701E8F37F1009F0B58 /* logo.jpg in Resources */,
 				897C6E1F1EBF578F00B22203 /* HelpDeskUIResource.bundle in Resources */,
 				893CDB2F1EB6D10E00AEB5D7 /* TabPageViewController.storyboard in Resources */,
 				897C6DED1EBF578F00B22203 /* icon_star_select.png in Resources */,
 				897C6DE91EBF578F00B22203 /* MWPhotoBrowser.bundle in Resources */,
 				897C6DEC1EBF578F00B22203 /* icon_star.png in Resources */,
+				89A37B4B1EC35456006A4D07 /* d_logo_l.jpg in Resources */,
 				893CDB2E1EB6D10E00AEB5D7 /* TabCollectionCell.xib in Resources */,
 				898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */,
 				897C6DBE1EBF578F00B22203 /* MJRefresh.bundle in Resources */,
@@ -1867,6 +1874,7 @@
 				895307C51E6D18D9007AF459 /* MainViewController.swift in Sources */,
 				8985F3791EB8B18A0028E70E /* CityTVController.swift in Sources */,
 				897C6DD71EBF578F00B22203 /* UIImage+EMMultiFormat.m in Sources */,
+				89A37B4D1EC35754006A4D07 /* RegisterController.swift in Sources */,
 				897C6E1B1EBF578F00B22203 /* HDTextView.m in Sources */,
 				8953081A1E6D7A67007AF459 /* ImageCell.swift in Sources */,
 				897C6DCB1EBF578F00B22203 /* DACircularProgressView.m in Sources */,

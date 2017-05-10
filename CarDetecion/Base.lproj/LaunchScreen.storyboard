@@ -23,40 +23,25 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="5it-I1-yuW">
-                                <rect key="frame" x="136.5" y="120" width="102" height="102"/>
+                                <rect key="frame" x="112.5" y="120" width="150" height="150"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="5it-I1-yuW" secondAttribute="height" id="0uz-Ep-dOn"/>
-                                    <constraint firstAttribute="width" constant="102" id="Cns-5Q-cdP"/>
+                                    <constraint firstAttribute="width" constant="150" id="Cns-5Q-cdP"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="犀牛评" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a7d-HK-7PS">
-                                <rect key="frame" x="153" y="242" width="70" height="27.5"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RHINO" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nFP-xD-FTN">
-                                <rect key="frame" x="156" y="271.5" width="64" height="24"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="过硬品质的二手车评估" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JAS-dI-oqe">
-                                <rect key="frame" x="101.5" y="606.5" width="173.5" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="d_logo_l.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="3zs-l0-1MT">
+                                <rect key="frame" x="72" y="514.5" width="230" height="52.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="230" id="JrG-vE-VQP"/>
+                                    <constraint firstAttribute="width" secondItem="3zs-l0-1MT" secondAttribute="height" multiplier="364:83" id="aNd-lt-NR8"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.1202537938952446" green="0.40505212545394897" blue="0.69568276405334473" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="nFP-xD-FTN" firstAttribute="top" secondItem="a7d-HK-7PS" secondAttribute="bottom" constant="2" id="6o4-Xo-4IU"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="JAS-dI-oqe" secondAttribute="bottom" constant="40" id="Iz8-kR-WGO"/>
-                            <constraint firstItem="a7d-HK-7PS" firstAttribute="top" secondItem="5it-I1-yuW" secondAttribute="bottom" constant="20" id="MDX-k3-gqb"/>
-                            <constraint firstItem="a7d-HK-7PS" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Nc9-c9-p4n"/>
-                            <constraint firstItem="nFP-xD-FTN" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="gRX-dQ-VFU"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="3zs-l0-1MT" secondAttribute="bottom" constant="100" id="4Ne-Uu-hG7"/>
+                            <constraint firstItem="3zs-l0-1MT" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="FxS-ra-xVX"/>
                             <constraint firstItem="5it-I1-yuW" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="100" id="loN-t7-c68"/>
-                            <constraint firstItem="JAS-dI-oqe" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="pLb-Qa-7T3"/>
                             <constraint firstItem="5it-I1-yuW" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="zTI-EA-qdd"/>
                         </constraints>
                     </view>
@@ -67,6 +52,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="logo.jpg" width="204" height="204"/>
+        <image name="d_logo_l.jpg" width="364" height="83"/>
+        <image name="logo.jpg" width="1575" height="1874"/>
     </resources>
 </document>
