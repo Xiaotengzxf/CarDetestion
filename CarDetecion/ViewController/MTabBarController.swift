@@ -11,12 +11,19 @@ import UIKit
 var recordIndex = -1
 
 class MTabBarController: UITabBarController {
+    
+    var btnService : UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         NotificationCenter.default.addObserver(self, selector: #selector(MTabBarController.handleNotification(notification:)), name: Notification.Name("tab"), object: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        addCustomServiceButton()
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,6 +45,24 @@ class MTabBarController: UITabBarController {
                 }
             }
         }
+    }
+    
+    
+    func addCustomServiceButton() {
+        if btnService == nil {
+            btnService = UIButton(frame: CGRect(x: WIDTH - 100, y: HEIGHT - 160, width: 80, height: 80))
+            btnService.setImage(UIImage(named: "kefu"), for: .normal)
+            btnService.backgroundColor = UIColor.rgbColorFromHex(rgb: 0x0789CD)
+            btnService.layer.cornerRadius = 40
+            btnService.clipsToBounds = true
+            self.view?.insertSubview(btnService, at: 0)
+            self.view?.bringSubview(toFront: btnService)
+            btnService.addTarget(self, action: #selector(AppDelegate.jumpToCustom), for: .touchUpInside)
+        }
+    }
+    
+    func jumpToCustom() {
+        
     }
 
 }

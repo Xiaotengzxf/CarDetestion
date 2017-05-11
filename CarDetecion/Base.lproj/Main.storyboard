@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="29l-ii-3r3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="29l-ii-3r3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -409,7 +409,7 @@
                                 <rect key="frame" x="0.0" y="227" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="chC-zx-S4Y" id="76w-hK-d6U">
-                                    <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -1820,14 +1820,14 @@
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jTp-4y-G66">
-                                <rect key="frame" x="315" y="213.5" width="60" height="240"/>
+                                <rect key="frame" x="315" y="183.5" width="60" height="300"/>
                                 <subviews>
                                     <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Oqf-dU-Q6T">
                                         <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Oqf-dU-Q6T" secondAttribute="height" id="fdT-X6-hnA"/>
                                         </constraints>
-                                        <state key="normal" image="icon_car_default"/>
+                                        <state key="normal" image="car_license"/>
                                         <connections>
                                             <action selector="move:" destination="3uE-nj-kEA" eventType="touchUpInside" id="D6y-Vr-Okn"/>
                                         </connections>
@@ -1837,7 +1837,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="xdC-vI-j15" secondAttribute="height" id="S3d-qU-54Q"/>
                                         </constraints>
-                                        <state key="normal" image="icon_certificate_default"/>
+                                        <state key="normal" image="car_body"/>
                                         <connections>
                                             <action selector="move:" destination="3uE-nj-kEA" eventType="touchUpInside" id="Nu0-79-eNu"/>
                                         </connections>
@@ -1847,7 +1847,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="LVZ-Ru-jx3" secondAttribute="height" id="27E-Az-cNn"/>
                                         </constraints>
-                                        <state key="normal" image="icon_add_default"/>
+                                        <state key="normal" image="car_frame"/>
                                         <connections>
                                             <action selector="move:" destination="3uE-nj-kEA" eventType="touchUpInside" id="EpE-t0-Kvh"/>
                                         </connections>
@@ -1857,9 +1857,19 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="LT4-8B-2Wy" secondAttribute="height" id="JLh-FS-wku"/>
                                         </constraints>
-                                        <state key="normal" image="icon_information_default"/>
+                                        <state key="normal" image="vehicle_interior"/>
                                         <connections>
                                             <action selector="move:" destination="3uE-nj-kEA" eventType="touchUpInside" id="OXv-2z-tz4"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hpa-tx-aDW">
+                                        <rect key="frame" x="0.0" y="240" width="60" height="60"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="hpa-tx-aDW" secondAttribute="height" id="n2S-yQ-MXb"/>
+                                        </constraints>
+                                        <state key="normal" image="supplement"/>
+                                        <connections>
+                                            <action selector="move:" destination="3uE-nj-kEA" eventType="touchUpInside" id="dEG-w3-CbD"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1870,16 +1880,18 @@
                                     <constraint firstItem="LVZ-Ru-jx3" firstAttribute="top" secondItem="xdC-vI-j15" secondAttribute="bottom" id="AYm-tz-cUN"/>
                                     <constraint firstItem="LVZ-Ru-jx3" firstAttribute="leading" secondItem="jTp-4y-G66" secondAttribute="leading" id="AqW-Qs-mvp"/>
                                     <constraint firstItem="LT4-8B-2Wy" firstAttribute="leading" secondItem="jTp-4y-G66" secondAttribute="leading" id="Iam-nn-o2g"/>
-                                    <constraint firstAttribute="bottom" secondItem="LT4-8B-2Wy" secondAttribute="bottom" id="K0k-Tb-43m"/>
                                     <constraint firstItem="xdC-vI-j15" firstAttribute="leading" secondItem="jTp-4y-G66" secondAttribute="leading" id="K4g-DR-v7R"/>
                                     <constraint firstItem="Oqf-dU-Q6T" firstAttribute="leading" secondItem="jTp-4y-G66" secondAttribute="leading" id="Ms4-8w-smt"/>
                                     <constraint firstAttribute="trailing" secondItem="Oqf-dU-Q6T" secondAttribute="trailing" id="NRr-vv-fMH"/>
                                     <constraint firstAttribute="trailing" secondItem="LT4-8B-2Wy" secondAttribute="trailing" id="VSr-Af-iRP"/>
                                     <constraint firstAttribute="trailing" secondItem="xdC-vI-j15" secondAttribute="trailing" id="W4T-U2-Dde"/>
-                                    <constraint firstAttribute="height" constant="240" id="anF-ed-Sng"/>
-                                    <constraint firstItem="LT4-8B-2Wy" firstAttribute="width" secondItem="LT4-8B-2Wy" secondAttribute="height" id="mG3-n3-0PL"/>
+                                    <constraint firstAttribute="height" constant="300" id="anF-ed-Sng"/>
+                                    <constraint firstItem="LT4-8B-2Wy" firstAttribute="bottom" secondItem="hpa-tx-aDW" secondAttribute="top" id="czG-B0-VJV"/>
+                                    <constraint firstAttribute="trailing" secondItem="hpa-tx-aDW" secondAttribute="trailing" id="hJo-Kx-L4c"/>
+                                    <constraint firstItem="hpa-tx-aDW" firstAttribute="leading" secondItem="jTp-4y-G66" secondAttribute="leading" id="jof-AZ-EPq"/>
                                     <constraint firstAttribute="width" constant="60" id="mcI-ls-ACR"/>
                                     <constraint firstItem="xdC-vI-j15" firstAttribute="top" secondItem="Oqf-dU-Q6T" secondAttribute="bottom" id="qf6-rD-Zdf"/>
+                                    <constraint firstAttribute="bottom" secondItem="hpa-tx-aDW" secondAttribute="bottom" id="s4B-IU-UMk"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pph-Tp-aSm">
@@ -1998,7 +2010,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="103"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lRM-kL-cEC" id="0yt-2N-j1H">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="102.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="103"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="o1D-VK-9nO">
@@ -2252,7 +2264,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Suo-X2-Mdh" id="MFU-1p-FAD">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8fL-op-hWn">
@@ -2325,7 +2337,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wCn-8l-aPz" id="GCr-js-MBq">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -2370,18 +2382,17 @@
         <image name="bg2" width="175" height="82"/>
         <image name="bg3" width="175" height="82"/>
         <image name="bg4" width="176" height="82"/>
+        <image name="car_body" width="27" height="27"/>
+        <image name="car_frame" width="27" height="27"/>
+        <image name="car_license" width="27" height="27"/>
         <image name="d_logo_l.jpg" width="364" height="83"/>
         <image name="defult_image" width="90" height="67"/>
         <image name="detection_head_bg" width="539" height="151"/>
-        <image name="icon_add_default" width="23" height="23"/>
         <image name="icon_advertise" width="80" height="40"/>
         <image name="icon_camera" width="25" height="23"/>
-        <image name="icon_car_default" width="23" height="23"/>
-        <image name="icon_certificate_default" width="23" height="23"/>
         <image name="icon_detection" width="70" height="70"/>
         <image name="icon_detection_query" width="70" height="70"/>
         <image name="icon_detectioning" width="45" height="60"/>
-        <image name="icon_information_default" width="23" height="23"/>
         <image name="icon_not_submit" width="45" height="59"/>
         <image name="icon_pass" width="45" height="59"/>
         <image name="icon_pre_detection" width="70" height="70"/>
@@ -2391,6 +2402,7 @@
         <image name="logo.jpg" width="1575" height="1874"/>
         <image name="mine_logo" width="120" height="120"/>
         <image name="right_arrow" width="49" height="66"/>
+        <image name="supplement" width="27" height="27"/>
         <image name="tab10" width="30" height="30"/>
         <image name="tab11" width="30" height="30"/>
         <image name="tab20" width="30" height="30"/>
@@ -2399,5 +2411,6 @@
         <image name="tab41" width="30" height="30"/>
         <image name="tab50" width="30" height="30"/>
         <image name="tab51" width="30" height="30"/>
+        <image name="vehicle_interior" width="27" height="27"/>
     </resources>
 </document>

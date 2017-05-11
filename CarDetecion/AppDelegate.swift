@@ -18,7 +18,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var orderInfo : [String : [String : String]] = [:]
     let createBill = "external/app/finishCreateAppCarBill.html"
-    var btnService : UIButton!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -69,7 +68,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-        addCustomServiceButton()
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
@@ -185,23 +183,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController?.present(alert, animated: true) {
             
         }
-    }
-    
-    func addCustomServiceButton() {
-        if btnService == nil {
-            btnService = UIButton(frame: CGRect(x: WIDTH - 100, y: HEIGHT - 160, width: 80, height: 80))
-            btnService.setImage(UIImage(named: "kefu"), for: .normal)
-            btnService.backgroundColor = UIColor.rgbColorFromHex(rgb: 0x0789CD)
-            btnService.layer.cornerRadius = 40
-            btnService.clipsToBounds = true
-            window?.insertSubview(btnService, at: 0)
-            window?.bringSubview(toFront: btnService)
-            btnService.addTarget(self, action: #selector(AppDelegate.jumpToCustom), for: .touchUpInside)
-        }
-    }
-    
-    func jumpToCustom() {
-        
     }
     
 }
