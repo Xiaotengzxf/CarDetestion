@@ -14,6 +14,7 @@
 #import "HVisitorTrack.h"
 #import "HDLeaveMsgViewController.h"
 #import "HFileViewController.h"
+
 @interface HDChatViewController ()<UIAlertViewDelegate,HChatClientDelegate>
 {
     UIMenuItem *_copyMenuItem;

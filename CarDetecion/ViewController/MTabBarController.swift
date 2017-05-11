@@ -57,12 +57,33 @@ class MTabBarController: UITabBarController {
             btnService.clipsToBounds = true
             self.view?.insertSubview(btnService, at: 0)
             self.view?.bringSubview(toFront: btnService)
-            btnService.addTarget(self, action: #selector(AppDelegate.jumpToCustom), for: .touchUpInside)
+            btnService.addTarget(self, action: #selector(MTabBarController.jumpToCustom), for: .touchUpInside)
         }
     }
     
     func jumpToCustom() {
-        
+        DispatchQueue.global().async {
+            [weak self] in
+            let lgM = SCLoginManager.share()
+            if lgM!.loginKefuSDK() {
+                let chat = HDChatViewController(conversationChatter: "")
+                chat?.visitorInfo = self?.visitorInfo()
+                chat?.title = lgM!.cname
+                
+            }
+        }
+    }
+    
+    func visitorInfo() -> HVisitorInfo {
+        let visitor = HVisitorInfo()
+        visitor.name = "小明儿"
+        visitor.qq = "12345678"
+        visitor.phone = "13636362637"
+        visitor.companyName = "环信";
+        visitor.nickName = SCLoginManager.share().nickname
+        visitor.email = "abv@126.com"
+        visitor.desc = "环信移动客服"
+        return visitor
     }
 
 }

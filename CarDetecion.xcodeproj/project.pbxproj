@@ -203,6 +203,7 @@
 		8985F37B1EB8DC9E0028E70E /* CarModelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */; };
 		898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 898916E41E7E8EBE00BE6848 /* Assets.xcassets */; };
 		898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */; };
+		898B0AA01EC49CAB00810620 /* SCLoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 898B0A9F1EC49CAB00810620 /* SCLoginManager.m */; };
 		89965D701EA1196B006560BA /* MNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D6F1EA1196B006560BA /* MNavigationController.swift */; };
 		89965D721EA11AEA006560BA /* RNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D711EA11AEA006560BA /* RNavigationController.swift */; };
 		89965D751EA1A542006560BA /* INavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89965D741EA1A542006560BA /* INavigationController.swift */; };
@@ -628,6 +629,9 @@
 		8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarModelCell.swift; sourceTree = "<group>"; };
 		898916E41E7E8EBE00BE6848 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
+		898B0A9E1EC49CAB00810620 /* SCLoginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCLoginManager.h; sourceTree = "<group>"; };
+		898B0A9F1EC49CAB00810620 /* SCLoginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCLoginManager.m; sourceTree = "<group>"; };
+		898B0AA11EC49D0200810620 /* LocalDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalDefine.h; sourceTree = "<group>"; };
 		899601421EBA2DF500BE9436 /* CarDetecion-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CarDetecion-Bridging-Header.h"; sourceTree = "<group>"; };
 		89965D6F1EA1196B006560BA /* MNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNavigationController.swift; sourceTree = "<group>"; };
 		89965D711EA11AEA006560BA /* RNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNavigationController.swift; sourceTree = "<group>"; };
@@ -691,12 +695,15 @@
 		891034DE1EC446B400EDBD23 /* ObjectC */ = {
 			isa = PBXGroup;
 			children = (
+				898B0AA11EC49D0200810620 /* LocalDefine.h */,
 				891034DF1EC447F700EDBD23 /* HFileViewController.h */,
 				891034E01EC447F700EDBD23 /* HFileViewController.m */,
 				891034E11EC447F700EDBD23 /* HDChatViewController.h */,
 				891034E21EC447F700EDBD23 /* HDChatViewController.m */,
 				891034E51EC4480D00EDBD23 /* HDLeaveMsgViewController.h */,
 				891034E61EC4480D00EDBD23 /* HDLeaveMsgViewController.m */,
+				898B0A9E1EC49CAB00810620 /* SCLoginManager.h */,
+				898B0A9F1EC49CAB00810620 /* SCLoginManager.m */,
 			);
 			name = ObjectC;
 			sourceTree = "<group>";
@@ -1977,6 +1984,7 @@
 				897C6DFF1EBF578F00B22203 /* HDMessageReadManager.m in Sources */,
 				8953081B1E6D7A67007AF459 /* PermissionsView.swift in Sources */,
 				896232A31E8E19D600AB4B1E /* DNavigationController.swift in Sources */,
+				898B0AA01EC49CAB00810620 /* SCLoginManager.m in Sources */,
 				897C6DD41EBF578F00B22203 /* NSData+EMImageContentType.m in Sources */,
 				897C6DF31EBF578F00B22203 /* NSDateFormatter+Category.m in Sources */,
 				897C6DAE1EBF578F00B22203 /* MBProgressHUD+Add.m in Sources */,
