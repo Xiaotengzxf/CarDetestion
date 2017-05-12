@@ -911,8 +911,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NMl-91-1iB">
+                                <rect key="frame" x="30" y="414" width="80" height="44"/>
+                                <color key="backgroundColor" red="0.0" green="0.47058823529999999" blue="0.78823529410000004" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="AV9-1V-x4u"/>
+                                    <constraint firstAttribute="width" constant="80" id="pcQ-kj-moL"/>
+                                </constraints>
+                                <state key="normal" title="注册">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="doRegister:" destination="aTD-j2-pET" eventType="touchUpInside" id="CkZ-g2-pZ4"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Sq-Aa-nW9">
-                                <rect key="frame" x="120" y="413.5" width="225" height="44"/>
+                                <rect key="frame" x="30" y="414" width="315" height="44"/>
                                 <color key="backgroundColor" red="0.027450980392156862" green="0.53725490196078429" blue="0.80392156862745101" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="39R-BY-eRw"/>
@@ -1032,25 +1051,6 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NMl-91-1iB">
-                                <rect key="frame" x="30" y="413.5" width="80" height="44"/>
-                                <color key="backgroundColor" red="0.0" green="0.47058823529999999" blue="0.78823529410000004" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="AV9-1V-x4u"/>
-                                    <constraint firstAttribute="width" constant="80" id="pcQ-kj-moL"/>
-                                </constraints>
-                                <state key="normal" title="注册">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <integer key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="doRegister:" destination="aTD-j2-pET" eventType="touchUpInside" id="CkZ-g2-pZ4"/>
-                                </connections>
-                            </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="d_logo_l.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="BZJ-1X-fUi">
                                 <rect key="frame" x="73" y="524.5" width="230" height="52.5"/>
                                 <constraints>
@@ -1063,10 +1063,10 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="xUR-d0-Txv" secondAttribute="trailing" constant="30" id="23z-tB-AWk"/>
                             <constraint firstItem="2lJ-k0-EH4" firstAttribute="centerX" secondItem="nKG-bJ-ZEV" secondAttribute="centerX" id="Aey-iX-gk1"/>
+                            <constraint firstItem="4Sq-Aa-nW9" firstAttribute="leading" secondItem="nKG-bJ-ZEV" secondAttribute="leading" constant="30" id="IqK-dq-iMv"/>
                             <constraint firstItem="NMl-91-1iB" firstAttribute="centerY" secondItem="4Sq-Aa-nW9" secondAttribute="centerY" id="Mib-aR-JZI"/>
                             <constraint firstItem="xUR-d0-Txv" firstAttribute="leading" secondItem="nKG-bJ-ZEV" secondAttribute="leading" constant="30" id="SSe-1p-bZo"/>
                             <constraint firstItem="BZJ-1X-fUi" firstAttribute="centerX" secondItem="nKG-bJ-ZEV" secondAttribute="centerX" id="TYj-sh-vSH"/>
-                            <constraint firstItem="4Sq-Aa-nW9" firstAttribute="leading" secondItem="NMl-91-1iB" secondAttribute="trailing" constant="10" id="YTe-cn-QGf"/>
                             <constraint firstItem="xUR-d0-Txv" firstAttribute="centerY" secondItem="nKG-bJ-ZEV" secondAttribute="centerY" id="ccN-lo-lWj"/>
                             <constraint firstItem="2cW-8J-JY7" firstAttribute="top" secondItem="BZJ-1X-fUi" secondAttribute="bottom" constant="90" id="d9Y-tC-a5e"/>
                             <constraint firstItem="4Sq-Aa-nW9" firstAttribute="top" secondItem="xUR-d0-Txv" secondAttribute="bottom" constant="20" id="kdP-ZM-OJK"/>

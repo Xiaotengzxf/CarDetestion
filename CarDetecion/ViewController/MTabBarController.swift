@@ -43,6 +43,8 @@ class MTabBarController: UITabBarController {
                     recordIndex = index
                     self.selectedIndex = 3
                 }
+            }else if tag == 2 {
+                btnService.isHidden = false
             }
         }
     }
@@ -66,17 +68,24 @@ class MTabBarController: UITabBarController {
             [weak self] in
             let lgM = SCLoginManager.share()
             if lgM!.loginKefuSDK() {
-                let chat = HDChatViewController(conversationChatter: "")
+                let chat = HDChatViewController(conversationChatter: "kefuchannelimid_856946")
+                chat?.hidesBottomBarWhenPushed = true
                 chat?.visitorInfo = self?.visitorInfo()
                 chat?.title = lgM!.cname
-                
+                DispatchQueue.main.async {
+                    self?.btnService.isHidden = true
+                    let controller : UINavigationController = self!.viewControllers![self!.selectedIndex] as! UINavigationController
+                    controller.pushViewController(chat!, animated: true)
+                }
             }
         }
     }
     
     func visitorInfo() -> HVisitorInfo {
         let visitor = HVisitorInfo()
-        visitor.name = "小明儿"
+        if let userinfo = UserDefaults.standard.object(forKey: "userinfo") as? [String : Any] {
+            visitor.name = userinfo["userChineseName"] as? String ?? "用户"
+        }
         visitor.qq = "12345678"
         visitor.phone = "13636362637"
         visitor.companyName = "环信";

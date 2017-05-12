@@ -97,6 +97,7 @@ class PreDetectionTVController: UITableViewController {
         params["createTime"] = fomatter.string(from: Date())
         params["runNum"] = gongli
         params["mark"] = remark
+        params["clientName"] = "iOS"
         let hud = self.showHUD(text: "提交中...")
         NetworkManager.sharedInstall.request(url: submitPre, params: params) {[weak self] (json, error) in
             self?.hideHUD(hud: hud)

@@ -154,6 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let username = UserDefaults.standard.string(forKey: "username")
                 var params = ["userName" : username!]
                 params["carBillId"] = orderNo
+                params["clientName"] = "iOS"
                 params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? ""
                 params["mark"] = self?.orderInfo[orderNo]?["remark"] ?? ""
                 NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in

@@ -14,6 +14,7 @@
 #import "HVisitorTrack.h"
 #import "HDLeaveMsgViewController.h"
 #import "HFileViewController.h"
+#import "UINavigationBar+Awesome.h"
 
 @interface HDChatViewController ()<UIAlertViewDelegate,HChatClientDelegate>
 {
@@ -159,10 +160,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.navigationController.navigationBar lt_setBackgroundColor:[UIColor colorWithRed:55/255.0 green:70/255.0 blue:85/255.0 alpha:1]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"tab" object:@(2)];
 }
 
 #pragma mark - setup subviews

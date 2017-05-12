@@ -193,6 +193,7 @@
 		897C6E291EBF57ED00B22203 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 897C6E281EBF57ED00B22203 /* libstdc++.6.0.9.tbd */; };
 		897C6E2B1EBF57F800B22203 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 897C6E2A1EBF57F800B22203 /* libsqlite3.tbd */; };
 		897C6E2E1EBF5B1F00B22203 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 897C6E2D1EBF5B1F00B22203 /* Foundation.framework */; };
+		8984662E1EC54B7600FDA2E3 /* UINavigationBar+Awesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 8984662D1EC54B7600FDA2E3 /* UINavigationBar+Awesome.m */; };
 		8985C79F1E72E63A0075B6F8 /* MineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */; };
 		8985C7A21E72E7BC0075B6F8 /* Macro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A11E72E7BC0075B6F8 /* Macro.swift */; };
 		8985C7A41E72ED850075B6F8 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7A31E72ED850075B6F8 /* Extension.swift */; };
@@ -619,6 +620,8 @@
 		897C6E2A1EBF57F800B22203 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		897C6E2C1EBF59C900B22203 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		897C6E2D1EBF5B1F00B22203 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		8984662C1EC54B7600FDA2E3 /* UINavigationBar+Awesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationBar+Awesome.h"; sourceTree = "<group>"; };
+		8984662D1EC54B7600FDA2E3 /* UINavigationBar+Awesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationBar+Awesome.m"; sourceTree = "<group>"; };
 		8985C79E1E72E63A0075B6F8 /* MineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MineTableViewController.swift; sourceTree = "<group>"; };
 		8985C7A11E72E7BC0075B6F8 /* Macro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Macro.swift; sourceTree = "<group>"; };
 		8985C7A31E72ED850075B6F8 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
@@ -695,6 +698,8 @@
 		891034DE1EC446B400EDBD23 /* ObjectC */ = {
 			isa = PBXGroup;
 			children = (
+				8984662C1EC54B7600FDA2E3 /* UINavigationBar+Awesome.h */,
+				8984662D1EC54B7600FDA2E3 /* UINavigationBar+Awesome.m */,
 				898B0AA11EC49D0200810620 /* LocalDefine.h */,
 				891034DF1EC447F700EDBD23 /* HFileViewController.h */,
 				891034E01EC447F700EDBD23 /* HFileViewController.m */,
@@ -1952,6 +1957,7 @@
 				89965D721EA11AEA006560BA /* RNavigationController.swift in Sources */,
 				899ADFC31EBE070D00E92B0E /* NewsDetailController.swift in Sources */,
 				897C6E131EBF578F00B22203 /* HDBubbleView+Video.m in Sources */,
+				8984662E1EC54B7600FDA2E3 /* UINavigationBar+Awesome.m in Sources */,
 				897C6E001EBF578F00B22203 /* HDLocationViewController.m in Sources */,
 				897C6DFE1EBF578F00B22203 /* HDConvertToCommonEmoticonsHelper.m in Sources */,
 				897C6DE71EBF578F00B22203 /* PSTGridLayoutRow.m in Sources */,

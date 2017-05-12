@@ -110,6 +110,12 @@ class MineTableViewController: UITableViewController {
             
         }))
         alert.addAction(UIAlertAction(title: "退出", style: .default, handler: {[weak self] (action) in
+            let chat = HChatClient.shared()
+            if chat!.isLoggedInBefore {
+                if let error = chat?.logout(true) {
+                    print(error.description)
+                }
+            }
             UserDefaults.standard.removeObject(forKey: "userinfo")
             UserDefaults.standard.removeObject(forKey: "username")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
