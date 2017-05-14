@@ -109,7 +109,7 @@ class MessageListTableViewController: UITableViewController , DZNEmptyDataSetSou
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
         var message = ""
         if nShowEmpty == 1 {
-            message = "空空如也，啥子都没有噢！"
+            message = "空空如也，啥子都没有哦！"
         }else if nShowEmpty == 2 {
             message = "加载是件正经事儿，走心加载中..."
         }else if nShowEmpty == 3 {

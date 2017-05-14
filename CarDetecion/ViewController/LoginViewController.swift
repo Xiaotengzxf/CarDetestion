@@ -72,6 +72,11 @@ class LoginViewController: UIViewController {
                     }
                     UserDefaults.standard.set(username, forKey: "username")
                     UserDefaults.standard.synchronize()
+                    
+                    if let username = UserDefaults.standard.object(forKey: "username") as? String {
+                        JPUSHService.setAlias(username, callbackSelector: nil, object: nil)
+                    }
+                    
                     if let controller = self?.storyboard?.instantiateViewController(withIdentifier: "default") as? DefaultViewController {
                         controller.modalTransitionStyle = .crossDissolve
                         self?.present(controller, animated: true, completion: { 

@@ -640,6 +640,7 @@
 		89965D711EA11AEA006560BA /* RNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNavigationController.swift; sourceTree = "<group>"; };
 		89965D741EA1A542006560BA /* INavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INavigationController.swift; sourceTree = "<group>"; };
 		89965D761EA1B285006560BA /* RecordDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordDetailViewController.swift; sourceTree = "<group>"; };
+		8997239A1EC6827300ADAD61 /* CarDetecion.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CarDetecion.entitlements; sourceTree = "<group>"; };
 		899ADFC21EBE070D00E92B0E /* NewsDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDetailController.swift; sourceTree = "<group>"; };
 		899ADFC41EBE15EE00E92B0E /* NewsListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsListController.swift; sourceTree = "<group>"; };
 		89A37B481EC3543F006A4D07 /* logo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = logo.jpg; sourceTree = "<group>"; };
@@ -765,6 +766,7 @@
 		895307C11E6D18D9007AF459 /* CarDetecion */ = {
 			isa = PBXGroup;
 			children = (
+				8997239A1EC6827300ADAD61 /* CarDetecion.entitlements */,
 				891034DE1EC446B400EDBD23 /* ObjectC */,
 				897C6C3E1EBF578E00B22203 /* HelpDeskSDK */,
 				897C6C711EBF578E00B22203 /* HelpDeskUI */,
@@ -1688,6 +1690,14 @@
 						DevelopmentTeam = JHBA8HY2R5;
 						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					895307D51E6D18D9007AF459 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -2149,6 +2159,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = CarDetecion/CarDetecion.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = JHBA8HY2R5;
 				ENABLE_BITCODE = NO;
@@ -2163,7 +2174,7 @@
 					"$(PROJECT_DIR)/CarDetecion/HelpDeskUI/HDUIKit/3rdparty/DeviceHelper/VoiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/CarDetecion/HelpDeskUI/HDUIKit/3rdparty/DeviceHelper/VoiceConvert/opencore-amrwb",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cd.CarDetection;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhixingping.CarDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CarDetecion/CarDetecion-Bridging-Header.h";
@@ -2178,6 +2189,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = CarDetecion/CarDetecion.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = JHBA8HY2R5;
 				ENABLE_BITCODE = NO;
@@ -2192,7 +2204,7 @@
 					"$(PROJECT_DIR)/CarDetecion/HelpDeskUI/HDUIKit/3rdparty/DeviceHelper/VoiceConvert/opencore-amrnb",
 					"$(PROJECT_DIR)/CarDetecion/HelpDeskUI/HDUIKit/3rdparty/DeviceHelper/VoiceConvert/opencore-amrwb",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cd.CarDetection;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zhixingping.CarDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CarDetecion/CarDetecion-Bridging-Header.h";

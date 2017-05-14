@@ -89,9 +89,7 @@ class PreDetectionTVController: UITableViewController {
         params["carTypeId"] = carType!["id"].stringValue
         params["cityId"] = city!["code"].stringValue
         params["color"] = carColor!
-        let year = strDate.components(separatedBy: "年").first
-        let month = strDate.components(separatedBy: "年").last?.components(separatedBy: "月").first
-        params["regDate"] = "\(year!)年\(Int(month!)!)月"
+        params["regDate"] = strDate
         let fomatter = DateFormatter()
         fomatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         params["createTime"] = fomatter.string(from: Date())
@@ -153,7 +151,7 @@ class PreDetectionTVController: UITableViewController {
             cell.tfContent.isHidden = false
             cell.lblContent.isHidden = true
             cell.tvContent.isHidden = true
-            cell.tfContent.placeholder = "请输入车颜色"
+            cell.tfContent.attributedPlaceholder = NSAttributedString(string: "请输入车颜色", attributes: [NSForegroundColorAttributeName : UIColor.darkGray])
             cell.tfContent.keyboardType = .default
             cell.tfContent.rightView = nil
             cell.lcIconWidth.constant = 28
@@ -176,7 +174,7 @@ class PreDetectionTVController: UITableViewController {
             cell.tfContent.isHidden = false
             cell.lblContent.isHidden = true
             cell.tvContent.isHidden = true
-            cell.tfContent.placeholder = "请输入"
+            cell.tfContent.attributedPlaceholder = NSAttributedString(string: "请输入", attributes: [NSForegroundColorAttributeName : UIColor.darkGray])
             cell.tfContent.keyboardType = .numbersAndPunctuation
             if cell.tfContent.rightView == nil {
                 let label = UILabel()
@@ -235,12 +233,12 @@ class PreDetectionTVController: UITableViewController {
                 tabPage?.navigationController?.pushViewController(controller, animated: true)
             }
         }else if indexPath.row == 2 {
-            DatePickerDialog().show(title: "请选择上牌时间", doneButtonTitle: "确定", cancelButtonTitle: "取消", datePickerMode: .date) {
+            var date = Date()
+            date = date.addingTimeInterval(-60 * 60 * 24 * 365 * 5)
+            DatePickerDialog().show(title: "请选择上牌时间", doneButtonTitle: "确定", cancelButtonTitle: "取消", minimumDate:date, maximumDate: Date() , datePickerMode: .date) {
                 [weak self] (date) -> Void in
                 if date != nil {
-                    let fomatter = DateFormatter()
-                    fomatter.dateFormat = "yyyy年MM月dd日"
-                    self?.strDate = fomatter.string(from: date!)
+                    self?.strDate = date ?? ""
                     self?.tableView.reloadData()
                 }
             }

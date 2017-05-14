@@ -242,10 +242,12 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             case 1:
                 tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
             case 2:
-                tableView.scrollToRow(at: IndexPath(row: 0, section: 2), at: .top, animated: true)
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .top, animated: true)
             case 3:
                 tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .top, animated: true)
             case 4:
+                tableView.scrollToRow(at: IndexPath(row: 0, section: 5), at: .top, animated: true)
+            case 5:
                 tableView.scrollToRow(at: IndexPath(row: 0, section: 6), at: .top, animated: true)
             default:
                 fatalError()
@@ -291,12 +293,12 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 }
                 let formatter = DateFormatter()
                 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                let str = imageStr.substring(to: imageStr.index(before: imageStr.endIndex))
+                let str = imageStr.characters.count > 0 ? imageStr.substring(to: imageStr.index(before: imageStr.endIndex)) : ""
                 if pathName == name {
                     let i = orderKeys.index(of: pathName) ?? 0
-                    orders.replaceSubrange(i..<(i+1), with: [["price" : price , "remark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]])
+                    orders.replaceSubrange(i..<(i+1), with: [["preSalePrice" : self.price , "mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]])
                 }else{
-                    orders.insert(["price" : price , "remark" : remark , "images" : str , "addtime" : formatter.string(from: Date())], at: 0)
+                    orders.insert(["preSalePrice" : self.price , "mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())], at: 0)
                 }
                 UserDefaults.standard.set(orders, forKey: "orders")
                 UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
@@ -687,6 +689,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }else if price.characters.count == 0 && bSubmit {
                 cell.contentView.layer.borderColor = UIColor.red.cgColor
             }else{
+                if price.characters.count > 0 {
+                    cell.tfPrice.text = price
+                }
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
             }
             return cell
@@ -699,6 +704,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }else if remark.characters.count == 0 && bSubmit {
                 cell.contentView.layer.borderColor = UIColor.red.cgColor
             }else{
+                if remark.characters.count > 0 {
+                    cell.tvMark.text = remark
+                }
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
             }
             return cell

@@ -240,6 +240,18 @@ class CarModelController: UIViewController , UITableViewDataSource , UITableView
         return 44
     }
 
+    func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+        return index
+    }
+    
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        if car1 == nil && car2 == nil  {
+            return arrKey
+        }else{
+            return nil
+        }
+    }
+
     /*
     // MARK: - Navigation
 
@@ -262,7 +274,7 @@ class CarModelController: UIViewController , UITableViewDataSource , UITableView
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
         var message = ""
         if nShowEmpty == 1 {
-            message = "空空如也，啥子都没有噢！"
+            message = "空空如也，啥子都没有哦！"
         }else if nShowEmpty == 2 {
             message = "加载是件正经事儿，走心加载中..."
         }else if nShowEmpty == 3 {

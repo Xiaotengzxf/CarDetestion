@@ -13,7 +13,7 @@ import IQKeyboardManagerSwift
 var upLoadCount = 0 // 上传图片的数量
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
 
     var window: UIWindow?
     var orderInfo : [String : [String : String]] = [:]
@@ -49,8 +49,75 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("环信客服初始化失败")
         }
         
+        // 通知注册实体类
+        let entity = JPUSHRegisterEntity();
+        entity.types = Int(JPAuthorizationOptions.alert.rawValue) |  Int(JPAuthorizationOptions.sound.rawValue) |  Int(JPAuthorizationOptions.badge.rawValue);
+        JPUSHService.register(forRemoteNotificationConfig: entity, delegate: self);
+        // 注册极光推送
+        JPUSHService.setup(withOption: launchOptions, appKey: "0cc682f084991254e7b0dd7a", channel:"Publish channel" , apsForProduction: false);
+        // 获取推送消息
+        let remote = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification] as? Dictionary<String,Any>;
+        // 如果remote不为空，就代表应用在未打开的时候收到了推送消息
+        if remote != nil {
+            // 收到推送消息实现的方法
+            self.perform(#selector(receivePush), with: remote, afterDelay: 1.0);
+        }
+        
+        if let username = UserDefaults.standard.object(forKey: "username") as? String {
+            JPUSHService.setAlias(username, callbackSelector: nil, object: nil)
+        }
+        
+        application.applicationIconBadgeNumber = 0
+        
         return true
     }
+    
+    
+    // MARK: -JPUSHRegisterDelegate
+    // iOS 10.x 需要
+    
+    @available(iOS 10.0, *)
+    func jpushNotificationCenter(_ center: UNUserNotificationCenter!, willPresent notification: UNNotification!, withCompletionHandler completionHandler: ((Int) -> Void)!) {
+        
+        let userInfo = notification.request.content.userInfo;
+        if notification.request.trigger is UNPushNotificationTrigger {
+            JPUSHService.handleRemoteNotification(userInfo);
+        }
+        completionHandler(Int(UNNotificationPresentationOptions.alert.rawValue))
+    }
+    
+    @available(iOS 10.0, *)
+    func jpushNotificationCenter(_ center: UNUserNotificationCenter!, didReceive response: UNNotificationResponse!, withCompletionHandler completionHandler: (() -> Void)!) {
+        
+        let userInfo = response.notification.request.content.userInfo;
+        if response.notification.request.trigger is UNPushNotificationTrigger {
+            JPUSHService.handleRemoteNotification(userInfo);
+        }
+        completionHandler();
+        // 应用打开的时候收到推送消息
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        JPUSHService.handleRemoteNotification(userInfo);
+        completionHandler(UIBackgroundFetchResult.newData);
+    }
+    
+    // 接收到推送实现的方法
+    func receivePush(_ userInfo : Dictionary<String,Any>) {
+        // 角标变0
+        UIApplication.shared.applicationIconBadgeNumber = 0
+        // 剩下的根据需要自定义
+    }
+
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        JPUSHService.registerDeviceToken(deviceToken)
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("apns fail:\(error.localizedDescription)")
+    }
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -68,6 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        application.applicationIconBadgeNumber = 0
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

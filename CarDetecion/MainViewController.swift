@@ -95,7 +95,14 @@ class MainViewController: UIViewController , UITableViewDataSource , UITableView
                 if let data = json , data["total"].intValue > 0 {
                     if let array = data["data"].array {
                         self?.arrBannerData += array
-                        self?.banner?.imageURLStringsGroup = array.map{$0["previewMedia"].stringValue}
+                        var arrImageUrl : [String] = []
+                        for item in array {
+                            if let url = item["previewMedia"].string?.trimmingCharacters(in: .whitespacesAndNewlines) {
+                                print(url)
+                                arrImageUrl.append(url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
+                            }
+                        }
+                        self?.banner?.imageURLStringsGroup = arrImageUrl
                     }
                 }
             }

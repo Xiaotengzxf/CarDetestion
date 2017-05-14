@@ -6,8 +6,8 @@ private extension Selector {
     static let deviceOrientationDidChange = #selector(DatePickerDialog.deviceOrientationDidChange)
 }
 
-public class DatePickerDialog: UIView {
-    public typealias DatePickerCallback = (_ date: Date?) -> Void
+public class DatePickerDialog: UIView , UIPickerViewDelegate , UIPickerViewDataSource {
+    public typealias DatePickerCallback = (_ date: String?) -> Void
 
     // MARK: - Constants
     private let kDatePickerDialogDefaultButtonHeight:       CGFloat = 50
@@ -18,7 +18,7 @@ public class DatePickerDialog: UIView {
     // MARK: - Views
     private var dialogView:   UIView!
     private var titleLabel:   UILabel!
-    public var datePicker:    UIDatePicker!
+    public var datePicker:    UIPickerView!
     private var cancelButton: UIButton!
     private var doneButton:   UIButton!
 
@@ -26,6 +26,8 @@ public class DatePickerDialog: UIView {
     private var defaultDate:    Date?
     private var datePickerMode: UIDatePickerMode?
     private var callback:       DatePickerCallback?
+    
+    private var years : [String] = []
 
     // MARK: - Dialog initialization
     override init(frame: CGRect) {
@@ -70,11 +72,22 @@ public class DatePickerDialog: UIView {
         self.datePickerMode = datePickerMode
         self.callback = callback
         self.defaultDate = defaultDate
-        self.datePicker.datePickerMode = self.datePickerMode ?? .date
-        self.datePicker.date = self.defaultDate ?? Date()
-        self.datePicker.maximumDate = maximumDate
-        self.datePicker.minimumDate = minimumDate
-
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        let d = formatter.string(from: defaultDate)
+        let year = d.substring(to: d.index(d.startIndex, offsetBy: 4))
+        let start = d.index(d.startIndex, offsetBy: 5)
+        let end = d.index(d.startIndex, offsetBy: 6)
+        let month = d[start...end]
+        let nYear = Int(year)!
+        let nMonth = Int (month)!
+        var i = 4
+        while i >= 0 {
+            years.append("\(nYear - i)")
+            i -= 1
+        }
+        self.datePicker.selectRow(4, inComponent: 0, animated: true)
+        self.datePicker.selectRow(nMonth - 1, inComponent: 1, animated: true)
         /* Add dialog to main window */
         guard let appDelegate = UIApplication.shared.delegate else { fatalError() }
         guard let window = appDelegate.window else { fatalError() }
@@ -173,10 +186,12 @@ public class DatePickerDialog: UIView {
         self.titleLabel.font = UIFont.boldSystemFont(ofSize: 17)
         dialogContainer.addSubview(self.titleLabel)
 
-        self.datePicker = UIDatePicker(frame: CGRect(x: 0, y: 30, width: 0, height: 0))
+        self.datePicker = UIPickerView(frame: CGRect(x: 0, y: 30, width: 0, height: 0))
         self.datePicker.autoresizingMask = .flexibleRightMargin
         self.datePicker.frame.size.width = 300
         self.datePicker.frame.size.height = 216
+        self.datePicker.dataSource = self
+        self.datePicker.delegate = self
         dialogContainer.addSubview(self.datePicker)
 
         // Add the buttons
@@ -221,7 +236,9 @@ public class DatePickerDialog: UIView {
 
     func buttonTapped(sender: UIButton!) {
         if sender.tag == kDatePickerDialogDoneButtonTag {
-            self.callback?(self.datePicker.date)
+            let y = self.datePicker.selectedRow(inComponent: 0)
+            let m = self.datePicker.selectedRow(inComponent: 1)
+            self.callback?("\(years[y])年\(m + 1)月")
         } else {
             self.callback?(nil)
         }
@@ -237,6 +254,26 @@ public class DatePickerDialog: UIView {
         let screenHeight = UIScreen.main.bounds.size.height
 
         return CGSize(width: screenWidth, height: screenHeight)
+    }
+    
+    public func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 2
+    }
+    
+    public func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        if component == 0 {
+            return 5
+        }else {
+            return 12
+        }
+    }
+    
+    public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        if component == 0 {
+            return years[row]
+        }else{
+            return "\(row + 1)"
+        }
     }
 
 }

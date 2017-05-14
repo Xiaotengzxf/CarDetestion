@@ -77,13 +77,22 @@
 
 - (HVisitorInfo *)visitorInfo {
     HVisitorInfo *visitor = [[HVisitorInfo alloc] init];
-    visitor.name = @"小明儿";
-    visitor.qq = @"12345678";
-    visitor.phone = @"13636362637";
-    visitor.companyName = @"环信";
-    visitor.nickName = [SCLoginManager shareLoginManager].nickname;
-    visitor.email = @"abv@126.com";
-    visitor.desc = @"环信移动客服";
+    NSDictionary * dict = [[NSUserDefaults standardUserDefaults] objectForKey:@"userinfo"];
+    if (dict && dict.count > 0) {
+        NSString * userChineseName = [dict objectForKey:@"userChineseName"];
+        NSString * companyName = [dict objectForKey:@"companyName"];
+        if (userChineseName) {
+            [visitor setNickName:userChineseName];
+        }
+        if (companyName) {
+            [visitor setCompanyName:companyName];
+        }
+    }
+    
+    NSString * username = [[NSUserDefaults standardUserDefaults] objectForKey:@"username"];
+    if (username) {
+        [visitor setName:username];
+    }
     return visitor;
 }
 

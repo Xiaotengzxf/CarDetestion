@@ -16,16 +16,24 @@ class NewsDetailController: UIViewController {
     let pageDetail = "external/pageelement/pageDetail.html"
     let newsDetail = "external/news/newsDetail.html"
     var webView : WKWebView!
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var lblTime: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if title == "新闻详情" {
+            lblTitle.text = json?["title"].string
+        } else {
+            lblTitle.text = json?["elementName"].string
+        }
+        lblTime.text = "时间：\(json?["createTime"].string ?? "")"
         //创建wkwebview
         webView = WKWebView()
         webView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(webView)
         self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[webView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["webView" : webView]))
-        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[webView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["webView" : webView]))
+        self.view.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lblTime]-20-[webView]|", options: .directionLeadingToTrailing, metrics: nil, views: ["webView" : webView , "lblTime" : lblTime]))
         loadDetailData()
     }
     

@@ -83,7 +83,7 @@ class MineTableViewController: UITableViewController {
                     self.navigationController?.pushViewController(controller, animated: true)
                 }
             }else{
-                makeCall(message: "88888888")
+                makeCall(message: "075586962135")
             }
         }else{
             self.performSegue(withIdentifier: "info", sender: self)

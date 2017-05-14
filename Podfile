@@ -14,5 +14,6 @@ target 'CarDetecion' do
     pod 'DZNEmptyDataSet'
     pod 'DatePickerDialog'
     pod 'Bugly'
+    pod 'JPush'
 end
 

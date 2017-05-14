@@ -4,6 +4,9 @@ PODS:
   - DatePickerDialog (1.1.7)
   - DZNEmptyDataSet (1.8.1)
   - IQKeyboardManagerSwift (4.0.8)
+  - JCore (1.1.1)
+  - JPush (3.0.2):
+    - JCore (~> 1.1.1)
   - MBProgressHUD (1.0.0)
   - MJRefresh (3.1.12)
   - SDCycleScrollView (1.65):
@@ -21,6 +24,7 @@ DEPENDENCIES:
   - DatePickerDialog
   - DZNEmptyDataSet
   - IQKeyboardManagerSwift
+  - JPush
   - MBProgressHUD
   - MJRefresh
   - SDCycleScrollView
@@ -34,6 +38,8 @@ SPEC CHECKSUMS:
   DatePickerDialog: bd5e7e92e4da2c6a8966b28d5f5d8f335d6c2c63
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   IQKeyboardManagerSwift: c04bc9f68473823f825eb44d958fce98d921bead
+  JCore: 2210a789c8efb7dc2a46b1c24d2209b995b18ad2
+  JPush: 01a693fafe51b93eafc2e368bbc7a7cc07e12ce4
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
   MJRefresh: b96cdb21c4aa75a7b07654311ab2f315c497e806
   SDCycleScrollView: f72904c77698a7f93a41bcbbc2d78b073bf7326c
@@ -42,6 +48,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
   Toaster: 77c0b03d78e680bbbab0071c9c7ee392b0034010
 
-PODFILE CHECKSUM: aed135f8131023a283586288bd9e2f872a687934
+PODFILE CHECKSUM: 9ecde5a2d4cf8f1d9ee895644fd5ed03ef29e061
 
 COCOAPODS: 1.2.1.beta.1
