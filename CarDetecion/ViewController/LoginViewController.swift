@@ -67,7 +67,12 @@ class LoginViewController: UIViewController {
                 Toast(text: "网络故障，请检查网络").show()
             }else{
                 if let data = json , data["success"].boolValue {
-                    if let dic = data["object"].dictionaryObject {
+                    if var dic = data["object"].dictionaryObject {
+                        for (key , value) in dic {
+                            if value is NSNull {
+                                dic[key] = ""
+                            }
+                        }
                         UserDefaults.standard.set(dic, forKey: "userinfo")
                     }
                     UserDefaults.standard.set(username, forKey: "username")
