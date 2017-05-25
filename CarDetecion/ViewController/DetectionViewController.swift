@@ -51,6 +51,10 @@ class DetectionViewController: UIViewController {
         
         vPreDetection.addGestureRecognizer(tapB)
         
+        let tapC = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.handleGestureRecognizer(recognizer:)))
+        
+        vCarStatus.addGestureRecognizer(tapC)
+        
         let tap1 = UITapGestureRecognizer(target: self, action: #selector(DetectionViewController.tap(recognizer:)))
         tap1.numberOfTapsRequired = 1
         vPass.addGestureRecognizer(tap1)
@@ -171,6 +175,8 @@ class DetectionViewController: UIViewController {
             tabPage.title = "预评估"
             tabPage.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(tabPage, animated: true)
+        }else{
+            Toast(text: "抱歉，您还没有车。").show()
         }
     }
     
