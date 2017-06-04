@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="29l-ii-3r3">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="29l-ii-3r3">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -627,7 +627,7 @@
                                 <rect key="frame" x="0.0" y="227" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="chC-zx-S4Y" id="76w-hK-d6U">
-                                    <rect key="frame" x="0.0" y="0.0" width="342" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="342" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -1812,6 +1812,7 @@
                         <outlet property="btnAdvertise" destination="1Y9-o9-Lft" id="VW1-t8-UY0"/>
                         <outlet property="lblAdvertise" destination="ABU-OM-nUH" id="2ok-z8-lgW"/>
                         <outlet property="lblPass" destination="PBW-6Q-aSI" id="vPt-QA-u6g"/>
+                        <outlet property="lblPreDetection" destination="Sv2-e7-m9U" id="zRZ-Fg-oaW"/>
                         <outlet property="lblReview" destination="dMG-OV-EfW" id="fjW-5N-1Ym"/>
                         <outlet property="lblUnSubmit" destination="fti-3l-05F" id="JvZ-g6-PO4"/>
                         <outlet property="lblUnpass" destination="db8-sT-N3a" id="LIr-Gn-NMN"/>
@@ -2253,7 +2254,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="103"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lRM-kL-cEC" id="0yt-2N-j1H">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="103"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="102.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="o1D-VK-9nO">
@@ -2507,7 +2508,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Suo-X2-Mdh" id="MFU-1p-FAD">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8fL-op-hWn">
@@ -2580,7 +2581,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wCn-8l-aPz" id="GCr-js-MBq">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -2646,14 +2647,14 @@
         <image name="mine_logo" width="120" height="120"/>
         <image name="right_arrow" width="49" height="66"/>
         <image name="supplement" width="27" height="27"/>
-        <image name="tab10" width="30" height="30"/>
-        <image name="tab11" width="30" height="30"/>
-        <image name="tab20" width="30" height="30"/>
-        <image name="tab21" width="30" height="31"/>
-        <image name="tab40" width="30" height="30"/>
-        <image name="tab41" width="30" height="30"/>
-        <image name="tab50" width="30" height="30"/>
-        <image name="tab51" width="30" height="30"/>
+        <image name="tab10" width="45" height="40"/>
+        <image name="tab11" width="45" height="40"/>
+        <image name="tab20" width="45" height="40"/>
+        <image name="tab21" width="45" height="40"/>
+        <image name="tab40" width="45" height="40"/>
+        <image name="tab41" width="45" height="40"/>
+        <image name="tab50" width="45" height="39"/>
+        <image name="tab51" width="45" height="39"/>
         <image name="vehicle_interior" width="27" height="27"/>
     </resources>
 </document>

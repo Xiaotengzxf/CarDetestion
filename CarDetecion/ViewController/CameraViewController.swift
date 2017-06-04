@@ -179,7 +179,7 @@ public class CameraViewController: UIViewController {
     let imageView : UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "mask_left_45")
+        imageView.image = UIImage(named: "transport")
         return imageView
     }()
     
@@ -381,7 +381,7 @@ public class CameraViewController: UIViewController {
                     imageUrl = "\(NetworkManager.sharedInstall.domain)\(json["waterMark"].stringValue)"
                     print("水印：\(imageUrl)")
                     url = URL(string: imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
-                    imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "mask_left_45"))
+                    imageView.sd_setImage(with: url, placeholderImage: UIImage(named: "transport"))
                 }
             }
         }else{

@@ -14,6 +14,7 @@ import AVFoundation
 class DetectionViewController: UIViewController {
 
     
+    @IBOutlet weak var lblPreDetection: UILabel!
     @IBOutlet weak var vPass: UIView!
     @IBOutlet weak var vReview: UIView!
     @IBOutlet weak var vUnsubmit: UIView!
@@ -71,10 +72,22 @@ class DetectionViewController: UIViewController {
         tap4.numberOfTapsRequired = 1
         vUnsubmit.addGestureRecognizer(tap4)
         
-        lcRight.constant = (WIDTH - 240) / 4
-        lcLeft.constant = (WIDTH - 240) / 4
-        
         NotificationCenter.default.addObserver(self, selector: #selector(DetectionViewController.handleNotification(notification:)), name: Notification.Name("detection"), object: nil)
+        
+        // 判断是否显示预评估 非先锋不显示
+        if let userinfo = UserDefaults.standard.object(forKey: "userinfo") as? [String : Any] {
+            let userSuperCompany = userinfo["userSuperCompany"] as? Int ?? 0
+            let userCompany = userinfo["userCompany"] as? Int ?? 0
+            if userSuperCompany == 9 || userCompany == 9 {
+                lcRight.constant = (WIDTH - 240) / 4
+                lcLeft.constant = (WIDTH - 240) / 4
+            }else{
+                lblPreDetection.isHidden = true
+                vPreDetection.isHidden = true
+                lcLeft.constant = ((WIDTH - 160) / 3 - 80 ) / 2
+                lcRight.constant = ((WIDTH - 160) / 3 - 80 ) / 2
+            }
+        }
         
     }
     
