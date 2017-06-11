@@ -12,13 +12,13 @@ import SKPhotoBrowser
 import SwiftyJSON
 import MBProgressHUD
 
-class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate {
+class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate , Detection3TableViewCellDelegate {
 
     @IBOutlet weak var lcBottom: NSLayoutConstraint!
     @IBOutlet weak var btnSave: UIButton!
     @IBOutlet weak var vBottom: UIView!
     @IBOutlet weak var tableView: UITableView!
-    let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "备注"]
+    let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "租赁期限", "备注"]
     let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门" , "右前门铰链"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
     var images : [Int : Data] = [:]
     let presentAnimator = PresentAnimator()
@@ -41,9 +41,19 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var arrImageInfo : [JSON] = []
     var pathName = ""
     var bSave = false
+    var bGuanghui = false
+    var leaseTerm = 0 // 租赁
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let userinfo = UserDefaults.standard.object(forKey: "userinfo") as! [String : Any]
+        let userSuperCompany = userinfo["userSuperCompany"] as? Int ?? 0
+        let userCompany = userinfo["userCompany"] as? Int ?? 0
+        if userSuperCompany == 8 || userCompany == 8 {
+            bGuanghui = true
+        }
+        
         tableView.register(UINib(nibName: "ReUseHeaderFooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "header")
         NotificationCenter.default.addObserver(self, selector: #selector(DetectionNewViewController.handleNotification(notification:)), name: Notification.Name("detectionnew"), object: nil)
         self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
@@ -436,13 +446,13 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 获取水印
     func getWaterMark(tag : Int) {
-        var hud : MBProgressHUD?
+        weak var hud : MBProgressHUD?
         if tag >= 0 {
             hud = showHUD(text: "加载中...")
         }
         NetworkManager.sharedInstall.requestString(url: operationDesc, params: nil) {[weak self] (json, error) in
             if hud != nil {
-                hud?.hide(animated: true)
+                self?.hideHUD(hud: hud!)
             }
             if error != nil {
                 print(error!.localizedDescription)
@@ -478,7 +488,10 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // MARK: - UITableView DataSource
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionTitles.count
+        if bGuanghui {
+            return sectionTitles.count
+        }
+        return sectionTitles.count - 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -696,20 +709,46 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }
             return cell
         }else{
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
-            cell.contentView.layer.borderWidth = 0.5
-            if source == 1 {
-                cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
-                cell.tvMark.text = json?["mark"].string
-            }else if remark.characters.count == 0 && bSubmit {
-                cell.contentView.layer.borderColor = UIColor.red.cgColor
-            }else{
-                if remark.characters.count > 0 {
-                    cell.tvMark.text = remark
+            if bGuanghui {
+                if indexPath.section == 7 {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "cell3", for: indexPath) as! Detection3TableViewCell
+                    cell.contentView.layer.borderWidth = 0.5
+                    cell.delegate = self
+                    
+                    return cell
+                }else {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
+                    cell.contentView.layer.borderWidth = 0.5
+                    if source == 1 {
+                        cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                        cell.tvMark.text = json?["mark"].string
+                    }else if remark.characters.count == 0 && bSubmit {
+                        cell.contentView.layer.borderColor = UIColor.red.cgColor
+                    }else{
+                        if remark.characters.count > 0 {
+                            cell.tvMark.text = remark
+                        }
+                        cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                    }
+                    return cell
                 }
-                cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+            }else{
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
+                cell.contentView.layer.borderWidth = 0.5
+                if source == 1 {
+                    cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                    cell.tvMark.text = json?["mark"].string
+                }else if remark.characters.count == 0 && bSubmit {
+                    cell.contentView.layer.borderColor = UIColor.red.cgColor
+                }else{
+                    if remark.characters.count > 0 {
+                        cell.tvMark.text = remark
+                    }
+                    cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                }
+                return cell
             }
-            return cell
+            
         }
     }
     
@@ -723,13 +762,30 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         }else if indexPath.section == 6 {
             return 44
         }else{
-            return 100
+            if bGuanghui {
+                if indexPath.section == 7 {
+                    return 60
+                }else{
+                    return 100
+                }
+            }else{
+                return 100
+            }
+            
         }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! ReUseHeaderFooterView
-        view.lblTitle.text = sectionTitles[section]
+        if section < 7 {
+            view.lblTitle.text = sectionTitles[section]
+        }else{
+            if bGuanghui {
+                view.lblTitle.text = sectionTitles[section]
+            }else{
+                view.lblTitle.text = sectionTitles[section + 1]
+            }
+        }
         return view
     }
     

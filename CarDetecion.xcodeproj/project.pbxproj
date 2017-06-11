@@ -202,6 +202,7 @@
 		8985C7D91E7309D60075B6F8 /* DetectionNewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */; };
 		8985F3791EB8B18A0028E70E /* CityTVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985F3781EB8B1890028E70E /* CityTVController.swift */; };
 		8985F37B1EB8DC9E0028E70E /* CarModelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */; };
+		898653641EED9AC600B276C3 /* Detection3TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898653631EED9AC600B276C3 /* Detection3TableViewCell.swift */; };
 		898916E51E7E8EBE00BE6848 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 898916E41E7E8EBE00BE6848 /* Assets.xcassets */; };
 		898916E91E7ED5B500BE6848 /* PlaceholderTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */; };
 		898B0AA01EC49CAB00810620 /* SCLoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 898B0A9F1EC49CAB00810620 /* SCLoginManager.m */; };
@@ -630,6 +631,7 @@
 		8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionNewViewController.swift; sourceTree = "<group>"; };
 		8985F3781EB8B1890028E70E /* CityTVController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityTVController.swift; sourceTree = "<group>"; };
 		8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarModelCell.swift; sourceTree = "<group>"; };
+		898653631EED9AC600B276C3 /* Detection3TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detection3TableViewCell.swift; sourceTree = "<group>"; };
 		898916E41E7E8EBE00BE6848 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		898916E81E7ED5B500BE6848 /* PlaceholderTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaceholderTextView.swift; sourceTree = "<group>"; };
 		898B0A9E1EC49CAB00810620 /* SCLoginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCLoginManager.h; sourceTree = "<group>"; };
@@ -857,6 +859,7 @@
 				896AFA761E8C9213008DE6F5 /* DetectionTableViewCell.swift */,
 				8978CAE61E928EF300BBC926 /* Detection1TableViewCell.swift */,
 				8978CAE81E928F0400BBC926 /* Detection2TableViewCell.swift */,
+				898653631EED9AC600B276C3 /* Detection3TableViewCell.swift */,
 				89CB168F1EABA54A00768787 /* RecordTableViewCell.swift */,
 			);
 			path = Views;
@@ -1916,6 +1919,7 @@
 				897C6E021EBF578F00B22203 /* HDRefreshTableViewController.m in Sources */,
 				897C6E051EBF578F00B22203 /* HDBaseMessageCell.m in Sources */,
 				897C6DE31EBF578F00B22203 /* PSTCollectionViewLayout.m in Sources */,
+				898653641EED9AC600B276C3 /* Detection3TableViewCell.swift in Sources */,
 				897C6DA71EBF578F00B22203 /* HDCDDeviceManager+Remind.m in Sources */,
 				897C6DE41EBF578F00B22203 /* PSTCollectionViewUpdateItem.m in Sources */,
 				895307C51E6D18D9007AF459 /* MainViewController.swift in Sources */,
