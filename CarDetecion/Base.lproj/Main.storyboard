@@ -2064,7 +2064,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="178"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" tag="1" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uJq-9j-7xk">
+                                                <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uJq-9j-7xk">
                                                     <rect key="frame" x="0.0" y="67" width="94" height="44"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="NWg-yl-6mO"/>

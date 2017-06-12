@@ -225,6 +225,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                 params["clientName"] = "iOS"
                 params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? ""
                 params["mark"] = self?.orderInfo[orderNo]?["remark"] ?? ""
+                params["leaseTerm"] = self?.orderInfo[orderNo]?["leaseTerm"] ?? ""
                 NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in
                     if error != nil {
                         print(error!.localizedDescription)

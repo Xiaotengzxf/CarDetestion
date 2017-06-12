@@ -306,9 +306,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 let str = imageStr.characters.count > 0 ? imageStr.substring(to: imageStr.index(before: imageStr.endIndex)) : ""
                 if pathName == name {
                     let i = orderKeys.index(of: pathName) ?? 0
-                    orders.replaceSubrange(i..<(i+1), with: [["preSalePrice" : self.price , "mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]])
+                    orders.replaceSubrange(i..<(i+1), with: [["preSalePrice" : self.price , "mark" : remark ,"leaseTerm" : "\(self.leaseTerm)" , "images" : str , "addtime" : formatter.string(from: Date())]])
                 }else{
-                    orders.insert(["preSalePrice" : self.price , "mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())], at: 0)
+                    orders.insert(["preSalePrice" : self.price , "mark" : remark ,"leaseTerm" : "\(self.leaseTerm)" , "images" : str , "addtime" : formatter.string(from: Date())], at: 0)
                 }
                 UserDefaults.standard.set(orders, forKey: "orders")
                 UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
@@ -400,7 +400,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                             let right = key % 1000 >= 100
                             self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                         }
-                        NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark])
+                        NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark, "leaseTerm" : "\(self!.leaseTerm)"])
                         if self!.pathName.characters.count > 0 {
                             var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
                             var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
@@ -714,11 +714,17 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     let cell = tableView.dequeueReusableCell(withIdentifier: "cell3", for: indexPath) as! Detection3TableViewCell
                     cell.contentView.layer.borderWidth = 0.5
                     cell.delegate = self
-                    leaseTerm = json?["leaseTerm"].int ?? 0
+                    if leaseTerm == 0 {
+                        leaseTerm = json?["leaseTerm"].int ?? 0
+                    }
+                    if leaseTerm == 0 {
+                        leaseTerm =  Int(json?["leaseTerm"].string ?? "0")!
+                    }
                     cell.btn1.isSelected = (leaseTerm == 0)
                     cell.btn2.isSelected = (leaseTerm == 12)
                     cell.btn3.isSelected = (leaseTerm == 24)
                     cell.btn4.isSelected = (leaseTerm == 36)
+                    cell.contentView.layer.borderColor = UIColor.clear.cgColor
                     return cell
                 }else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
