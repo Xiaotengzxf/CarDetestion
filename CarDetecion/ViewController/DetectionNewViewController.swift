@@ -714,7 +714,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     let cell = tableView.dequeueReusableCell(withIdentifier: "cell3", for: indexPath) as! Detection3TableViewCell
                     cell.contentView.layer.borderWidth = 0.5
                     cell.delegate = self
-                    
+                    leaseTerm = json?["leaseTerm"].int ?? 0
+                    cell.btn1.isSelected = (leaseTerm == 0)
+                    cell.btn2.isSelected = (leaseTerm == 12)
+                    cell.btn3.isSelected = (leaseTerm == 24)
+                    cell.btn4.isSelected = (leaseTerm == 36)
                     return cell
                 }else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
@@ -811,5 +815,20 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return dismissAnimator
+    }
+    
+    // Detection3TableViewCellDelegate
+    func selectedItem(tag: Int) {
+        switch tag {
+        case 0:
+            leaseTerm = 0
+        case 1:
+            leaseTerm = 12
+        case 2:
+            leaseTerm = 24
+        default:
+            leaseTerm = 36
+        }
+        tableView.reloadData()
     }
 }

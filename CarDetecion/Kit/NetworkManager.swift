@@ -14,7 +14,7 @@ class NetworkManager {
     
     static let sharedInstall = NetworkManager() // 单例
     
-    let domain = "http://119.23.128.214:8080/carWeb"
+    let domain = "http://112.74.65.110:8080/carWeb" //119.23.128.214
     
     enum CustomError : Int , Error {
         case Custom
