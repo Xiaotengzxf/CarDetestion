@@ -21,6 +21,9 @@ class RecordDetailViewController: UIViewController {
     @IBOutlet weak var vAllSuggestion: UIView!
     @IBOutlet weak var vContent: UIView!
     @IBOutlet weak var lblOpinion: UILabel!
+    @IBOutlet weak var vZuLin: UIView!
+    @IBOutlet weak var lblLeaseTerm: UILabel!
+    @IBOutlet weak var lblLeasePrice: UILabel!
     var json : JSON!
     var statusInfo : [String : String]!
     var flag = 0
@@ -46,7 +49,26 @@ class RecordDetailViewController: UIViewController {
         if flag == 1 {
             lblPrice.isHidden = true
             lblPriceTip.isHidden = true
-            lcTop.constant = -20
+            let leaseTerm = json["leaseTerm"].int ?? 0
+            let residualPrice = json["residualPrice"].int ?? 0
+            if leaseTerm == 0 {
+                vZuLin.isHidden = true
+                lcTop.constant = 5-59-20-10
+            }else{
+                lblLeaseTerm.text = "\(leaseTerm)月"
+                lblLeasePrice.text = "\(residualPrice)元"
+                lcTop.constant = -20
+            }
+        }else{
+            let leaseTerm = json["leaseTerm"].int ?? 0
+            let residualPrice = json["residualPrice"].int ?? 0
+            if leaseTerm == 0 {
+                vZuLin.isHidden = true
+                lcTop.constant = 5-59
+            }else{
+                lblLeaseTerm.text = "\(leaseTerm)月"
+                lblLeasePrice.text = "\(residualPrice)元"
+            }
         }
         
     }

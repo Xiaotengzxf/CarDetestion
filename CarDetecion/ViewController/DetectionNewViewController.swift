@@ -18,7 +18,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     @IBOutlet weak var btnSave: UIButton!
     @IBOutlet weak var vBottom: UIView!
     @IBOutlet weak var tableView: UITableView!
-    let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "租赁期限", "备注"]
+    let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "租赁期限(非残值租赁产品就选无租期)", "备注"]
     let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门" , "右前门铰链"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
     var images : [Int : Data] = [:]
     let presentAnimator = PresentAnimator()
@@ -43,6 +43,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var bSave = false
     var bGuanghui = false
     var leaseTerm = 0 // 租赁
+    var localIndex = -1 // 本地缓存的index
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -371,7 +372,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     let right = key % 1000 >= 100
                     self.uploadImage(imageClass: self.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                 }
-                NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self.orderNo , "price" : self.price , "remark" : self.remark])
+                NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self.orderNo , "price" : self.price , "remark" : self.remark, "leaseTerm" : "\(self.leaseTerm)"])
                 if self.pathName.characters.count > 0 {
                     var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
                     var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
@@ -401,12 +402,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                             self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                         }
                         NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark, "leaseTerm" : "\(self!.leaseTerm)"])
-                        if self!.pathName.characters.count > 0 {
+                        if self!.localIndex >= 0 {
                             var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
                             var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
-                            let i = orderKeys.index(of: self!.pathName) ?? 0
-                            orderKeys.remove(at: i)
-                            orders.remove(at: i)
+                            orderKeys.remove(at: self!.localIndex)
+                            orders.remove(at: self!.localIndex)
                             UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
                             UserDefaults.standard.set(orders, forKey: "orders")
                             UserDefaults.standard.synchronize()

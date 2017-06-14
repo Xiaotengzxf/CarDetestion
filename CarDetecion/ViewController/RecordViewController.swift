@@ -478,6 +478,7 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                 controller.price = p ?? ""
                 controller.remark = json["mark"].string ?? ""
                 controller.leaseTerm = Int(json["leaseTerm"].string ?? "0")!
+                controller.localIndex = indexPath.row
                 self.navigationController?.pushViewController(controller, animated: true)
             }
         }else{
