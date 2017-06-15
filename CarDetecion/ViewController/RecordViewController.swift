@@ -469,16 +469,13 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                             images[Int(item)!] = UIImageJPEGRepresentation(image, 1)
                         }
                     }
-                    
-                    controller.pathName = orderKeys[indexPath.row]
                     controller.images = images
                 }
-                
+                controller.pathName = orderKeys[indexPath.row]
                 let p = json["preSalePrice"].string
                 controller.price = p ?? ""
                 controller.remark = json["mark"].string ?? ""
                 controller.leaseTerm = Int(json["leaseTerm"].string ?? "0")!
-                controller.localIndex = indexPath.row
                 self.navigationController?.pushViewController(controller, animated: true)
             }
         }else{

@@ -199,7 +199,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         if let tag = notification.object as? Int {
             if tag == 1 {
                 if let userinfo = notification.userInfo as? [String : String] {
-                    orderInfo[userinfo["orderNo"]!] = ["price" : userinfo["price"]! , "remark" : userinfo["remark"]!]
+                    orderInfo[userinfo["orderNo"]!] = ["price" : userinfo["price"]! , "remark" : userinfo["remark"]!, "leaseTerm" : userinfo["leaseTerm"]!]
                     self.perform(#selector(AppDelegate.showAlertView(userinfo:)), with: userinfo, afterDelay: 0.1)
                 }
             }else if tag == 2 {
@@ -225,7 +225,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                 params["clientName"] = "iOS"
                 params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? ""
                 params["mark"] = self?.orderInfo[orderNo]?["remark"] ?? ""
-                params["leaseTerm"] = self?.orderInfo[orderNo]?["leaseTerm"] ?? ""
+                params["leaseTerm"] = self?.orderInfo[orderNo]?["leaseTerm"] ?? "0"
                 NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in
                     if error != nil {
                         print(error!.localizedDescription)

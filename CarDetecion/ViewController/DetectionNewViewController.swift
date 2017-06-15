@@ -31,6 +31,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var price = ""
     var remark = ""
     var bSubmit = false // 是否点击了提交
+    var bSubmitSuccess = false // 是否提交成功
     var companyNo = 0 // 单位代号
     var nTag = 0 // 临时tag
     //var cameraType = 0 // 单拍，连拍
@@ -43,7 +44,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var bSave = false
     var bGuanghui = false
     var leaseTerm = 0 // 租赁
-    var localIndex = -1 // 本地缓存的index
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,7 +89,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if (!self.navigationController!.viewControllers.contains(self)) && bSave == false {
+        if (!self.navigationController!.viewControllers.contains(self)) && bSave == false && source != 1 && bSubmitSuccess == false {
             self.save(UIButton())
         }
     }
@@ -373,16 +373,20 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     self.uploadImage(imageClass: self.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                 }
                 NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self.orderNo , "price" : self.price , "remark" : self.remark, "leaseTerm" : "\(self.leaseTerm)"])
-                if self.pathName.characters.count > 0 {
-                    var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
-                    var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
-                    let i = orderKeys.index(of: self.pathName) ?? 0
-                    orderKeys.remove(at: i)
-                    orders.remove(at: i)
-                    UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
-                    UserDefaults.standard.set(orders, forKey: "orders")
-                    UserDefaults.standard.synchronize()
-                }
+//                if self.pathName.characters.count > 0 {
+//                    var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+//                    var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
+//                    let i = orderKeys.index(of: self.pathName) ?? 0
+//                    if i < orderKeys.count {
+//                        orderKeys.remove(at: i)
+//                        orders.remove(at: i)
+//                    }
+//                    orderKeys.remove(at: i)
+//                    orders.remove(at: i)
+//                    UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
+//                    UserDefaults.standard.set(orders, forKey: "orders")
+//                    UserDefaults.standard.synchronize()
+//                }
                 self.navigationController?.popViewController(animated: true)
             }
         }else{
@@ -392,6 +396,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 if error != nil {
                     Toast(text: "网络故障，请检查网络").show()
                 }else{
+                    self!.bSubmitSuccess = true
                     if let data = json {
                         self?.orderNo = data.stringValue
                         for (key , value) in self!.images {
@@ -402,14 +407,19 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                             self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                         }
                         NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark, "leaseTerm" : "\(self!.leaseTerm)"])
-                        if self!.localIndex >= 0 {
+                        if self!.pathName.characters.count > 0 {
                             var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
                             var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
-                            orderKeys.remove(at: self!.localIndex)
-                            orders.remove(at: self!.localIndex)
+                            let i = orderKeys.index(of: self!.pathName) ?? 0
+                            if i < orderKeys.count {
+                                orderKeys.remove(at: i)
+                                orders.remove(at: i)
+                            }
+                            
                             UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
                             UserDefaults.standard.set(orders, forKey: "orders")
                             UserDefaults.standard.synchronize()
+
                         }
                         self?.navigationController?.popViewController(animated: true)
                     }

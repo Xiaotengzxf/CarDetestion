@@ -24,6 +24,7 @@ class RecordDetailViewController: UIViewController {
     @IBOutlet weak var vZuLin: UIView!
     @IBOutlet weak var lblLeaseTerm: UILabel!
     @IBOutlet weak var lblLeasePrice: UILabel!
+    @IBOutlet weak var lcPriceTop: NSLayoutConstraint!
     var json : JSON!
     var statusInfo : [String : String]!
     var flag = 0
@@ -57,7 +58,7 @@ class RecordDetailViewController: UIViewController {
             }else{
                 lblLeaseTerm.text = "\(leaseTerm)月"
                 lblLeasePrice.text = "\(residualPrice)元"
-                lcTop.constant = -20
+                lcPriceTop.constant = -25
             }
         }else{
             let leaseTerm = json["leaseTerm"].int ?? 0
