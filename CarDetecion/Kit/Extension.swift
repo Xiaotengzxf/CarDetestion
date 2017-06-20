@@ -54,3 +54,17 @@ extension UIViewController : MBProgressHUDDelegate
     
     
 }
+
+extension UIImage {
+    class func image(withColor: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        UIGraphicsBeginImageContext(CGSize(width: 1, height: 1))
+        let context = UIGraphicsGetCurrentContext()
+        context?.setFillColor(withColor.cgColor)
+        context?.fill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+        
+    }
+}

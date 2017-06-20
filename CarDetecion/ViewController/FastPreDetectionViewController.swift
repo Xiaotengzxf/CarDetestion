@@ -12,14 +12,15 @@ import SKPhotoBrowser
 import SwiftyJSON
 import MBProgressHUD
 
-class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate , Detection3TableViewCellDelegate {
-
+class FastPreDetectionViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate {
+    
     @IBOutlet weak var lcBottom: NSLayoutConstraint!
     @IBOutlet weak var btnSave: UIButton!
     @IBOutlet weak var vBottom: UIView!
     @IBOutlet weak var tableView: UITableView!
-    let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "租赁期限(非残值租赁产品就选无租期)", "备注"]
-    let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门" , "右前门铰链"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
+    let sectionTitles = ["基础照片" , "补充照片" , "备注"]
+    let titles = [["登记证首页" , "中控台含档位杆", "车左前45度"] , ["行驶证-正本\n副本同照", "左前门"]]
+    let titlesImageClass = [["登记证" , "车辆内饰" , "车体骨架"] , ["行驶证" , "车身外观"]]
     var images : [Int : Data] = [:]
     var imagesPath = "" // 本地如果有缓冲图片，则读取图片
     var imagesFilePath = "" // 本地如果有缓冲图片，则读取图片
@@ -27,10 +28,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     let dismissAnimator = DismisssAnimator()
     let bill = "external/carBill/getCarBillIdNextVal.html"
     let upload = "external/app/uploadAppImage.html"
+    let uploadPre = "external/app/addAppPreCarImage.html"
     let operationDesc = "external/source/operation-desc.json" // 水印和接口说明
     let billImages = "external/app/getAppBillImageList.html"
+    let submitPre = "external/app/addPreCarBill.html"
     var orderNo = ""
-    var price = ""
     var remark = ""
     var bSubmit = false // 是否点击了提交
     var bSubmitSuccess = false // 是否提交成功
@@ -38,47 +40,22 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var nTag = 0 // 临时tag
     //var cameraType = 0 // 单拍，连拍
     var waterMarks : [JSON] = []
-    let companyOtherNeed : [Int] = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 4007 , 5000 , 5100 , 5001 , 5101]
+    let companyOtherNeed : [Int] = [0 , 100, 1 , 1000 , 1100]
     var source = 0  // 0 创建新的，1 未通过 ， 2 本地的
     var json : JSON? // 未通过时，获取的数据
     var arrImageInfo : [JSON] = []
     var pathName = ""
-    var bSave = false
-    var bGuanghui = false
-    var leaseTerm = 0 // 租赁
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let userinfo = UserDefaults.standard.object(forKey: "userinfo") as! [String : Any]
-        let userSuperCompany = userinfo["userSuperCompany"] as? Int ?? 0
-        let userCompany = userinfo["userCompany"] as? Int ?? 0
-        if userSuperCompany == 8 || userCompany == 8 {
-            bGuanghui = true
-        }
-        
-        tableView.register(UINib(nibName: "ReUseHeaderFooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "header")
-        NotificationCenter.default.addObserver(self, selector: #selector(DetectionNewViewController.handleNotification(notification:)), name: Notification.Name("detectionnew"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(FastPreDetectionViewController.handleNotification(notification:)), name: Notification.Name("detectionnew"), object: nil)
         self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: nil, action: nil)
-        
-        if source == 1 {
-            let p = json?["preSalePrice"].int ?? 0
-            price = p > 0 ? "\(p)" : ""
-            remark = json?["mark"].string ?? ""
-            loadUnpassData()
-            if let label = tableView.tableHeaderView?.viewWithTag(10000) as? UILabel {
-                do {
-                    label.attributedText = try NSAttributedString(data: "退回原因：\(json?["applyAllOpinion"].string ?? "")".data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
-                }catch{
-                    
-                }
-            }
-        }else {
-            tableView.tableHeaderView = nil
-            getWaterMark(tag: -1)
+    
+        tableView.register(UINib(nibName: "ReUseHeaderFooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "header")
+        getWaterMark(tag: -1)
             
-        }
         
         if imagesPath.characters.count > 0 {
             DispatchQueue.global().async {
@@ -109,11 +86,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if (!self.navigationController!.viewControllers.contains(self)) && bSave == false && source != 1 && bSubmitSuccess == false {
-            self.save(UIButton())
-        }
-    }
 
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -146,26 +121,12 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         }
     }
     
-    // 拍照类型
-//    func setCameraType() {
-//        let action = UIAlertController(title: "拍照类型", message: nil, preferredStyle: .actionSheet)
-//        action.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
-//            
-//        }))
-//        action.addAction(UIAlertAction(title: "单拍", style: .default, handler: {[weak self] (action) in
-//            self?.cameraType = 0
-//        }))
-//        action.addAction(UIAlertAction(title: "连拍", style: .default, handler: {[weak self] (action) in
-//            self?.cameraType = 1
-//        }))
-//    }
-    
     // 通知处理
     func handleNotification(notification : Notification) {
         if let tag = notification.object as? Int {
             if tag == 1 {
                 if let userInfo = notification.userInfo as? [String : String] {
-                    price = userInfo["text"]!
+                    
                 }
             }else if tag == 2 {
                 if let userInfo = notification.userInfo as? [String : String] {
@@ -203,28 +164,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }else{
                 getWaterMark(tag: tag)
             }
-//            if companyOtherNeed.contains(tag) {
-//                if waterMarks.count > 0{
-//                    pushToCamera(tag: tag)
-//                }else{
-//                    getWaterMark(tag: tag)
-//                }
-//            }else{
-//                let section = tag / 1000
-//                //let row = tag % 1000 % 100
-//                //let right = tag % 100 >= 100
-//                let array = companyOtherNeed.sorted()
-//                for value in array {
-//                    if value / 1000 == section {
-//                        if value < tag {
-//                            if images[value] == nil {
-//                                self.showAlert(title: nil, message: "请先拍照：\(titles[value / 1000][((value % 1000) % 100) * 2 + (value % 1000 >= 100 ? 1 : 0)])" , button: "确定")
-//                                return
-//                            }
-//                        }
-//                    }
-//                }
-//            }
         }
         
     }
@@ -262,11 +201,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         alert.addAction(UIAlertAction(title: "不，保留", style: .cancel, handler: { (action) in
             
         }))
-        self.present(alert, animated: true) { 
+        self.present(alert, animated: true) {
             
         }
     }
-
+    
     @IBAction func move(_ sender: Any) {
         if let button = sender as? UIButton {
             switch button.tag {
@@ -288,68 +227,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 保存
     @IBAction func save(_ sender: Any) {
-        if source == 1 {
-            self.navigationController?.popViewController(animated: true)
-            return
-        }
-        bSave = true
-        if images.count > 0 || price.characters.count > 0 || remark.characters.count > 0 {
-            var orders : [[String : String]] = []
-            if let order = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
-                orders += order
-            }
-            var orderKeys : [String] = []
-            if let keys = UserDefaults.standard.object(forKey: "orderKeys") as? [String] {
-                orderKeys += keys
-            }
-            let fileManager = FileManager.default
-            var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-            let name = pathName.characters.count > 0 ? pathName : "\(Date().timeIntervalSince1970)"
-            if pathName != name {
-                orderKeys.insert(name, at: 0)
-            }
-            path = path! + "/\(name)"
-            do{
-                if pathName == name {
-                    try fileManager.removeItem(atPath: path!)
-                }
-                try fileManager.createDirectory(atPath:path! , withIntermediateDirectories: true, attributes: nil)
-                var imageStr = ""
-                for (key , value) in images {
-                    imageStr += "\(key),"
-                    let result = fileManager.createFile(atPath: path! + "/\(key).jpg", contents: value, attributes: nil)
-                    if !result {
-                        print("图片保存失败")
-                    }
-                }
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-                let str = imageStr.characters.count > 0 ? imageStr.substring(to: imageStr.index(before: imageStr.endIndex)) : ""
-                if pathName == name {
-                    let i = orderKeys.index(of: pathName) ?? 0
-                    orders.replaceSubrange(i..<(i+1), with: [["preSalePrice" : self.price , "mark" : remark ,"leaseTerm" : "\(self.leaseTerm)" , "images" : str , "addtime" : formatter.string(from: Date())]])
-                }else{
-                    orders.insert(["preSalePrice" : self.price , "mark" : remark ,"leaseTerm" : "\(self.leaseTerm)" , "images" : str , "addtime" : formatter.string(from: Date())], at: 0)
-                }
-                UserDefaults.standard.set(orders, forKey: "orders")
-                UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
-                UserDefaults.standard.synchronize()
-                if let button = sender as? UIButton , button == btnSave {
-                    showAlert(title: "温馨提示", message: "保存成功", button: "确定")
-                }
-                
-            }catch{
-                if let button = sender as? UIButton , button == btnSave {
-                    showAlert(title: "温馨提示", message: "保存失败，数据丢失!", button: "确定")
-                }
-                
-            }
-        }else{
-            if let button = sender as? UIButton , button == btnSave {
-                showAlert(title: "温馨提示", message: "您没有拍摄任何照片，或输入价格，或输入内容！", button: "保存失败")
-            }
-            
-        }
+        
     }
     
     // 显示提示框
@@ -360,12 +238,12 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 self?.navigationController?.popViewController(animated: true)
             }
         }))
-        present(alert, animated: true) { 
+        present(alert, animated: true) {
             
         }
     }
     
-    // 提交订单
+    // 提交预评估订单
     @IBAction func submit(_ sender: Any) {
         tableView.endEditing(true) // 结束编辑
         bSubmit = true
@@ -378,10 +256,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             showAlert(title: nil, message: "您没有做任何图片修改，无法提交！" , button:"确定")
             return
         }
-        if price.characters.count == 0 {
-            Toast(text : "请输入预售价格").show()
-            return
-        }
+
         if source == 1 {
             orderNo = json?["carBillId"].string ?? ""
             if orderNo.characters.count > 0 {
@@ -390,58 +265,41 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     let section = key / 1000
                     let row = (key % 1000) % 100
                     let right = key % 1000 >= 100
-                    self.uploadImage(imageClass: self.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+                    self.uploadImage(imageClass: self.titlesImageClass[section][row + (right ? 1 : 0)], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
                 }
-                NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self.orderNo , "price" : self.price , "remark" : self.remark, "leaseTerm" : "\(self.leaseTerm)"])
-//                if self.pathName.characters.count > 0 {
-//                    var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
-//                    var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
-//                    let i = orderKeys.index(of: self.pathName) ?? 0
-//                    if i < orderKeys.count {
-//                        orderKeys.remove(at: i)
-//                        orders.remove(at: i)
-//                    }
-//                    orderKeys.remove(at: i)
-//                    orders.remove(at: i)
-//                    UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
-//                    UserDefaults.standard.set(orders, forKey: "orders")
-//                    UserDefaults.standard.synchronize()
-//                }
+
                 self.navigationController?.popViewController(animated: true)
             }
         }else{
-            let hud = self.showHUD(text: "创建中...")
-            NetworkManager.sharedInstall.request(url: bill, params: nil) {[weak self] (json, error) in
+            
+            let username = UserDefaults.standard.string(forKey: "username")
+            var params = ["createUser" : username!]
+            params["carBillType"] = "routine"
+            params["mark"] = remark
+            params["clientName"] = "iOS"
+            let hud = self.showHUD(text: "提交中...")
+            NetworkManager.sharedInstall.request(url: submitPre, params: params) {[weak self] (json, error) in
                 self?.hideHUD(hud: hud)
                 if error != nil {
-                    Toast(text: "网络故障，请检查网络").show()
+                    print(error!.localizedDescription)
                 }else{
-                    self!.bSubmitSuccess = true
-                    if let data = json {
-                        self?.orderNo = data.stringValue
-                        for (key , value) in self!.images {
-                            upLoadCount = self!.images.count
-                            let section = key / 1000
-                            let row = (key % 1000) % 100
-                            let right = key % 1000 >= 100
-                            self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
-                        }
-                        NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark, "leaseTerm" : "\(self!.leaseTerm)"])
-                        if self!.pathName.characters.count > 0 {
-                            var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
-                            var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
-                            let i = orderKeys.index(of: self!.pathName) ?? 0
-                            if i < orderKeys.count {
-                                orderKeys.remove(at: i)
-                                orders.remove(at: i)
-                            }
-                            
-                            UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
-                            UserDefaults.standard.set(orders, forKey: "orders")
-                            UserDefaults.standard.synchronize()
-
-                        }
+                    if let data = json , data["success"].boolValue {
+                        Toast(text: "提交成功").show()
                         self?.navigationController?.popViewController(animated: true)
+                        self!.orderNo = "\(data["object"].int ?? 0)"
+                        if self!.orderNo != "0" {
+                            for (key , value) in self!.images {
+                                upLoadCount = self!.images.count
+                                let section = key / 1000
+                                let row = (key % 1000) % 100
+                                let right = key % 1000 >= 100
+                                self!.uploadImage(imageClass: self!.titlesImageClass[section][row + (right ? 1 : 0)], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+                            }
+                        }
+                    }else{
+                        if let message = json?["message"].string {
+                            Toast(text: message).show()
+                        }
                     }
                 }
             }
@@ -457,12 +315,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         params["carBillId"] = orderNo
         params["imageClass"] = imageClass
         params["imageSeqNum"] = "\(imageSeqNum)"
-        NetworkManager.sharedInstall.upload(url: upload, params: params, data: data) {[weak self] (json, error) in
+        NetworkManager.sharedInstall.upload(url: uploadPre, params: params, data: data) {[weak self] (json, error) in
             DispatchQueue.global().async {
                 if json?["success"].boolValue == true {
                     upLoadCount -= 1
                     if upLoadCount == 0 {
-                        NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
                     }
                 }else{
                     print("上传失败:\(imageClass)---\(imageSeqNum)")
@@ -518,31 +375,13 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // MARK: - UITableView DataSource
     func numberOfSections(in tableView: UITableView) -> Int {
-        if bGuanghui {
-            return sectionTitles.count
-        }
-        return sectionTitles.count - 1
+        return sectionTitles.count
+
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section < 6 {
-            var count = titles[section].count + 1
-            if images.count > 0 {
-                let array = images.keys.filter{$0 >= section * 1000 && $0 < (section + 1) * 1000}
-                let array1 = companyOtherNeed.filter{$0 >= section * 1000 && $0 < (section + 1) * 1000}
-                var n = 0
-                if array.count > 0 {
-                    for key in array {
-                        if !array1.contains(key) {
-                            n += 1
-                        }
-                    }
-                }
-                if n > 0 {
-                    n += 1
-                }
-                count = max(count, array1.count + n)
-            }
+        if section < 2 {
+            let count = titles[section].count
             return (count % 2 > 0) ? (count / 2 + 1) : (count / 2)
         }else {
             return 1
@@ -550,7 +389,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section < 6 {
+        if indexPath.section < 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetectionTableViewCell
             cell.vCamera1.layer.cornerRadius = 6.0
             cell.vCamera2.layer.cornerRadius = 6.0
@@ -564,23 +403,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             cell.delegate = self
             cell.source = source
             let c = titles[indexPath.section].count
-            var count = titles[indexPath.section].count + 1
-            if images.count > 0 {
-                let array = images.keys.filter{$0 >= indexPath.section * 1000 && $0 < (indexPath.section + 1) * 1000}
-                let array1 = companyOtherNeed.filter{$0 >= indexPath.section * 1000 && $0 < (indexPath.section + 1) * 1000}
-                var n = 0
-                if array.count > 0 {
-                    for key in array {
-                        if !array1.contains(key) {
-                            n += 1
-                        }
-                    }
-                }
-                if n > 0 {
-                    n += 1
-                }
-                count = max(count, array1.count + n)
-            }
+            let count = titles[indexPath.section].count
             if count % 2 > 0 && indexPath.row == count / 2 {
                 cell.vCamera2.isHidden = true
             }else{
@@ -589,16 +412,10 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             if indexPath.row * 2 < c {
                 cell.lbl1.text = titles[indexPath.section][indexPath.row * 2]
                 cell.lbl11.text = titles[indexPath.section][indexPath.row * 2]
-            }else{
-                cell.lbl1.text = "添加照片"
-                cell.lbl11.text = "添加照片"
             }
             if indexPath.row * 2 + 1 < c {
                 cell.lbl2.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
                 cell.lbl22.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
-            }else{
-                cell.lbl2.text = "添加照片"
-                cell.lbl22.text = "添加照片"
             }
             cell.iv11.image = UIImage(named: indexPath.row * 2 < count - 1 ? "icon_camera" : "icon_add_photo")
             cell.iv21.image = UIImage(named: indexPath.row * 2 + 1 < count - 1 ? "icon_camera" : "icon_add_photo")
@@ -723,73 +540,23 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }
             
             return cell
-        }else if indexPath.section == 6 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as! Detection1TableViewCell
+        }else{
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
             cell.contentView.layer.borderWidth = 0.5
             if source == 1 {
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
-                cell.tfPrice.text = "\(json?["preSalePrice"].int ?? 0)"
-            }else if price.characters.count == 0 && bSubmit {
+                cell.tvMark.text = json?["mark"].string
+            }else if remark.characters.count == 0 && bSubmit {
                 cell.contentView.layer.borderColor = UIColor.red.cgColor
             }else{
-                if price.characters.count > 0 {
-                    cell.tfPrice.text = price
+                if remark.characters.count > 0 {
+                    cell.tvMark.text = remark
                 }
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
             }
             return cell
-        }else{
-            if bGuanghui {
-                if indexPath.section == 7 {
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "cell3", for: indexPath) as! Detection3TableViewCell
-                    cell.contentView.layer.borderWidth = 0.5
-                    cell.delegate = self
-                    if leaseTerm == 0 {
-                        leaseTerm = json?["leaseTerm"].int ?? 0
-                    }
-                    if leaseTerm == 0 {
-                        leaseTerm =  Int(json?["leaseTerm"].string ?? "0")!
-                    }
-                    cell.btn1.isSelected = (leaseTerm == 0)
-                    cell.btn2.isSelected = (leaseTerm == 12)
-                    cell.btn3.isSelected = (leaseTerm == 24)
-                    cell.btn4.isSelected = (leaseTerm == 36)
-                    cell.contentView.layer.borderColor = UIColor.clear.cgColor
-                    return cell
-                }else {
-                    let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
-                    cell.contentView.layer.borderWidth = 0.5
-                    if source == 1 {
-                        cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
-                        cell.tvMark.text = json?["mark"].string
-                    }else if remark.characters.count == 0 && bSubmit {
-                        cell.contentView.layer.borderColor = UIColor.red.cgColor
-                    }else{
-                        if remark.characters.count > 0 {
-                            cell.tvMark.text = remark
-                        }
-                        cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
-                    }
-                    return cell
-                }
-            }else{
-                let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
-                cell.contentView.layer.borderWidth = 0.5
-                if source == 1 {
-                    cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
-                    cell.tvMark.text = json?["mark"].string
-                }else if remark.characters.count == 0 && bSubmit {
-                    cell.contentView.layer.borderColor = UIColor.red.cgColor
-                }else{
-                    if remark.characters.count > 0 {
-                        cell.tvMark.text = remark
-                    }
-                    cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
-                }
-                return cell
-            }
-            
         }
+        
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -797,51 +564,32 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section < 6 {
+        if indexPath.section < 2 {
             return 10 + (WIDTH / 2 - 15) / 3 * 2.0
-        }else if indexPath.section == 6 {
-            return 44
         }else{
-            if bGuanghui {
-                if indexPath.section == 7 {
-                    return 60
-                }else{
-                    return 100
-                }
-            }else{
-                return 100
-            }
-            
+            return 100
         }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! ReUseHeaderFooterView
-        if section < 7 {
-            view.lblTitle.text = sectionTitles[section]
-        }else{
-            if bGuanghui {
-                view.lblTitle.text = sectionTitles[section]
-            }else{
-                view.lblTitle.text = sectionTitles[section + 1]
-            }
-        }
+        view.lblTitle.text = sectionTitles[section]
         return view
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
+    
     /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
+     // MARK: - Navigation
+     
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+     // Get the new view controller using segue.destinationViewController.
+     // Pass the selected object to the new view controller.
+     }
+     */
     
     // 转场动画
     
@@ -852,19 +600,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return dismissAnimator
     }
-    
-    // Detection3TableViewCellDelegate
-    func selectedItem(tag: Int) {
-        switch tag {
-        case 0:
-            leaseTerm = 0
-        case 1:
-            leaseTerm = 12
-        case 2:
-            leaseTerm = 24
-        default:
-            leaseTerm = 36
-        }
-        tableView.reloadData()
-    }
+
 }
+

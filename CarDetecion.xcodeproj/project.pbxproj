@@ -12,6 +12,7 @@
 		891034E71EC4480D00EDBD23 /* HDLeaveMsgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 891034E61EC4480D00EDBD23 /* HDLeaveMsgViewController.m */; };
 		8920A31D1EB84B1B005DC01B /* PreDetectionListTVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */; };
 		8920A31F1EB8964E005DC01B /* CarModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8920A31E1EB8964E005DC01B /* CarModelController.swift */; };
+		892D10311EF7B7510045D8A3 /* FastPreDetectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892D10301EF7B7510045D8A3 /* FastPreDetectionViewController.swift */; };
 		893CDB2A1EB6D10E00AEB5D7 /* TabCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */; };
 		893CDB2B1EB6D10E00AEB5D7 /* TabPageOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB241EB6D10E00AEB5D7 /* TabPageOption.swift */; };
 		893CDB2C1EB6D10E00AEB5D7 /* TabPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB251EB6D10E00AEB5D7 /* TabPageViewController.swift */; };
@@ -51,6 +52,7 @@
 		8953081F1E6D7CEC007AF459 /* CameraView.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8953081E1E6D7CEC007AF459 /* CameraView.strings */; };
 		896232A31E8E19D600AB4B1E /* DNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896232A21E8E19D600AB4B1E /* DNavigationController.swift */; };
 		896232A51E8E48DF00AB4B1E /* TransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896232A41E8E48DF00AB4B1E /* TransitionAnimator.swift */; };
+		896837B61EF560B000029010 /* PreDetectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896837B51EF560B000029010 /* PreDetectionViewController.swift */; };
 		896AFA701E8B694E008DE6F5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA6F1E8B694E008DE6F5 /* LoginViewController.swift */; };
 		896AFA731E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA721E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift */; };
 		896AFA751E8BC283008DE6F5 /* ReUseHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 896AFA741E8BC283008DE6F5 /* ReUseHeaderFooterView.xib */; };
@@ -250,6 +252,7 @@
 		891034E61EC4480D00EDBD23 /* HDLeaveMsgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLeaveMsgViewController.m; sourceTree = "<group>"; };
 		8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreDetectionListTVController.swift; sourceTree = "<group>"; };
 		8920A31E1EB8964E005DC01B /* CarModelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarModelController.swift; sourceTree = "<group>"; };
+		892D10301EF7B7510045D8A3 /* FastPreDetectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FastPreDetectionViewController.swift; sourceTree = "<group>"; };
 		893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabCollectionCell.swift; sourceTree = "<group>"; };
 		893CDB241EB6D10E00AEB5D7 /* TabPageOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageOption.swift; sourceTree = "<group>"; };
 		893CDB251EB6D10E00AEB5D7 /* TabPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageViewController.swift; sourceTree = "<group>"; };
@@ -295,6 +298,7 @@
 		8953081E1E6D7CEC007AF459 /* CameraView.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = CameraView.strings; sourceTree = "<group>"; };
 		896232A21E8E19D600AB4B1E /* DNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DNavigationController.swift; sourceTree = "<group>"; };
 		896232A41E8E48DF00AB4B1E /* TransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionAnimator.swift; sourceTree = "<group>"; };
+		896837B51EF560B000029010 /* PreDetectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreDetectionViewController.swift; sourceTree = "<group>"; };
 		896AFA6F1E8B694E008DE6F5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		896AFA721E8BC26E008DE6F5 /* ReUseHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReUseHeaderFooterView.swift; sourceTree = "<group>"; };
 		896AFA741E8BC283008DE6F5 /* ReUseHeaderFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ReUseHeaderFooterView.xib; sourceTree = "<group>"; };
@@ -725,6 +729,8 @@
 				8920A31E1EB8964E005DC01B /* CarModelController.swift */,
 				8985F3781EB8B1890028E70E /* CityTVController.swift */,
 				8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */,
+				896837B51EF560B000029010 /* PreDetectionViewController.swift */,
+				892D10301EF7B7510045D8A3 /* FastPreDetectionViewController.swift */,
 			);
 			name = PreDetection;
 			sourceTree = "<group>";
@@ -1971,6 +1977,7 @@
 				89965D721EA11AEA006560BA /* RNavigationController.swift in Sources */,
 				899ADFC31EBE070D00E92B0E /* NewsDetailController.swift in Sources */,
 				897C6E131EBF578F00B22203 /* HDBubbleView+Video.m in Sources */,
+				896837B61EF560B000029010 /* PreDetectionViewController.swift in Sources */,
 				8984662E1EC54B7600FDA2E3 /* UINavigationBar+Awesome.m in Sources */,
 				897C6E001EBF578F00B22203 /* HDLocationViewController.m in Sources */,
 				897C6DFE1EBF578F00B22203 /* HDConvertToCommonEmoticonsHelper.m in Sources */,
@@ -1981,6 +1988,7 @@
 				897C6E101EBF578F00B22203 /* HDBubbleView+Text.m in Sources */,
 				89965D701EA1196B006560BA /* MNavigationController.swift in Sources */,
 				897C6DDC1EBF578F00B22203 /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
+				892D10311EF7B7510045D8A3 /* FastPreDetectionViewController.swift in Sources */,
 				897C6E0A1EBF578F00B22203 /* HDBubbleView+File.m in Sources */,
 				897C6E151EBF578F00B22203 /* HDBubbleView.m in Sources */,
 				897C6DB81EBF578F00B22203 /* MJRefreshBackGifFooter.m in Sources */,

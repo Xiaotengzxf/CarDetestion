@@ -460,16 +460,8 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                     orderKeys += keys
                 }
                 if let urls = json["images"].string {
-                    var images : [Int : Data] = [:]
-                    let array = urls.components(separatedBy: ",")
-                    var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-                    path = path! + "/\(orderKeys[indexPath.row])"
-                    for item in array {
-                        if let image = UIImage(contentsOfFile: path! + "/\(item).jpg") {
-                            images[Int(item)!] = UIImageJPEGRepresentation(image, 1)
-                        }
-                    }
-                    controller.images = images
+                    controller.imagesPath = urls
+                    controller.imagesFilePath = orderKeys[indexPath.row]
                 }
                 controller.pathName = orderKeys[indexPath.row]
                 let p = json["preSalePrice"].string
