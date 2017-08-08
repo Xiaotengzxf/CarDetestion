@@ -96,6 +96,8 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         tableView1.mj_header.beginRefreshing()
         tableView2.mj_header.beginRefreshing()
         tableView3.mj_header.beginRefreshing()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.handleNotification(notification:)), name: Notification.Name("recordVC"), object: self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -103,18 +105,7 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0))
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
-        data.removeAll()
-        if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
-            if orders.count > 0 {
-                for dic in orders {
-                    data.append(JSON(dic))
-                }
-            }
-        }
-        if data.count == 0 {
-            nShowEmpty = 1
-        }
-        self.tableView0.reloadData()
+        refreshTableView0()
         
         
         if recordIndex >= 0 {
@@ -137,6 +128,29 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    func handleNotification(notification : Notification)  {
+        refreshTableView0()
+    }
+    
+    func refreshTableView0() {
+        data.removeAll()
+        if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
+            if orders.count > 0 {
+                for dic in orders {
+                    data.append(JSON(dic))
+                }
+            }
+        }
+        if data.count == 0 {
+            nShowEmpty = 1
+        }
+        self.tableView0.reloadData()
     }
     
     func getBillList1() {
@@ -453,8 +467,20 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if  tableView == tableView0 {
+            let json = data[indexPath.row]
+            if let orderNo = json["orderNo"].string, orderNo.characters.count > 0 {
+                let alert = UIAlertController(title: "温馨提示", message: "评估单：\(orderNo)，正在提交中", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: { (action) in
+                    
+                }))
+                self.present(alert, animated: true) {
+                    
+                }
+                return
+            }
+            
             if let controller = self.storyboard?.instantiateViewController(withIdentifier: "detectionnew") as? DetectionNewViewController {
-                let json = data[indexPath.row]
+                
                 var orderKeys : [String] = []
                 if let keys = UserDefaults.standard.object(forKey: "orderKeys") as? [String] {
                     orderKeys += keys
@@ -628,6 +654,10 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                 
             })
         }
+    }
+    
+    func handleChangeToNormal(tag: Int) {
+        
     }
 
 }

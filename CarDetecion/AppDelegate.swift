@@ -10,7 +10,8 @@ import UIKit
 import CoreData
 import IQKeyboardManagerSwift
 
-var upLoadCount = 0 // 上传图片的数量
+var uploadDict : [String : Set<String>] = [:]
+var upLoadCount = 0
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
@@ -18,10 +19,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
     var window: UIWindow?
     var orderInfo : [String : [String : String]] = [:]
     let createBill = "external/app/finishCreateAppCarBill.html"
+    let upload = "external/app/uploadAppImage.html"
+    let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "租赁期限(非残值租赁产品就选无租期)", "备注"]
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        Bugly.start(withAppId: "18e9624730")
+        if let upload = UserDefaults.standard.object(forKey: "uploadDict") as? [String : Set<String>] {
+            uploadDict = upload
+        }
+        
+        Bugly.start(withAppId: "2304f83592") // 腾讯Bugly接入
         
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName : UIColor(red: 66/255.0, green: 83/255.0, blue: 90/255.0, alpha: 1)], for: .normal)
         UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName : UIColor(red: 0/255.0, green: 120/255.0, blue: 201/255.0, alpha: 1)], for: .selected)
@@ -50,11 +57,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         }
         
         // 通知注册实体类
-        let entity = JPUSHRegisterEntity();
-        entity.types = Int(JPAuthorizationOptions.alert.rawValue) |  Int(JPAuthorizationOptions.sound.rawValue) |  Int(JPAuthorizationOptions.badge.rawValue);
-        JPUSHService.register(forRemoteNotificationConfig: entity, delegate: self);
+        let entity = JPUSHRegisterEntity()
+        entity.types = Int(JPAuthorizationOptions.alert.rawValue) |  Int(JPAuthorizationOptions.sound.rawValue) |  Int(JPAuthorizationOptions.badge.rawValue)
+        JPUSHService.register(forRemoteNotificationConfig: entity, delegate: self)
         // 注册极光推送
-        JPUSHService.setup(withOption: launchOptions, appKey: "0cc682f084991254e7b0dd7a", channel:"Publish channel" , apsForProduction: false);
+        JPUSHService.setup(withOption: launchOptions, appKey: "0cc682f084991254e7b0dd7a", channel:"Publish channel" , apsForProduction: true)
         // 获取推送消息
         let remote = launchOptions?[UIApplicationLaunchOptionsKey.remoteNotification] as? Dictionary<String,Any>;
         // 如果remote不为空，就代表应用在未打开的时候收到了推送消息
@@ -68,6 +75,51 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         }
         
         application.applicationIconBadgeNumber = 0
+        
+        if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
+            if orders.count > 0 {
+                for (index, dic) in orders.enumerated() {
+                    if let orderNo = dic["orderNo"] {
+                        if let urls = dic["images"] {
+                            
+                            let keys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+                            if keys.count > 0 {
+                                let imagesPath = keys[index]
+                                DispatchQueue.global().async {
+                                    [weak self] in
+                                    var images : [Int : Data] = [:]
+                                    let array = urls.components(separatedBy: ",")
+                                    var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+                                    path = path! + "/\(imagesPath)"
+                                    for item in array {
+                                        if let image = UIImage(contentsOfFile: path! + "/\(item).jpg") {
+                                            images[Int(item)!] = UIImageJPEGRepresentation(image, 1)
+                                        }
+                                    }
+                                    
+                                    if images.count > 0 {
+                                        let arr : Set<String> = uploadDict[orderNo] ?? []
+                                        for (key , value) in images {
+                                            if arr.contains("\(key)") {
+                                                continue
+                                            }
+                                            let section = key / 1000
+                                            let row = (key % 1000) % 100
+                                            let right = key % 1000 >= 100
+                                            self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value, orderNo: orderNo, key: key)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+            }
+        }
+        
+        
+        
         
         return true
     }
@@ -127,6 +179,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        
+        UserDefaults.standard.set(uploadDict, forKey: "uploadDict")
+        UserDefaults.standard.synchronize()
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -233,6 +288,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                     }else{
                         if let data = json , data["success"].boolValue {
                             self?.showAlert(title: "温馨提示", message: "评估单：\(orderNo)，已提交成功！", button: "确认")
+                            
+                            var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+                            var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
+                            var i = 0
+                            for (index , order) in orders.enumerated() {
+                                if order["orderNo"] == orderNo {
+                                    i = index
+                                    break
+                                }
+                            }
+                            if i < orders.count {
+                                orderKeys.remove(at: i)
+                                orders.remove(at: i)
+                                print("已删除：\(orderNo)")
+                            }
+                            
+                            UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
+                            UserDefaults.standard.set(orders, forKey: "orders")
+                            UserDefaults.standard.synchronize()
+                            
+                            DispatchQueue.main.async {
+                                NotificationCenter.default.post(name: Notification.Name("recordVC"), object: 1)
+                            }
+                            
                         }else{
                             if let message = json?["message"].string {
                                 self?.showAlert(title: "温馨提示", message: "评估单：\(orderNo)，提交失败；原因：\(message)", button: "确认")
@@ -253,6 +332,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         window?.rootViewController?.present(alert, animated: true) {
             
         }
+    }
+    
+    
+    // 上传图片
+    func uploadImage(imageClass : String , imageSeqNum : Int , data : Data, orderNo : String, key: Int) {
+        print("上传图片：\(imageClass)---\(imageSeqNum)")
+        let username = UserDefaults.standard.string(forKey: "username")
+        var params = ["createUser" : username!]
+        params["clientName"] = "iOS"
+        params["carBillId"] = orderNo
+        params["imageClass"] = imageClass
+        params["imageSeqNum"] = "\(imageSeqNum)"
+        NetworkManager.sharedInstall.upload(url: upload, params: params, data: data) {[weak self] (json, error) in
+            DispatchQueue.global().async {
+                if json?["success"].boolValue == true {
+                    var arr : Set<String> = uploadDict[orderNo] ?? []
+                    arr.remove("\(key)")
+                    uploadDict[orderNo] = arr
+                    if arr.count == 0 {
+                        uploadDict.removeValue(forKey: orderNo)
+                        NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
+                    }
+                }else{
+                    print("上传失败:\(imageClass)---\(imageSeqNum)")
+                    self?.uploadImage(imageClass: imageClass, imageSeqNum: imageSeqNum, data: data, orderNo: orderNo,key : key)
+                }
+            }
+        }
+        
+        
     }
     
 }

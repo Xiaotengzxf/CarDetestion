@@ -12,7 +12,7 @@ import SKPhotoBrowser
 import SwiftyJSON
 import MBProgressHUD
 
-class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate , Detection3TableViewCellDelegate {
+class DetectionNewViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate , Detection3TableViewCellDelegate, Detection4TableViewCellDelegate {
 
     @IBOutlet weak var lcBottom: NSLayoutConstraint!
     @IBOutlet weak var btnSave: UIButton!
@@ -46,6 +46,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var bSave = false
     var bGuanghui = false
     var leaseTerm = 0 // 租赁
+    var fWebViewCellHeight : Float = 100
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,15 +68,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             price = p > 0 ? "\(p)" : ""
             remark = json?["mark"].string ?? ""
             loadUnpassData()
-            if let label = tableView.tableHeaderView?.viewWithTag(10000) as? UILabel {
-                do {
-                    label.attributedText = try NSAttributedString(data: "退回原因：\(json?["applyAllOpinion"].string ?? "")".data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
-                }catch{
-                    
-                }
-            }
         }else {
-            tableView.tableHeaderView = nil
             getWaterMark(tag: -1)
             
         }
@@ -109,7 +102,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if (!self.navigationController!.viewControllers.contains(self)) && bSave == false && source != 1 && bSubmitSuccess == false {
+        if (!self.navigationController!.viewControllers.contains(self)) && bSave == false && source != 1 {
             self.save(UIButton())
         }
     }
@@ -305,9 +298,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             let fileManager = FileManager.default
             var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
             let name = pathName.characters.count > 0 ? pathName : "\(Date().timeIntervalSince1970)"
-            if pathName != name {
-                orderKeys.insert(name, at: 0)
-            }
+            orderKeys.insert(name, at: 0)
             path = path! + "/\(name)"
             do{
                 if pathName == name {
@@ -327,9 +318,25 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 let str = imageStr.characters.count > 0 ? imageStr.substring(to: imageStr.index(before: imageStr.endIndex)) : ""
                 if pathName == name {
                     let i = orderKeys.index(of: pathName) ?? 0
-                    orders.replaceSubrange(i..<(i+1), with: [["preSalePrice" : self.price , "mark" : remark ,"leaseTerm" : "\(self.leaseTerm)" , "images" : str , "addtime" : formatter.string(from: Date())]])
+                    if i == 0 && orders.count == 0 {
+                        var order = ["preSalePrice" : self.price , "mark" : remark ,"leaseTerm" : "\(self.leaseTerm)" , "images" : str , "addtime" : formatter.string(from: Date())]
+                        if bSubmitSuccess && orderNo.characters.count > 0 {
+                            order["orderNo"] = orderNo
+                        }
+                        orders.append(order)
+                    }else{
+                        var order = ["preSalePrice" : self.price , "mark" : remark ,"leaseTerm" : "\(self.leaseTerm)" , "images" : str , "addtime" : formatter.string(from: Date())]
+                        if bSubmitSuccess && orderNo.characters.count > 0 {
+                            order["orderNo"] = orderNo
+                        }
+                        orders[i] = order
+                    }
                 }else{
-                    orders.insert(["preSalePrice" : self.price , "mark" : remark ,"leaseTerm" : "\(self.leaseTerm)" , "images" : str , "addtime" : formatter.string(from: Date())], at: 0)
+                    var order = ["preSalePrice" : self.price , "mark" : remark ,"leaseTerm" : "\(self.leaseTerm)" , "images" : str , "addtime" : formatter.string(from: Date())]
+                    if bSubmitSuccess && orderNo.characters.count > 0 {
+                        order["orderNo"] = orderNo
+                    }
+                    orders.insert(order, at: 0)
                 }
                 UserDefaults.standard.set(orders, forKey: "orders")
                 UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
@@ -385,12 +392,16 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         if source == 1 {
             orderNo = json?["carBillId"].string ?? ""
             if orderNo.characters.count > 0 {
+                var arrPictureName : Set<String> = []
+                for key in self.images.keys {
+                    arrPictureName.insert("\(key)")
+                }
+                uploadDict[orderNo] = arrPictureName
                 for (key , value) in self.images {
-                    upLoadCount = self.images.count
                     let section = key / 1000
                     let row = (key % 1000) % 100
                     let right = key % 1000 >= 100
-                    self.uploadImage(imageClass: self.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+                    self.uploadImage(imageClass: self.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value, orderNo: orderNo, key: key)
                 }
                 NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self.orderNo , "price" : self.price , "remark" : self.remark, "leaseTerm" : "\(self.leaseTerm)"])
 //                if self.pathName.characters.count > 0 {
@@ -420,11 +431,15 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     if let data = json {
                         self?.orderNo = data.stringValue
                         for (key , value) in self!.images {
-                            upLoadCount = self!.images.count
+                            var arrPictureName : Set<String> = []
+                            for key in self!.images.keys {
+                                arrPictureName.insert("\(key)")
+                            }
+                            uploadDict[self!.orderNo] = arrPictureName
                             let section = key / 1000
                             let row = (key % 1000) % 100
                             let right = key % 1000 >= 100
-                            self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+                            self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value, orderNo: self!.orderNo, key: key)
                         }
                         NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark, "leaseTerm" : "\(self!.leaseTerm)"])
                         if self!.pathName.characters.count > 0 {
@@ -449,7 +464,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     }
     
     // 上传图片
-    func uploadImage(imageClass : String , imageSeqNum : Int , data : Data) {
+    func uploadImage(imageClass : String , imageSeqNum : Int , data : Data, orderNo: String, key: Int) {
         print("上传图片：\(imageClass)---\(imageSeqNum)")
         let username = UserDefaults.standard.string(forKey: "username")
         var params = ["createUser" : username!]
@@ -460,13 +475,16 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         NetworkManager.sharedInstall.upload(url: upload, params: params, data: data) {[weak self] (json, error) in
             DispatchQueue.global().async {
                 if json?["success"].boolValue == true {
-                    upLoadCount -= 1
-                    if upLoadCount == 0 {
+                    var arr : Set<String> = uploadDict[orderNo] ?? []
+                    arr.remove("\(key)")
+                    uploadDict[orderNo] = arr
+                    if arr.count == 0 {
+                        uploadDict.removeValue(forKey: orderNo)
                         NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
                     }
                 }else{
                     print("上传失败:\(imageClass)---\(imageSeqNum)")
-                    self?.uploadImage(imageClass: imageClass, imageSeqNum: imageSeqNum, data: data)
+                    self?.uploadImage(imageClass: imageClass, imageSeqNum: imageSeqNum, data: data, orderNo: orderNo, key: key)
                 }
             }
         }
@@ -518,18 +536,28 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // MARK: - UITableView DataSource
     func numberOfSections(in tableView: UITableView) -> Int {
+        var count = 0
         if bGuanghui {
-            return sectionTitles.count
+            count = sectionTitles.count
+        }else{
+            count = sectionTitles.count - 1
         }
-        return sectionTitles.count - 1
+        if source == 1 {
+            count += 1
+        }
+        return count
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section < 6 {
-            var count = titles[section].count + 1
+        let nMin = source == 1 ? 1 : 0
+        let nMax = source == 1 ? 7 : 6
+        if section < nMax && section >= nMin {
+            let nSection = source==1 ? section - 1 : section
+            var count = titles[nSection].count + 1
             if images.count > 0 {
-                let array = images.keys.filter{$0 >= section * 1000 && $0 < (section + 1) * 1000}
-                let array1 = companyOtherNeed.filter{$0 >= section * 1000 && $0 < (section + 1) * 1000}
+                let array = images.keys.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
+                let array1 = companyOtherNeed.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
                 var n = 0
                 if array.count > 0 {
                     for key in array {
@@ -550,7 +578,10 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section < 6 {
+        let nMin = source == 1 ? 1 : 0
+        let nMax = source == 1 ? 7 : 6
+        if indexPath.section < nMax && indexPath.section >= nMin {
+            let nSection = source==1 ? indexPath.section - 1 : indexPath.section
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetectionTableViewCell
             cell.vCamera1.layer.cornerRadius = 6.0
             cell.vCamera2.layer.cornerRadius = 6.0
@@ -560,14 +591,14 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             cell.iv2.clipsToBounds = true
             cell.lbl11.layer.cornerRadius = 3.0
             cell.lbl22.layer.cornerRadius = 3.0
-            cell.indexPath = indexPath
+            cell.indexPath = IndexPath(row: indexPath.row, section: nSection)
             cell.delegate = self
             cell.source = source
-            let c = titles[indexPath.section].count
-            var count = titles[indexPath.section].count + 1
+            let c = titles[nSection].count
+            var count = titles[nSection].count + 1
             if images.count > 0 {
-                let array = images.keys.filter{$0 >= indexPath.section * 1000 && $0 < (indexPath.section + 1) * 1000}
-                let array1 = companyOtherNeed.filter{$0 >= indexPath.section * 1000 && $0 < (indexPath.section + 1) * 1000}
+                let array = images.keys.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
+                let array1 = companyOtherNeed.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
                 var n = 0
                 if array.count > 0 {
                     for key in array {
@@ -587,15 +618,15 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 cell.vCamera2.isHidden = false
             }
             if indexPath.row * 2 < c {
-                cell.lbl1.text = titles[indexPath.section][indexPath.row * 2]
-                cell.lbl11.text = titles[indexPath.section][indexPath.row * 2]
+                cell.lbl1.text = titles[nSection][indexPath.row * 2]
+                cell.lbl11.text = titles[nSection][indexPath.row * 2]
             }else{
                 cell.lbl1.text = "添加照片"
                 cell.lbl11.text = "添加照片"
             }
             if indexPath.row * 2 + 1 < c {
-                cell.lbl2.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
-                cell.lbl22.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
+                cell.lbl2.text = titles[nSection][(indexPath.row * 2 + 1) % titles[nSection].count]
+                cell.lbl22.text = titles[nSection][(indexPath.row * 2 + 1) % titles[nSection].count]
             }else{
                 cell.lbl2.text = "添加照片"
                 cell.lbl22.text = "添加照片"
@@ -607,14 +638,14 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             if source == 1 {
                 var bTem = false
                 if images.count > 0 {
-                    if let data = images[indexPath.section * 1000 + indexPath.row] {
+                    if let data = images[nSection * 1000 + indexPath.row] {
                         cell.iv1.image = UIImage(data: data)
                         bTem = true
                     }
                 }
                 if !bTem {
                     for  json in arrImageInfo {
-                        if json["imageClass"].string == sectionTitles[indexPath.section] {
+                        if json["imageClass"].string == sectionTitles[nSection] {
                             if json["imageSeqNum"].intValue == indexPath.row * 2 {
                                 cell.iv1.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
                                 bTem = true
@@ -636,7 +667,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 }
                 
             }else {
-                if let data = images[indexPath.section * 1000 + indexPath.row] {
+                if let data = images[nSection * 1000 + indexPath.row] {
                     cell.iv1.image = UIImage(data: data)
                     cell.lbl11.isHidden = false
                     cell.lbl1.isHidden = true
@@ -649,7 +680,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     cell.iv11.isHidden = false
                     if bSubmit {
                         if companyNo == 0 {
-                            if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row) {
+                            if companyOtherNeed.contains(nSection * 1000 + indexPath.row) {
                                 cell.vCamera1.layer.borderColor = UIColor.red.cgColor
                             }else{
                                 cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
@@ -666,14 +697,14 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             if source == 1 {
                 var bTem = false
                 if images.count > 0 {
-                    if let data = images[indexPath.section * 1000 + indexPath.row + 100] {
+                    if let data = images[nSection * 1000 + indexPath.row + 100] {
                         cell.iv2.image = UIImage(data: data)
                         bTem = true
                     }
                 }
                 if !bTem {
                     for  json in arrImageInfo {
-                        if json["imageClass"].string == sectionTitles[indexPath.section] {
+                        if json["imageClass"].string == sectionTitles[nSection] {
                             if json["imageSeqNum"].intValue == indexPath.row * 2 + 1 {
                                 cell.iv2.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
                                 bTem = true
@@ -695,7 +726,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 }
                 
             }else{
-                if let data = images[indexPath.section * 1000 + indexPath.row + 100] {
+                if let data = images[nSection * 1000 + indexPath.row + 100] {
                     cell.iv2.image = UIImage(data: data)
                     cell.lbl2.isHidden = true
                     cell.lbl22.isHidden = false
@@ -708,7 +739,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     cell.iv21.isHidden = false
                     if bSubmit {
                         if companyNo == 0 {
-                            if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row + 100) {
+                            if companyOtherNeed.contains(nSection * 1000 + indexPath.row + 100) {
                                 cell.vCamera2.layer.borderColor = UIColor.red.cgColor
                             }else{
                                 cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
@@ -723,7 +754,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }
             
             return cell
-        }else if indexPath.section == 6 {
+        }else if indexPath.section == nMax {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as! Detection1TableViewCell
             cell.contentView.layer.borderWidth = 0.5
             if source == 1 {
@@ -739,8 +770,16 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }
             return cell
         }else{
+            if source == 1 && indexPath.section == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell4", for: indexPath) as! Detection4TableViewCell
+                cell.contentView.layer.borderWidth = 0.5
+                cell.delegate = self
+                cell.showWebView(htmlString: json?["applyAllOpinion"].string ?? "")
+                cell.contentView.layer.borderColor = UIColor.clear.cgColor
+                return cell
+            }
             if bGuanghui {
-                if indexPath.section == 7 {
+                if indexPath.section == nMax + 1 {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "cell3", for: indexPath) as! Detection3TableViewCell
                     cell.contentView.layer.borderWidth = 0.5
                     cell.delegate = self
@@ -797,13 +836,18 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section < 6 {
+        let nMin = source == 1 ? 1 : 0
+        let nMax = source == 1 ? 7 : 6
+        if indexPath.section < nMax && indexPath.section >= nMin {
             return 10 + (WIDTH / 2 - 15) / 3 * 2.0
-        }else if indexPath.section == 6 {
+        }else if indexPath.section == nMax {
             return 44
         }else{
+            if source == 1 && indexPath.section == 0 {
+                return CGFloat(fWebViewCellHeight + 20)
+            }
             if bGuanghui {
-                if indexPath.section == 7 {
+                if indexPath.section == nMax + 1 {
                     return 60
                 }else{
                     return 100
@@ -817,14 +861,24 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! ReUseHeaderFooterView
-        if section < 7 {
-            view.lblTitle.text = sectionTitles[section]
+        let nMin = source == 1 ? 1 : 0
+        let nMax = source == 1 ? 7 : 6
+        let nSection = source==1 ? section - 1 : section
+        if section < nMax && section >= nMin {
+            view.lblTitle.text = sectionTitles[nSection]
+        }else if section == nMax {
+            view.lblTitle.text = sectionTitles[nSection]
         }else{
-            if bGuanghui {
-                view.lblTitle.text = sectionTitles[section]
+            if source == 1 && section == 0 {
+                view.lblTitle.text = "退回原因"
             }else{
-                view.lblTitle.text = sectionTitles[section + 1]
+                if bGuanghui {
+                    view.lblTitle.text = sectionTitles[nSection]
+                }else{
+                    view.lblTitle.text = sectionTitles[nSection + 1]
+                }
             }
+            
         }
         return view
     }
@@ -865,6 +919,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         default:
             leaseTerm = 36
         }
+        tableView.reloadData()
+    }
+    
+    func getWebViewContentHeight(height: Float) {
+        fWebViewCellHeight = height
         tableView.reloadData()
     }
 }

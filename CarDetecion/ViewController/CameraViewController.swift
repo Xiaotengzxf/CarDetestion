@@ -56,6 +56,7 @@ public class CameraViewController: UIViewController {
     var nTag = 0 // 定位当前位置
     //var cameraType = 0
     var sectionTiltes : [String] = []
+    var titlesImageClass : [[String]] = []
     var titles : [[String]] = []
     var lcWidth : NSLayoutConstraint!
     var lcHeight : NSLayoutConstraint!
@@ -374,7 +375,8 @@ public class CameraViewController: UIViewController {
             lblName.text = titles[section][row * 2 + bright]
             lblCurrentPage.text = "\(index + 1)/\(titles[section].count)"
             for json in waterMarks {
-                if json["imageClass"].stringValue == sectionTiltes[section] && index == json["imageSeqNum"].intValue {
+                let bTem = titlesImageClass.count > 0 ? (json["imageClass"].stringValue == titlesImageClass[section][index]) : (json["imageClass"].stringValue == sectionTiltes[section] && index == json["imageSeqNum"].intValue)
+                if bTem {
                     var imageUrl = "\(NetworkManager.sharedInstall.domain)\(json["imageDesc"].stringValue)"
                     var url = URL(string: imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
                     ivDetailDesc.sd_setImage(with: url)
@@ -810,7 +812,7 @@ public class CameraViewController: UIViewController {
                     nTag = array[index! + 1]
                     onCompletion?(imageInfo.0 , imageInfo.1)
                     imageInfo = (nil , nil)
-                    NotificationCenter.default.post(name: Notification.Name("detectionnew"), object: 3, userInfo: ["tag" : nTag])
+                    NotificationCenter.default.post(name: Notification.Name(titlesImageClass.count > 0 ? "fastpredetection" : "detectionnew"), object: 3, userInfo: ["tag" : nTag])
                     
                     cameraView.startSession()
                     ivSnap.isHidden = true
@@ -828,7 +830,8 @@ public class CameraViewController: UIViewController {
                         lblName.text = titles[section][row * 2 + bright]
                         lblCurrentPage.text = "\(index2 + 1)/\(titles[section].count)"
                         for json in waterMarks {
-                            if json["imageClass"].stringValue == sectionTiltes[section] && index2 == json["imageSeqNum"].intValue {
+                            let bTem = titlesImageClass.count > 0 ? (json["imageClass"].stringValue == titlesImageClass[section][index2]) : (json["imageClass"].stringValue == sectionTiltes[section] && index2 == json["imageSeqNum"].intValue)
+                            if bTem {
                                 var imageUrl = "\(NetworkManager.sharedInstall.domain)\(json["imageDesc"].stringValue)"
                                 var url = URL(string: imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
                                 ivDetailDesc.sd_setImage(with: url)

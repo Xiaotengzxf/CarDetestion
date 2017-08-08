@@ -97,6 +97,7 @@ class LoginViewController: UIViewController {
             }
         }
     }
+    
     @IBAction func doRegister(_ sender: Any) {
         if let controller = self.storyboard?.instantiateViewController(withIdentifier: "register") as? RegisterController {
             self.present(controller, animated: true, completion: { 

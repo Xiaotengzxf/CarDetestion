@@ -13,6 +13,7 @@
 		8920A31D1EB84B1B005DC01B /* PreDetectionListTVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */; };
 		8920A31F1EB8964E005DC01B /* CarModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8920A31E1EB8964E005DC01B /* CarModelController.swift */; };
 		892D10311EF7B7510045D8A3 /* FastPreDetectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892D10301EF7B7510045D8A3 /* FastPreDetectionViewController.swift */; };
+		893100F31F04A8A200B65426 /* FastPreDetectionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893100F21F04A8A200B65426 /* FastPreDetectionDetailViewController.swift */; };
 		893CDB2A1EB6D10E00AEB5D7 /* TabCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */; };
 		893CDB2B1EB6D10E00AEB5D7 /* TabPageOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB241EB6D10E00AEB5D7 /* TabPageOption.swift */; };
 		893CDB2C1EB6D10E00AEB5D7 /* TabPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB251EB6D10E00AEB5D7 /* TabPageViewController.swift */; };
@@ -59,6 +60,7 @@
 		896AFA771E8C9213008DE6F5 /* DetectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA761E8C9213008DE6F5 /* DetectionTableViewCell.swift */; };
 		896AFA791E8CFAE1008DE6F5 /* MTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA781E8CFAE1008DE6F5 /* MTabBarController.swift */; };
 		896AFA7B1E8D10F2008DE6F5 /* UINavigationBarExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896AFA7A1E8D10F2008DE6F5 /* UINavigationBarExtension.swift */; };
+		897638C71F19FADD0045B1F7 /* DetectionWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897638C61F19FADC0045B1F7 /* DetectionWebViewController.swift */; };
 		8978CAE71E928EF300BBC926 /* Detection1TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8978CAE61E928EF300BBC926 /* Detection1TableViewCell.swift */; };
 		8978CAE91E928F0400BBC926 /* Detection2TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8978CAE81E928F0400BBC926 /* Detection2TableViewCell.swift */; };
 		897C6DA11EBF578E00B22203 /* libhelpdesk_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 897C6C701EBF578E00B22203 /* libhelpdesk_sdk.a */; };
@@ -220,6 +222,7 @@
 		89B3A5E01EAADC7000949757 /* InfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3A5DF1EAADC7000949757 /* InfoTableViewController.swift */; };
 		89B3A5E31EAB148100949757 /* MessageListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3A5E21EAB148100949757 /* MessageListTableViewController.swift */; };
 		89CB16901EABA54A00768787 /* RecordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CB168F1EABA54A00768787 /* RecordTableViewCell.swift */; };
+		89D4EAC31EFA9FAA004600A6 /* Detection4TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89D4EAC21EFA9FAA004600A6 /* Detection4TableViewCell.swift */; };
 		927BA23DC90FCA9C2D177731 /* Pods_CarDetecion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E2CC0138EACBF25DE67C2E1 /* Pods_CarDetecion.framework */; };
 /* End PBXBuildFile section */
 
@@ -253,6 +256,7 @@
 		8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreDetectionListTVController.swift; sourceTree = "<group>"; };
 		8920A31E1EB8964E005DC01B /* CarModelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarModelController.swift; sourceTree = "<group>"; };
 		892D10301EF7B7510045D8A3 /* FastPreDetectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FastPreDetectionViewController.swift; sourceTree = "<group>"; };
+		893100F21F04A8A200B65426 /* FastPreDetectionDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FastPreDetectionDetailViewController.swift; sourceTree = "<group>"; };
 		893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabCollectionCell.swift; sourceTree = "<group>"; };
 		893CDB241EB6D10E00AEB5D7 /* TabPageOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageOption.swift; sourceTree = "<group>"; };
 		893CDB251EB6D10E00AEB5D7 /* TabPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageViewController.swift; sourceTree = "<group>"; };
@@ -305,6 +309,7 @@
 		896AFA761E8C9213008DE6F5 /* DetectionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionTableViewCell.swift; sourceTree = "<group>"; };
 		896AFA781E8CFAE1008DE6F5 /* MTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTabBarController.swift; sourceTree = "<group>"; };
 		896AFA7A1E8D10F2008DE6F5 /* UINavigationBarExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationBarExtension.swift; sourceTree = "<group>"; };
+		897638C61F19FADC0045B1F7 /* DetectionWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetectionWebViewController.swift; sourceTree = "<group>"; };
 		8978CAE61E928EF300BBC926 /* Detection1TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detection1TableViewCell.swift; sourceTree = "<group>"; };
 		8978CAE81E928F0400BBC926 /* Detection2TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detection2TableViewCell.swift; sourceTree = "<group>"; };
 		897C6C3F1EBF578E00B22203 /* helpdesk_sdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = helpdesk_sdk.h; sourceTree = "<group>"; };
@@ -655,6 +660,7 @@
 		89B3A5DF1EAADC7000949757 /* InfoTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoTableViewController.swift; sourceTree = "<group>"; };
 		89B3A5E21EAB148100949757 /* MessageListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListTableViewController.swift; sourceTree = "<group>"; };
 		89CB168F1EABA54A00768787 /* RecordTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordTableViewCell.swift; sourceTree = "<group>"; };
+		89D4EAC21EFA9FAA004600A6 /* Detection4TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detection4TableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -731,6 +737,7 @@
 				8985F37A1EB8DC9E0028E70E /* CarModelCell.swift */,
 				896837B51EF560B000029010 /* PreDetectionViewController.swift */,
 				892D10301EF7B7510045D8A3 /* FastPreDetectionViewController.swift */,
+				893100F21F04A8A200B65426 /* FastPreDetectionDetailViewController.swift */,
 			);
 			name = PreDetection;
 			sourceTree = "<group>";
@@ -867,6 +874,7 @@
 				8978CAE81E928F0400BBC926 /* Detection2TableViewCell.swift */,
 				898653631EED9AC600B276C3 /* Detection3TableViewCell.swift */,
 				89CB168F1EABA54A00768787 /* RecordTableViewCell.swift */,
+				89D4EAC21EFA9FAA004600A6 /* Detection4TableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1567,6 +1575,7 @@
 				896232A21E8E19D600AB4B1E /* DNavigationController.swift */,
 				8985C7A51E72EECA0075B6F8 /* DetectionViewController.swift */,
 				8985C7D81E7309D60075B6F8 /* DetectionNewViewController.swift */,
+				897638C61F19FADC0045B1F7 /* DetectionWebViewController.swift */,
 			);
 			name = Detection;
 			sourceTree = "<group>";
@@ -1843,6 +1852,7 @@
 				897C6DBF1EBF578F00B22203 /* MJRefreshConst.m in Sources */,
 				897C6DD51EBF578F00B22203 /* UIButton+EMWebCache.m in Sources */,
 				89B3A5E31EAB148100949757 /* MessageListTableViewController.swift in Sources */,
+				897638C71F19FADD0045B1F7 /* DetectionWebViewController.swift in Sources */,
 				897C6DF21EBF578F00B22203 /* NSDate+Category.m in Sources */,
 				897C6DF51EBF578F00B22203 /* UIResponder+HRouter.m in Sources */,
 				897C6DB91EBF578F00B22203 /* MJRefreshBackNormalFooter.m in Sources */,
@@ -1917,6 +1927,7 @@
 				897C6DF81EBF578F00B22203 /* HDEmoji.m in Sources */,
 				897C6DB61EBF578F00B22203 /* MJRefreshAutoNormalFooter.m in Sources */,
 				893CDB2D1EB6D10E00AEB5D7 /* TabView.swift in Sources */,
+				89D4EAC31EFA9FAA004600A6 /* Detection4TableViewCell.swift in Sources */,
 				8953080A1E6D7A67007AF459 /* CameraShot.swift in Sources */,
 				897C6DAB1EBF578F00B22203 /* HDVoiceConverter.mm in Sources */,
 				8985C7A41E72ED850075B6F8 /* Extension.swift in Sources */,
@@ -1990,6 +2001,7 @@
 				897C6DDC1EBF578F00B22203 /* NSIndexPath+PSTCollectionViewAdditions.m in Sources */,
 				892D10311EF7B7510045D8A3 /* FastPreDetectionViewController.swift in Sources */,
 				897C6E0A1EBF578F00B22203 /* HDBubbleView+File.m in Sources */,
+				893100F31F04A8A200B65426 /* FastPreDetectionDetailViewController.swift in Sources */,
 				897C6E151EBF578F00B22203 /* HDBubbleView.m in Sources */,
 				897C6DB81EBF578F00B22203 /* MJRefreshBackGifFooter.m in Sources */,
 				897C6DCE1EBF578F00B22203 /* EMSDWebImageDecoder.m in Sources */,
@@ -2188,6 +2200,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zhixingping.CarDetection;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CarDetecion/CarDetecion-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";

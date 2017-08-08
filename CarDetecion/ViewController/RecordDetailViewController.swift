@@ -43,7 +43,9 @@ class RecordDetailViewController: UIViewController {
         lblTime.text = json["createTime"].string
         lblRemark.text = json["mark"].string
         do {
-            lblOpinion.attributedText = try NSAttributedString(data: json["applyAllOpinion"].stringValue.data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
+            var strOpinion = json["applyAllOpinion"].stringValue
+            strOpinion = htmlStringToHtml5(htmlString: strOpinion)
+            lblOpinion.attributedText = try NSAttributedString(data: strOpinion.data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
         }catch{
             
         }
@@ -82,6 +84,10 @@ class RecordDetailViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func htmlStringToHtml5(htmlString : String) -> String {
+        return "<html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,user-scalable=no\"></head><body>\(htmlString)</body></html>"
     }
     
 

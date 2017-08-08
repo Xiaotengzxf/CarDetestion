@@ -16,8 +16,8 @@ class MineTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        titles = [["个人资料"] , ["客服电话" , "关于"] , ["账号退出"]]
-        icons = [["mine_info"] , [ "mine_call" , "mine_setting"] , ["mine_logout"]]
+        titles = [["个人资料"] , ["关于"] , ["账号退出"]] //"客服电话" ,
+        icons = [["mine_info"] , ["mine_setting"] , ["mine_logout"]] //"mine_call" ,
         tableView.tableHeaderView?.frame = CGRect(x: 0, y: 0, width: WIDTH, height: WIDTH * 553/1080.0)
         tableView.tableFooterView = UIView()
         view.backgroundColor = UIColor(red: 245/255.0, green: 245/255.0, blue: 245/255.0, alpha: 1)
@@ -49,17 +49,11 @@ class MineTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return titles.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 1
-        }else if section == 1 {
-            return 2
-        }else{
-            return 1
-        }
+        return titles[section].count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -75,7 +69,7 @@ class MineTableViewController: UITableViewController {
         if indexPath.section == 2 {
             showAlet(title: "提示", message: "您确定退出吗？")
         }else if indexPath.section == 1 {
-            if indexPath.row == 1 {
+            if indexPath.row == 0 {
                 if let controller = self.storyboard?.instantiateViewController(withIdentifier: "default") as? DefaultViewController {
                     controller.title = "关于我们"
                     controller.hidesBottomBarWhenPushed = true

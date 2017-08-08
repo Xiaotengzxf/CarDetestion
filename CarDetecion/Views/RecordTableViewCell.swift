@@ -10,6 +10,7 @@ import UIKit
 
 class RecordTableViewCell: UITableViewCell {
     
+    @IBOutlet weak var btnChangeToNormal: UIButton!
     var longTap : UILongPressGestureRecognizer?
     var delegate : RecordTableViewCellDelegate?
 
@@ -35,8 +36,13 @@ class RecordTableViewCell: UITableViewCell {
         delegate?.tapCell(tag: tag)
     }
 
+    @IBAction func changeToNormal(_ sender: Any) {
+        delegate?.handleChangeToNormal(tag: tag)
+    }
 }
 
 protocol RecordTableViewCellDelegate {
     func tapCell(tag : Int)
+    func handleChangeToNormal(tag : Int)
+    
 }

@@ -12,7 +12,7 @@ import SKPhotoBrowser
 import SwiftyJSON
 import MBProgressHUD
 
-class FastPreDetectionViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate {
+class FastPreDetectionViewController: UIViewController , UITableViewDataSource , UITableViewDelegate , DetectionTableViewCellDelegate , UIViewControllerTransitioningDelegate, Detection4TableViewCellDelegate {
     
     @IBOutlet weak var lcBottom: NSLayoutConstraint!
     @IBOutlet weak var btnSave: UIButton!
@@ -20,7 +20,8 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     @IBOutlet weak var tableView: UITableView!
     let sectionTitles = ["基础照片" , "补充照片" , "备注"]
     let titles = [["登记证首页" , "中控台含档位杆", "车左前45度"] , ["行驶证-正本\n副本同照", "左前门"]]
-    let titlesImageClass = [["登记证" , "车辆内饰" , "车体骨架"] , ["行驶证" , "车身外观"]]
+    let titlesImageClass = [["登记证" , "车辆内饰" , "车身外观"] , ["行驶证" , "车体骨架"]]
+    let titlesImageSeqNum = [[0, 2, 0], [0, 5]]
     var images : [Int : Data] = [:]
     var imagesPath = "" // 本地如果有缓冲图片，则读取图片
     var imagesFilePath = "" // 本地如果有缓冲图片，则读取图片
@@ -30,7 +31,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     let upload = "external/app/uploadAppImage.html"
     let uploadPre = "external/app/addAppPreCarImage.html"
     let operationDesc = "external/source/operation-desc.json" // 水印和接口说明
-    let billImages = "external/app/getAppBillImageList.html"
+    let billImages = "external/app/getAppPreBillImageList.html"
     let submitPre = "external/app/addPreCarBill.html"
     var orderNo = ""
     var remark = ""
@@ -45,11 +46,13 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     var json : JSON? // 未通过时，获取的数据
     var arrImageInfo : [JSON] = []
     var pathName = ""
+    var bSave = false
+    var fWebViewCellHeight : Float = 100
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(FastPreDetectionViewController.handleNotification(notification:)), name: Notification.Name("detectionnew"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(FastPreDetectionViewController.handleNotification(notification:)), name: Notification.Name("fastpredetection"), object: nil)
         self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: nil, action: nil)
     
@@ -77,6 +80,10 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
             }
         }
         
+        if source == 1 { // 驳回
+            loadUnpassData()
+        }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,7 +93,9 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        if (!self.navigationController!.viewControllers.contains(self)) && bSave == false && source != 1 && bSubmitSuccess == false {
+            self.save(UIButton())
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -184,6 +193,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
         camera.titles = titles
         camera.waterMarks = waterMarks
         camera.companyNeed = companyOtherNeed
+        camera.titlesImageClass = titlesImageClass
         //camera.transitioningDelegate = self
         self.present(camera, animated: true) {
             
@@ -206,28 +216,74 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
         }
     }
     
-    @IBAction func move(_ sender: Any) {
-        if let button = sender as? UIButton {
-            switch button.tag {
-            case 1:
-                tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
-            case 2:
-                tableView.scrollToRow(at: IndexPath(row: 0, section: 3), at: .top, animated: true)
-            case 3:
-                tableView.scrollToRow(at: IndexPath(row: 0, section: 4), at: .top, animated: true)
-            case 4:
-                tableView.scrollToRow(at: IndexPath(row: 0, section: 5), at: .top, animated: true)
-            case 5:
-                tableView.scrollToRow(at: IndexPath(row: 0, section: 6), at: .top, animated: true)
-            default:
-                fatalError()
-            }
-        }
-    }
-    
     // 保存
     @IBAction func save(_ sender: Any) {
-        
+        if source == 1 {
+            self.navigationController?.popViewController(animated: true)
+            return
+        }
+        bSave = true
+        if images.count > 0 || remark.characters.count > 0 {
+            var orders : [[String : String]] = []
+            if let order = UserDefaults.standard.object(forKey: "preorders") as? [[String : String]] {
+                orders += order
+            }
+            var orderKeys : [String] = []
+            if let keys = UserDefaults.standard.object(forKey: "preorderKeys") as? [String] {
+                orderKeys += keys
+            }
+            let fileManager = FileManager.default
+            var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+            let name = pathName.characters.count > 0 ? pathName : "\(Date().timeIntervalSince1970)"
+            if pathName != name {
+                orderKeys.insert(name, at: 0)
+            }
+            path = path! + "/\(name)"
+            do{
+                if pathName == name {
+                    try fileManager.removeItem(atPath: path!)
+                }
+                try fileManager.createDirectory(atPath:path! , withIntermediateDirectories: true, attributes: nil)
+                var imageStr = ""
+                for (key , value) in images {
+                    imageStr += "\(key),"
+                    let result = fileManager.createFile(atPath: path! + "/\(key).jpg", contents: value, attributes: nil)
+                    if !result {
+                        print("图片保存失败")
+                    }
+                }
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let str = imageStr.characters.count > 0 ? imageStr.substring(to: imageStr.index(before: imageStr.endIndex)) : ""
+                if pathName == name {
+                    let i = orderKeys.index(of: pathName) ?? 0
+                    if i == 0 && orders.count == 0 {
+                        orders.append(["mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())])
+                    }else{
+                        orders[i] = ["mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]
+                    }
+                }else{
+                    orders.insert([ "mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())], at: 0)
+                }
+                UserDefaults.standard.set(orders, forKey: "preorders")
+                UserDefaults.standard.set(orderKeys, forKey: "preorderKeys")
+                UserDefaults.standard.synchronize()
+                if let button = sender as? UIButton , button == btnSave {
+                    showAlert(title: "温馨提示", message: "保存成功", button: "确定")
+                }
+                
+            }catch{
+                if let button = sender as? UIButton , button == btnSave {
+                    showAlert(title: "温馨提示", message: "保存失败，数据丢失!", button: "确定")
+                }
+                
+            }
+        }else{
+            if let button = sender as? UIButton , button == btnSave {
+                showAlert(title: "温馨提示", message: "您没有拍摄任何照片，或输入内容！", button: "保存失败")
+            }
+            
+        }
     }
     
     // 显示提示框
@@ -265,7 +321,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                     let section = key / 1000
                     let row = (key % 1000) % 100
                     let right = key % 1000 >= 100
-                    self.uploadImage(imageClass: self.titlesImageClass[section][row + (right ? 1 : 0)], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+                    self.uploadImage(imageClass: self.titlesImageClass[section][row * 2 + (right ? 1 : 0)], imageSeqNum: self.titlesImageSeqNum[section][row * 2 + (right ? 1 : 0)], data: value)
                 }
 
                 self.navigationController?.popViewController(animated: true)
@@ -284,6 +340,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                     print(error!.localizedDescription)
                 }else{
                     if let data = json , data["success"].boolValue {
+                        self?.bSubmitSuccess = true
                         Toast(text: "提交成功").show()
                         self?.navigationController?.popViewController(animated: true)
                         self!.orderNo = "\(data["object"].int ?? 0)"
@@ -293,7 +350,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                                 let section = key / 1000
                                 let row = (key % 1000) % 100
                                 let right = key % 1000 >= 100
-                                self!.uploadImage(imageClass: self!.titlesImageClass[section][row + (right ? 1 : 0)], imageSeqNum: row * 2 + (right ? 1 : 0), data: value)
+                                self!.uploadImage(imageClass: self!.titlesImageClass[section][row * 2 + (right ? 1 : 0)], imageSeqNum: self!.titlesImageSeqNum[section][row * 2 + (right ? 1 : 0)], data: value)
                             }
                         }
                     }else{
@@ -320,6 +377,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                 if json?["success"].boolValue == true {
                     upLoadCount -= 1
                     if upLoadCount == 0 {
+                        
                     }
                 }else{
                     print("上传失败:\(imageClass)---\(imageSeqNum)")
@@ -375,13 +433,17 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     
     // MARK: - UITableView DataSource
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionTitles.count
+        let count = source == 1 ? (sectionTitles.count + 1) : sectionTitles.count
+        return count
 
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section < 2 {
-            let count = titles[section].count
+        let mSection = source == 1 ? (section - 1) : section
+        let max = source == 1 ? 3 : 2
+        let min = source == 1 ? 1 : 0
+        if section < max && section >= min{
+            let count = titles[mSection].count
             return (count % 2 > 0) ? (count / 2 + 1) : (count / 2)
         }else {
             return 1
@@ -389,7 +451,10 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section < 2 {
+        let mSection = source == 1 ? (indexPath.section - 1) : indexPath.section
+        let max = source == 1 ? 3 : 2
+        let min = source == 1 ? 1 : 0
+        if indexPath.section < max && indexPath.section >= min {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetectionTableViewCell
             cell.vCamera1.layer.cornerRadius = 6.0
             cell.vCamera2.layer.cornerRadius = 6.0
@@ -402,20 +467,20 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
             cell.indexPath = indexPath
             cell.delegate = self
             cell.source = source
-            let c = titles[indexPath.section].count
-            let count = titles[indexPath.section].count
+            let c = titles[mSection].count
+            let count = titles[mSection].count
             if count % 2 > 0 && indexPath.row == count / 2 {
                 cell.vCamera2.isHidden = true
             }else{
                 cell.vCamera2.isHidden = false
             }
             if indexPath.row * 2 < c {
-                cell.lbl1.text = titles[indexPath.section][indexPath.row * 2]
-                cell.lbl11.text = titles[indexPath.section][indexPath.row * 2]
+                cell.lbl1.text = titles[mSection][indexPath.row * 2]
+                cell.lbl11.text = titles[mSection][indexPath.row * 2]
             }
             if indexPath.row * 2 + 1 < c {
-                cell.lbl2.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
-                cell.lbl22.text = titles[indexPath.section][(indexPath.row * 2 + 1) % titles[indexPath.section].count]
+                cell.lbl2.text = titles[mSection][(indexPath.row * 2 + 1) % titles[mSection].count]
+                cell.lbl22.text = titles[mSection][(indexPath.row * 2 + 1) % titles[mSection].count]
             }
             cell.iv11.image = UIImage(named: indexPath.row * 2 < count - 1 ? "icon_camera" : "icon_add_photo")
             cell.iv21.image = UIImage(named: indexPath.row * 2 + 1 < count - 1 ? "icon_camera" : "icon_add_photo")
@@ -424,18 +489,16 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
             if source == 1 {
                 var bTem = false
                 if images.count > 0 {
-                    if let data = images[indexPath.section * 1000 + indexPath.row] {
+                    if let data = images[mSection * 1000 + indexPath.row] {
                         cell.iv1.image = UIImage(data: data)
                         bTem = true
                     }
                 }
                 if !bTem {
                     for  json in arrImageInfo {
-                        if json["imageClass"].string == sectionTitles[indexPath.section] {
-                            if json["imageSeqNum"].intValue == indexPath.row * 2 {
-                                cell.iv1.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
-                                bTem = true
-                            }
+                        if json["imageClass"].string == titlesImageClass[mSection][indexPath.row * 2] {
+                            cell.iv1.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
+                            bTem = true
                         }
                     }
                 }
@@ -453,7 +516,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                 }
                 
             }else {
-                if let data = images[indexPath.section * 1000 + indexPath.row] {
+                if let data = images[mSection * 1000 + indexPath.row] {
                     cell.iv1.image = UIImage(data: data)
                     cell.lbl11.isHidden = false
                     cell.lbl1.isHidden = true
@@ -466,7 +529,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                     cell.iv11.isHidden = false
                     if bSubmit {
                         if companyNo == 0 {
-                            if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row) {
+                            if companyOtherNeed.contains(mSection * 1000 + indexPath.row) {
                                 cell.vCamera1.layer.borderColor = UIColor.red.cgColor
                             }else{
                                 cell.vCamera1.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
@@ -483,18 +546,16 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
             if source == 1 {
                 var bTem = false
                 if images.count > 0 {
-                    if let data = images[indexPath.section * 1000 + indexPath.row + 100] {
+                    if let data = images[mSection * 1000 + indexPath.row + 100] {
                         cell.iv2.image = UIImage(data: data)
                         bTem = true
                     }
                 }
                 if !bTem {
                     for  json in arrImageInfo {
-                        if json["imageClass"].string == sectionTitles[indexPath.section] {
-                            if json["imageSeqNum"].intValue == indexPath.row * 2 + 1 {
-                                cell.iv2.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
-                                bTem = true
-                            }
+                        if json["imageClass"].string == titlesImageClass[mSection][indexPath.row + 1] {
+                            cell.iv2.sd_setImage(with: URL(string: "\(NetworkManager.sharedInstall.domain)\(json["imageThumbPath"].stringValue)")!)
+                            bTem = true
                         }
                     }
                 }
@@ -512,7 +573,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                 }
                 
             }else{
-                if let data = images[indexPath.section * 1000 + indexPath.row + 100] {
+                if let data = images[mSection * 1000 + indexPath.row + 100] {
                     cell.iv2.image = UIImage(data: data)
                     cell.lbl2.isHidden = true
                     cell.lbl22.isHidden = false
@@ -525,7 +586,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                     cell.iv21.isHidden = false
                     if bSubmit {
                         if companyNo == 0 {
-                            if companyOtherNeed.contains(indexPath.section * 1000 + indexPath.row + 100) {
+                            if companyOtherNeed.contains(mSection * 1000 + indexPath.row + 100) {
                                 cell.vCamera2.layer.borderColor = UIColor.red.cgColor
                             }else{
                                 cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
@@ -541,6 +602,15 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
             
             return cell
         }else{
+            if source == 1 && indexPath.section == 0 {
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell4", for: indexPath) as! Detection4TableViewCell
+                cell.contentView.layer.borderWidth = 0.5
+                cell.delegate = self
+                cell.showWebView(htmlString: json?["applyAllOpinion"].string ?? "")
+                cell.contentView.layer.borderColor = UIColor.clear.cgColor
+                return cell
+            }
+            
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
             cell.contentView.layer.borderWidth = 0.5
             if source == 1 {
@@ -564,16 +634,23 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section < 2 {
+        //let mSection = source == 1 ? (indexPath.section - 1) : indexPath.section
+        let max = source == 1 ? 3 : 2
+        let min = source == 1 ? 1 : 0
+        if indexPath.section < max && indexPath.section >= min {
             return 10 + (WIDTH / 2 - 15) / 3 * 2.0
         }else{
+            if source == 1 && indexPath.section == 0 {
+                return CGFloat(fWebViewCellHeight + 20)
+            }
             return 100
         }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! ReUseHeaderFooterView
-        view.lblTitle.text = sectionTitles[section]
+        let mSection = source == 1 ? (section - 1) : section
+        view.lblTitle.text = source == 1 && section == 0 ? "退回原因" : sectionTitles[mSection]
         return view
     }
     
@@ -599,6 +676,11 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return dismissAnimator
+    }
+    
+    func getWebViewContentHeight(height: Float) {
+        fWebViewCellHeight = height
+        tableView.reloadData()
     }
 
 }
