@@ -75,7 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         }
         
         application.applicationIconBadgeNumber = 0
-        
+        /*
         if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
             if orders.count > 0 {
                 for (index, dic) in orders.enumerated() {
@@ -118,7 +118,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             }
         }
         
-        
+        */
         
         
         return true
