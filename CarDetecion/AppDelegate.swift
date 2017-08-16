@@ -356,7 +356,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                     }
                 }else{
                     print("上传失败:\(imageClass)---\(imageSeqNum)")
-                    self?.uploadImage(imageClass: imageClass, imageSeqNum: imageSeqNum, data: data, orderNo: orderNo,key : key)
+                    // TODO: - 图片上传
                 }
             }
         }

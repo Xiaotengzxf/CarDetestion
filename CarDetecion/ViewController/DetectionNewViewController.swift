@@ -51,13 +51,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let userinfo = UserDefaults.standard.object(forKey: "userinfo") as! [String : Any]
-        let userSuperCompany = userinfo["userSuperCompany"] as? Int ?? 0
-        let userCompany = userinfo["userCompany"] as? Int ?? 0
-        if userSuperCompany == 8 || userCompany == 8 {
-            bGuanghui = true
-        }
-        
         tableView.register(UINib(nibName: "ReUseHeaderFooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "header")
         NotificationCenter.default.addObserver(self, selector: #selector(DetectionNewViewController.handleNotification(notification:)), name: Notification.Name("detectionnew"), object: nil)
         self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
@@ -484,7 +477,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     }
                 }else{
                     print("上传失败:\(imageClass)---\(imageSeqNum)")
-                    self?.uploadImage(imageClass: imageClass, imageSeqNum: imageSeqNum, data: data, orderNo: orderNo, key: key)
+                    // TODO: - 图片上传失败
                 }
             }
         }

@@ -469,15 +469,19 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         if  tableView == tableView0 {
             let json = data[indexPath.row]
             if let orderNo = json["orderNo"].string, orderNo.characters.count > 0 {
-                let alert = UIAlertController(title: "温馨提示", message: "评估单：\(orderNo)，正在提交中", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: { (action) in
-                    
-                }))
-                self.present(alert, animated: true) {
-                    
-                }
-                return
+//                let alert = UIAlertController(title: "温馨提示", message: "评估单：\(orderNo)，正在提交中", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: { (action) in
+//                    
+//                }))
+//                self.present(alert, animated: true) {
+//                    
+//                }
+//                return
+                
+                Toast(text: "评估单：\(orderNo)，正在提交中").show()
             }
+            
+            
             
             if let controller = self.storyboard?.instantiateViewController(withIdentifier: "detectionnew") as? DetectionNewViewController {
                 

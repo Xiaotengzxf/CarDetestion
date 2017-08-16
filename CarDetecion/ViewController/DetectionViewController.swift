@@ -77,10 +77,10 @@ class DetectionViewController: UIViewController {
         if let userinfo = UserDefaults.standard.object(forKey: "userinfo") as? [String : Any] {
             let userSuperCompany = userinfo["userSuperCompany"] as? Int ?? 0
             let userCompany = userinfo["userCompany"] as? Int ?? 0
-            if userSuperCompany == 9 || userCompany == 9 { // 广汇
+            if userSuperCompany == 9 || userCompany == 9 { // 先锋
                 lcRight.constant = (WIDTH - 240) / 4
                 lcLeft.constant = (WIDTH - 240) / 4
-            }else if userSuperCompany == 8 || userCompany == 8 { // 先锋
+            }else if userSuperCompany == 8 || userCompany == 8 { // 广汇
                 lcRight.constant = (WIDTH - 240) / 4
                 lcLeft.constant = (WIDTH - 240) / 4
                 lblPreDetection.text = "残值评估"
@@ -138,9 +138,9 @@ class DetectionViewController: UIViewController {
                 if let userinfo = UserDefaults.standard.object(forKey: "userinfo") as? [String : Any] {
                     let userSuperCompany = userinfo["userSuperCompany"] as? Int ?? 0
                     let userCompany = userinfo["userCompany"] as? Int ?? 0
-                    if userSuperCompany == 9 || userCompany == 9 { // 广汇
+                    if userSuperCompany == 9 || userCompany == 9 { // 先锋
                         nId = 4
-                    }else if userSuperCompany == 8 || userCompany == 8 { // 先锋
+                    }else if userSuperCompany == 8 || userCompany == 8 { // 广汇
                         nId = 5
                     }else{
                         
@@ -183,6 +183,19 @@ class DetectionViewController: UIViewController {
         if recognizer.view == vDetection {
             jumpToCamera()
         }else if recognizer.view == vPreDetection {
+            if let userinfo = UserDefaults.standard.object(forKey: "userinfo") as? [String : Any] {
+                let userSuperCompany = userinfo["userSuperCompany"] as? Int ?? 0
+                let userCompany = userinfo["userCompany"] as? Int ?? 0
+                if userSuperCompany == 9 || userCompany == 9 { // 先锋
+                    // jumpToPreDetection()
+                    self.performSegue(withIdentifier: "pre", sender: self)
+                }else if userSuperCompany == 8 || userCompany == 8 { // 广汇
+                    bTemp = true
+                    jumpToCamera()
+                }else{
+                    
+                }
+            }
             
             
         }else{
