@@ -364,7 +364,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             DispatchQueue.global().async {
                 if json?["success"].boolValue == true {
                     DispatchQueue.main.async {
-                        Toast(text: "订单：\(orderNo)提交一张图片失败").show()
+                        Toast(text: "订单：\(orderNo)提交一张图片成功").show()
                     }
                     var arr : Set<String> = uploadDict[orderNo] ?? []
                     arr.remove("\(key)")
