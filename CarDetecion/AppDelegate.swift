@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import IQKeyboardManagerSwift
+import Toaster
 
 var uploadDict : [String : Set<String>] = [:]
 var upLoadCount = 0
@@ -362,6 +363,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         NetworkManager.sharedInstall.upload(url: upload, params: params, data: data) {[weak self] (json, error) in
             DispatchQueue.global().async {
                 if json?["success"].boolValue == true {
+                    DispatchQueue.main.async {
+                        Toast(text: "订单：\(orderNo)提交一张图片失败").show()
+                    }
                     var arr : Set<String> = uploadDict[orderNo] ?? []
                     arr.remove("\(key)")
                     uploadDict[orderNo] = arr
@@ -375,6 +379,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                     print("上传失败:\(imageClass)---\(imageSeqNum)")
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: Notification.Name("app"), object: 3 , userInfo: ["orderNo" : orderNo])
+                    }
+                    DispatchQueue.main.async {
+                        Toast(text: "订单：\(orderNo)提交一张图片失败").show()
                     }
                 }
             }

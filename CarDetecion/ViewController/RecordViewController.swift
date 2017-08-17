@@ -349,16 +349,38 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             cell.delegate = self
             cell.tag = indexPath.row
             cell.addLongTap()
+            let json = data[indexPath.row]
+            var bUnfinished = false
+            var strOrderNo = ""
+            if let orderNo = json["orderNo"].string, orderNo.characters.count > 0 {
+                if let unfinished = json["unfinished"].string, unfinished == "1" {
+                    bUnfinished = true
+                }else{
+                }
+                strOrderNo = orderNo
+            }
             
             if let label = cell.contentView.viewWithTag(3) as? UILabel {
-                label.text = "暂无单号"
+                if strOrderNo.characters.count == 0 {
+                    label.text = "暂无单号"
+                }else{
+                    label.text = "单号：\(strOrderNo)"
+                }
             }
             if let label = cell.contentView.viewWithTag(4) as? UILabel {
                 label.text = "添加时间：\(data[indexPath.row]["addtime"].string ?? "") "
                 label.textColor = UIColor.rgbColorFromHex(rgb: 0xF86765)
             }
             if let label = cell.contentView.viewWithTag(5) as? UILabel {
-                label.text = ""
+                if strOrderNo.characters.count > 0 {
+                    if bUnfinished {
+                        label.text = "提交状态：提交失败"
+                    }else{
+                        label.text = "提交状态：提交中"
+                    }
+                }else{
+                    label.text = ""
+                }
             }
             if let imageView = cell.contentView.viewWithTag(2) as? UIImageView {
                 let json = data[indexPath.row]

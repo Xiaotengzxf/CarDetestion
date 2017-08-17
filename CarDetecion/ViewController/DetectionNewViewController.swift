@@ -492,6 +492,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     arr.remove("\(key)")
                     uploadDict[orderNo] = arr
                     print("还有\(arr.count)张没上传完")
+                    DispatchQueue.main.async {
+                        Toast(text: "订单：\(orderNo)提交一张图片失败").show()
+                    }
                     if arr.count == 0 {
                         uploadDict.removeValue(forKey: orderNo)
                         DispatchQueue.main.async {
@@ -500,6 +503,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     }
                 }else{
                     print("上传失败:\(imageClass)---\(imageSeqNum)")
+                    DispatchQueue.main.async {
+                        Toast(text: "订单：\(orderNo)提交一张图片失败").show()
+                    }
                     // TODO: - 图片上传失败
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: Notification.Name("app"), object: 3 , userInfo: ["orderNo" : orderNo])
