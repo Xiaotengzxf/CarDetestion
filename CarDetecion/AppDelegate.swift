@@ -24,9 +24,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        if let upload = UserDefaults.standard.object(forKey: "uploadDict") as? [String : Set<String>] {
-            uploadDict = upload
+        if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first?.appending("/upload.data") {
+            if FileManager.default.fileExists(atPath: path) {
+                let data = NSData(contentsOfFile: path)
+                let unachiver = NSKeyedUnarchiver(forReadingWith: data! as Data)
+                if let dict = unachiver.decodeObject(forKey: "upload") as? NSDictionary {
+                    if let upload = dict as? [String : Set<String>] {
+                        uploadDict = upload
+                    }
+                }
+                
+            }
+            
         }
+        
         
         Bugly.start(withAppId: "2304f83592") // 腾讯Bugly接入
         
@@ -76,47 +87,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         
         application.applicationIconBadgeNumber = 0
         /*
-        if let orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
-            if orders.count > 0 {
-                for (index, dic) in orders.enumerated() {
-                    if let orderNo = dic["orderNo"] {
-                        if let urls = dic["images"] {
-                            
-                            let keys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
-                            if keys.count > 0 {
-                                let imagesPath = keys[index]
-                                DispatchQueue.global().async {
-                                    [weak self] in
-                                    var images : [Int : Data] = [:]
-                                    let array = urls.components(separatedBy: ",")
-                                    var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
-                                    path = path! + "/\(imagesPath)"
-                                    for item in array {
-                                        if let image = UIImage(contentsOfFile: path! + "/\(item).jpg") {
-                                            images[Int(item)!] = UIImageJPEGRepresentation(image, 1)
-                                        }
-                                    }
-                                    
-                                    if images.count > 0 {
-                                        let arr : Set<String> = uploadDict[orderNo] ?? []
-                                        for (key , value) in images {
-                                            if arr.contains("\(key)") {
-                                                continue
-                                            }
-                                            let section = key / 1000
-                                            let row = (key % 1000) % 100
-                                            let right = key % 1000 >= 100
-                                            self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value, orderNo: orderNo, key: key)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                    }
-                }
-            }
-        }
         
         */
         
@@ -180,8 +150,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         
-        UserDefaults.standard.set(uploadDict, forKey: "uploadDict")
-        UserDefaults.standard.synchronize()
+        if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first?.appending("/upload.data") {
+            let dict = NSMutableDictionary(dictionary: uploadDict)
+            let data = NSMutableData()
+            let archiver = NSKeyedArchiver(forWritingWith: data)
+            archiver.encode(dict, forKey: "upload")
+            archiver.finishEncoding()
+            let bValue = data.write(toFile: path, atomically: true)
+            if !bValue {
+                print("写入失败")
+            }
+        }
+        
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -261,12 +241,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                 if let userinfo = notification.userInfo as? [String : String] {
                     submitBill(orderNo: userinfo["orderNo"] ?? "")
                 }
+            }else if tag == 3 {
+                if let userinfo = notification.userInfo as? [String : String] {
+                    isBadOrder(orderNo: userinfo["orderNo"] ?? "")
+                    
+                }
+                
+            }else if tag == 4 {
+                if let userinfo = notification.userInfo as? [String : String] {
+                    reuploadOrder(oldOrderNo: userinfo["orderNo"] ?? "")
+                    self.perform(#selector(AppDelegate.showAlertView(userinfo:)), with: userinfo, afterDelay: 0.1)
+                }
+                
             }
         }
     }
     
     func showAlertView(userinfo : [String : String]) {
         self.showAlert(title: "温馨提示", message: "评估单：\(userinfo["orderNo"]!)，在后台提交中", button: "确认")
+    }
+    
+    // 标志订单提交失败
+    func isBadOrder(orderNo : String) {
+        if orderNo.characters.count > 0 {
+            var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
+            var i = 0
+            for (index , order) in orders.enumerated() {
+                if order["orderNo"] == orderNo {
+                    i = index
+                    break
+                }
+            }
+            if i < orders.count {
+                var order = orders[i]
+                order["unfinished"] = "1"
+                orders[i] = order
+            }
+            UserDefaults.standard.set(orders, forKey: "orders")
+            UserDefaults.standard.synchronize()
+            
+            NotificationCenter.default.post(name: Notification.Name("recordVC"), object: nil)
+        }
     }
     
     // 提交订单
@@ -309,7 +324,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                             UserDefaults.standard.synchronize()
                             
                             DispatchQueue.main.async {
-                                NotificationCenter.default.post(name: Notification.Name("recordVC"), object: 1)
+                                NotificationCenter.default.post(name: Notification.Name("recordVC"), object: nil)
                             }
                             
                         }else{
@@ -352,16 +367,81 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                     uploadDict[orderNo] = arr
                     if arr.count == 0 {
                         uploadDict.removeValue(forKey: orderNo)
-                        NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
+                        }
                     }
                 }else{
                     print("上传失败:\(imageClass)---\(imageSeqNum)")
-                    // TODO: - 图片上传
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: Notification.Name("app"), object: 3 , userInfo: ["orderNo" : orderNo])
+                    }
                 }
             }
         }
         
         
+    }
+    
+    func reuploadOrder(oldOrderNo: String) {
+        if oldOrderNo.characters.count > 0 {
+            if var orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
+                if orders.count > 0 {
+                    var dicTem : [String : String] = [:]
+                    var i = 0
+                    for (index, dic) in orders.enumerated() {
+                        if let orderNo = dic["orderNo"] {
+                            if oldOrderNo == orderNo {
+                                dicTem = dic
+                                i = index
+                                break
+                            }
+                        }
+                    }
+                 
+                    if dicTem.count > 0 {
+                        
+                        dicTem["unfinished"] = ""
+                        orders[i] = dicTem
+                        UserDefaults.standard.set(orders, forKey: "orders")
+                        UserDefaults.standard.synchronize()
+                        
+                        if let urls = dicTem["images"] {
+                            
+                            let keys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+                            if keys.count > 0 {
+                                let imagesPath = keys[i]
+                                DispatchQueue.global().async {
+                                    [weak self] in
+                                    var images : [Int : Data] = [:]
+                                    let array = urls.components(separatedBy: ",")
+                                    var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+                                    path = path! + "/\(imagesPath)"
+                                    for item in array {
+                                        if let image = UIImage(contentsOfFile: path! + "/\(item).jpg") {
+                                            images[Int(item)!] = UIImageJPEGRepresentation(image, 1)
+                                        }
+                                    }
+                                    
+                                    if images.count > 0 {
+                                        let arr : Set<String> = uploadDict[oldOrderNo] ?? []
+                                        for (key , value) in images {
+                                            if arr.contains("\(key)") == false {
+                                                continue
+                                            }
+                                            let section = key / 1000
+                                            let row = (key % 1000) % 100
+                                            let right = key % 1000 >= 100
+                                            self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value, orderNo: oldOrderNo, key: key)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     
 }

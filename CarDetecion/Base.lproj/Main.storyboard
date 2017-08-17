@@ -1037,7 +1037,7 @@
         <scene sceneID="lwW-tI-pJG">
             <objects>
                 <tableViewController storyboardIdentifier="newslist" hidesBottomBarWhenPushed="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QFe-ve-bA8" customClass="NewsListController" customModule="CarDetecion" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="110" sectionHeaderHeight="28" sectionFooterHeight="28" id="NKt-d4-Tde">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="110" sectionHeaderHeight="28" sectionFooterHeight="28" id="NKt-d4-Tde">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2278,7 +2278,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pph-Tp-aSm">
                                 <rect key="frame" x="0.0" y="617" width="375" height="50"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CCG-5A-LoX">
+                                    <button opaque="NO" tag="100" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CCG-5A-LoX">
                                         <rect key="frame" x="0.0" y="0.0" width="187.5" height="50"/>
                                         <state key="normal" title="保存">
                                             <color key="titleColor" red="0.22944369910000001" green="0.57670170070000004" blue="0.92546039820000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2287,7 +2287,7 @@
                                             <action selector="save:" destination="3uE-nj-kEA" eventType="touchUpInside" id="ykB-43-XJE"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DWW-Dn-SWD">
+                                    <button opaque="NO" tag="101" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DWW-Dn-SWD">
                                         <rect key="frame" x="187.5" y="0.0" width="187" height="50"/>
                                         <color key="backgroundColor" red="0.22944369912147522" green="0.57670170068740845" blue="0.92546039819717407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" title="立即提交">
@@ -3005,7 +3005,7 @@
                         <viewControllerLayoutGuide type="top" id="0vF-Fh-QmM"/>
                         <viewControllerLayoutGuide type="bottom" id="cFg-m7-Bb4"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" misplaced="YES" id="nyJ-Eo-N4M">
+                    <view key="view" contentMode="scaleToFill" id="nyJ-Eo-N4M">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>

@@ -47,6 +47,8 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var bGuanghui = false
     var leaseTerm = 0 // 租赁
     var fWebViewCellHeight : Float = 100
+    var unfinished = false
+    var onceOrderId = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +69,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         }
         
         if imagesPath.characters.count > 0 {
+            let hud = self.showHUD(text: "读取中...")
             DispatchQueue.global().async {
                 [weak self] in
                 var images : [Int : Data] = [:]
@@ -81,6 +84,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 self!.images = images
                 DispatchQueue.main.async {
                     [weak self] in
+                    self?.hideHUD(hud: hud)
                     self?.tableView.reloadData()
                 }
             }
@@ -91,6 +95,15 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 55/255.0, green: 70/255.0, blue: 85/255.0, alpha: 1))
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if unfinished {
+            if let button = vBottom.viewWithTag(101) as? UIButton {
+                button.setTitle("重新提交", for: .normal)
+            }
+        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -274,7 +287,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 保存
     @IBAction func save(_ sender: Any) {
-        if source == 1 {
+        if source == 1 || unfinished {
             self.navigationController?.popViewController(animated: true)
             return
         }
@@ -367,6 +380,11 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     // 提交订单
     @IBAction func submit(_ sender: Any) {
+        if unfinished {
+            NotificationCenter.default.post(name: Notification.Name("app"), object: 4 , userInfo: ["orderNo" : onceOrderId])
+            self.navigationController?.popViewController(animated: true)
+            return
+        }
         tableView.endEditing(true) // 结束编辑
         bSubmit = true
         if !checkoutImage(companyNo: companyNo) {
@@ -434,7 +452,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                             let right = key % 1000 >= 100
                             self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value, orderNo: self!.orderNo, key: key)
                         }
-                        NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark, "leaseTerm" : "\(self!.leaseTerm)"])
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark, "leaseTerm" : "\(self!.leaseTerm)"])
+                        }
                         if self!.pathName.characters.count > 0 {
                             var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
                             var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
@@ -471,13 +491,19 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     var arr : Set<String> = uploadDict[orderNo] ?? []
                     arr.remove("\(key)")
                     uploadDict[orderNo] = arr
+                    print("还有\(arr.count)张没上传完")
                     if arr.count == 0 {
                         uploadDict.removeValue(forKey: orderNo)
-                        NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
+                        }
                     }
                 }else{
                     print("上传失败:\(imageClass)---\(imageSeqNum)")
                     // TODO: - 图片上传失败
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: Notification.Name("app"), object: 3 , userInfo: ["orderNo" : orderNo])
+                    }
                 }
             }
         }
@@ -745,7 +771,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     }
                 }
             }
-            
+            if unfinished {
+                cell.isUserInteractionEnabled = false
+            }
             return cell
         }else if indexPath.section == nMax {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as! Detection1TableViewCell
@@ -761,6 +789,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 }
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
             }
+            if unfinished {
+                cell.isUserInteractionEnabled = false
+            }
             return cell
         }else{
             if source == 1 && indexPath.section == 0 {
@@ -769,6 +800,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 cell.delegate = self
                 cell.showWebView(htmlString: json?["applyAllOpinion"].string ?? "")
                 cell.contentView.layer.borderColor = UIColor.clear.cgColor
+                if unfinished {
+                    cell.isUserInteractionEnabled = false
+                }
                 return cell
             }
             if bGuanghui {
@@ -787,6 +821,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     cell.btn3.isSelected = (leaseTerm == 24)
                     cell.btn4.isSelected = (leaseTerm == 36)
                     cell.contentView.layer.borderColor = UIColor.clear.cgColor
+                    if unfinished {
+                        cell.isUserInteractionEnabled = false
+                    }
                     return cell
                 }else {
                     let cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as! Detection2TableViewCell
@@ -801,6 +838,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                             cell.tvMark.text = remark
                         }
                         cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                    }
+                    if unfinished {
+                        cell.isUserInteractionEnabled = false
                     }
                     return cell
                 }
@@ -817,6 +857,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                         cell.tvMark.text = remark
                     }
                     cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+                }
+                if unfinished {
+                    cell.isUserInteractionEnabled = false
                 }
                 return cell
             }

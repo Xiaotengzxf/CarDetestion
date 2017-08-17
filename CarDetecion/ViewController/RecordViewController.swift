@@ -468,20 +468,25 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         tableView.deselectRow(at: indexPath, animated: true)
         if  tableView == tableView0 {
             let json = data[indexPath.row]
+            var bUnfinished = false
             if let orderNo = json["orderNo"].string, orderNo.characters.count > 0 {
-//                let alert = UIAlertController(title: "温馨提示", message: "评估单：\(orderNo)，正在提交中", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: { (action) in
-//                    
-//                }))
-//                self.present(alert, animated: true) {
-//                    
-//                }
-//                return
-                
-                Toast(text: "评估单：\(orderNo)，正在提交中").show()
+                if let unfinished = json["unfinished"].string, unfinished == "1" {
+                    bUnfinished = true
+                }else{
+//                    let alert = UIAlertController(title: "温馨提示", message: "评估单：\(orderNo)，正在提交中", preferredStyle: .alert)
+//                    alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: { (action) in
+//                        
+//                    }))
+//                    self.present(alert, animated: true) {
+//                        
+//                    }
+//                    return
+                    
+                    Toast(text: "评估单：\(orderNo)，正在提交中" ).show()
+                    return
+                    
+                }
             }
-            
-            
             
             if let controller = self.storyboard?.instantiateViewController(withIdentifier: "detectionnew") as? DetectionNewViewController {
                 
@@ -498,6 +503,10 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                 controller.price = p ?? ""
                 controller.remark = json["mark"].string ?? ""
                 controller.leaseTerm = Int(json["leaseTerm"].string ?? "0")!
+                controller.unfinished = bUnfinished
+                if let orderNo = json["orderNo"].string, orderNo.characters.count > 0 {
+                    controller.onceOrderId = orderNo
+                }
                 self.navigationController?.pushViewController(controller, animated: true)
             }
         }else{
