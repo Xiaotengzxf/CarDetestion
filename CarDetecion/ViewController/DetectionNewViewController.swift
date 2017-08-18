@@ -408,12 +408,8 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     arrPictureName.insert("\(key)")
                 }
                 uploadDict[orderNo] = arrPictureName
-                for (key , value) in self.images {
-                    let section = key / 1000
-                    let row = (key % 1000) % 100
-                    let right = key % 1000 >= 100
-                    self.uploadImage(imageClass: self.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value, orderNo: orderNo, key: key)
-                }
+                let keys  = self.images.keys
+                self.uploadImageQueue(i: 0, keys: keys)
                 NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self.orderNo , "price" : self.price , "remark" : self.remark, "leaseTerm" : "\(self.leaseTerm)"])
 //                if self.pathName.characters.count > 0 {
 //                    var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
@@ -441,17 +437,13 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     self!.bSubmitSuccess = true
                     if let data = json {
                         self?.orderNo = data.stringValue
-                        for (key , value) in self!.images {
-                            var arrPictureName : Set<String> = []
-                            for key in self!.images.keys {
-                                arrPictureName.insert("\(key)")
-                            }
-                            uploadDict[self!.orderNo] = arrPictureName
-                            let section = key / 1000
-                            let row = (key % 1000) % 100
-                            let right = key % 1000 >= 100
-                            self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value, orderNo: self!.orderNo, key: key)
+                        var arrPictureName : Set<String> = []
+                        for key in self!.images.keys {
+                            arrPictureName.insert("\(key)")
                         }
+                        uploadDict[self!.orderNo] = arrPictureName
+                        let keys  = self!.images.keys
+                        self!.uploadImageQueue(i: 0, keys: keys)
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark, "leaseTerm" : "\(self!.leaseTerm)"])
                         }
@@ -477,44 +469,52 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     }
     
     // 上传图片
-    func uploadImage(imageClass : String , imageSeqNum : Int , data : Data, orderNo: String, key: Int) {
-        print("上传图片：\(imageClass)---\(imageSeqNum)")
+    func uploadImageQueue(i : Int, keys: LazyMapCollection<Dictionary<Int, Data>, Int>){
+        if i == keys.count {
+            return
+        }
+        let key = keys[keys.index(keys.startIndex, offsetBy: i)]
+        let value = self.images[key]!
+        let section = key / 1000
+        let row = (key % 1000) % 100
+        let right = key % 1000 >= 100
+        
+        print("上传图片")
         let username = UserDefaults.standard.string(forKey: "username")
         var params = ["createUser" : username!]
         params["clientName"] = "iOS"
         params["carBillId"] = orderNo
-        params["imageClass"] = imageClass
-        params["imageSeqNum"] = "\(imageSeqNum)"
-        NetworkManager.sharedInstall.upload(url: upload, params: params, data: data) {[weak self] (json, error) in
+        params["imageClass"] = self.sectionTitles[section]
+        params["imageSeqNum"] = "\(row * 2 + (right ? 1 : 0))"
+        NetworkManager.sharedInstall.upload(url: upload, params: params, data: value) {[weak self] (json, error) in
             DispatchQueue.global().async {
                 if json?["success"].boolValue == true {
-                    var arr : Set<String> = uploadDict[orderNo] ?? []
+                    
+                    var arr : Set<String> = uploadDict[self!.orderNo] ?? []
                     arr.remove("\(key)")
-                    uploadDict[orderNo] = arr
+                    uploadDict[self!.orderNo] = arr
                     print("还有\(arr.count)张没上传完")
-                    DispatchQueue.main.async {
-                        Toast(text: "订单：\(orderNo)提交一张图片成功").show()
-                    }
+                    
                     if arr.count == 0 {
-                        uploadDict.removeValue(forKey: orderNo)
+                        uploadDict.removeValue(forKey: self!.orderNo)
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
                         }
                     }
+                    self?.uploadImageQueue(i: i + 1, keys: keys)
                 }else{
-                    print("上传失败:\(imageClass)---\(imageSeqNum)")
+                    
                     DispatchQueue.main.async {
-                        Toast(text: "订单：\(orderNo)提交一张图片失败").show()
+                        Toast(text: "订单：\(self!.orderNo)提交一张图片失败").show()
                     }
                     // TODO: - 图片上传失败
                     DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: Notification.Name("app"), object: 3 , userInfo: ["orderNo" : orderNo])
+                        NotificationCenter.default.post(name: Notification.Name("app"), object: 3 , userInfo: ["orderNo" : self!.orderNo])
                     }
+                    self?.uploadImageQueue(i: i + 1, keys: keys)
                 }
             }
         }
-        
-        
     }
     
     // 获取水印

@@ -350,22 +350,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         }
     }
     
-    
     // 上传图片
-    func uploadImage(imageClass : String , imageSeqNum : Int , data : Data, orderNo : String, key: Int) {
-        print("上传图片：\(imageClass)---\(imageSeqNum)")
+    func uploadImageQueue(i : Int, keys: LazyMapCollection<Dictionary<Int, Data>, Int>, orderNo: String, images : [Int : Data]){
+        if i == images.count {
+            return
+        }
+        let key = keys[keys.index(keys.startIndex, offsetBy: i)]
+        let value = images[key]!
+        
+        let section = key / 1000
+        let row = (key % 1000) % 100
+        let right = key % 1000 >= 100
+        
         let username = UserDefaults.standard.string(forKey: "username")
         var params = ["createUser" : username!]
         params["clientName"] = "iOS"
         params["carBillId"] = orderNo
-        params["imageClass"] = imageClass
-        params["imageSeqNum"] = "\(imageSeqNum)"
-        NetworkManager.sharedInstall.upload(url: upload, params: params, data: data) {[weak self] (json, error) in
+        params["imageClass"] = self.sectionTitles[section]
+        params["imageSeqNum"] = "\(row * 2 + (right ? 1 : 0))"
+        NetworkManager.sharedInstall.upload(url: upload, params: params, data: value) {[weak self] (json, error) in
             DispatchQueue.global().async {
                 if json?["success"].boolValue == true {
-                    DispatchQueue.main.async {
-                        Toast(text: "订单：\(orderNo)提交一张图片成功").show()
-                    }
+                    
                     var arr : Set<String> = uploadDict[orderNo] ?? []
                     arr.remove("\(key)")
                     uploadDict[orderNo] = arr
@@ -375,17 +381,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                             NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
                         }
                     }
+                    self?.uploadImageQueue(i: i+1, keys: keys, orderNo: orderNo, images: images)
                 }else{
-                    print("上传失败:\(imageClass)---\(imageSeqNum)")
+                
                     DispatchQueue.main.async {
                         NotificationCenter.default.post(name: Notification.Name("app"), object: 3 , userInfo: ["orderNo" : orderNo])
                     }
                     DispatchQueue.main.async {
                         Toast(text: "订单：\(orderNo)提交一张图片失败").show()
                     }
+                    self?.uploadImageQueue(i: i+1, keys: keys, orderNo: orderNo, images: images)
                 }
             }
         }
+    }
+    
+    
+    
+    // 上传图片
+    func uploadImage(imageClass : String , imageSeqNum : Int , data : Data, orderNo : String, key: Int) {
+        
         
         
     }
@@ -432,14 +447,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                                     
                                     if images.count > 0 {
                                         let arr : Set<String> = uploadDict[oldOrderNo] ?? []
+                                        var images2 : [Int : Data] = [:]
                                         for (key , value) in images {
                                             if arr.contains("\(key)") == false {
                                                 continue
+                                            }else{
+                                                images2[key] = value
                                             }
-                                            let section = key / 1000
-                                            let row = (key % 1000) % 100
-                                            let right = key % 1000 >= 100
-                                            self?.uploadImage(imageClass: self!.sectionTitles[section], imageSeqNum: row * 2 + (right ? 1 : 0), data: value, orderNo: oldOrderNo, key: key)
+                                        }
+                                        if images2.count > 0 {
+                                            self?.uploadImageQueue(i: 0, keys: images2.keys, orderNo: oldOrderNo, images: images2)
                                         }
                                     }
                                 }

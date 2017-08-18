@@ -104,7 +104,7 @@ class NetworkManager {
                             print("返回内容：\(value)")
                             callback(JSON(value), nil)
                         }else{
-                            print("返回错误")
+                            print("返回错误\(response.error?.localizedDescription)")
                             callback(nil, nil)
                         }
                         
