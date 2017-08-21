@@ -48,19 +48,28 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     var pathName = ""
     var bSave = false
     var fWebViewCellHeight : Float = 100
+    var unfinished = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(FastPreDetectionViewController.handleNotification(notification:)), name: Notification.Name("fastpredetection"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(notification:)), name: Notification.Name("fastpredetection"), object: nil)
         self.edgesForExtendedLayout = UIRectEdge(rawValue: 0)
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "返回", style: .plain, target: nil, action: nil)
     
         tableView.register(UINib(nibName: "ReUseHeaderFooterView", bundle: nil), forHeaderFooterViewReuseIdentifier: "header")
-        getWaterMark(tag: -1)
+        
+        if source == 1 {
+            remark = json?["mark"].string ?? ""
+            loadUnpassData()
+        }else {
+            getWaterMark(tag: -1)
+            
+        }
             
         
         if imagesPath.characters.count > 0 {
+            let hud = self.showHUD(text: "读取中...")
             DispatchQueue.global().async {
                 [weak self] in
                 var images : [Int : Data] = [:]
@@ -75,13 +84,10 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                 self!.images = images
                 DispatchQueue.main.async {
                     [weak self] in
+                    self?.hideHUD(hud: hud)
                     self?.tableView.reloadData()
                 }
             }
-        }
-        
-        if source == 1 { // 驳回
-            loadUnpassData()
         }
         
     }
@@ -91,9 +97,18 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
         self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 55/255.0, green: 70/255.0, blue: 85/255.0, alpha: 1))
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if unfinished {
+            if let button = vBottom.viewWithTag(102) as? UIButton {
+                button.setTitle("重新提交", for: .normal)
+            }
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if (!self.navigationController!.viewControllers.contains(self)) && bSave == false && source != 1 && bSubmitSuccess == false {
+        if (!self.navigationController!.viewControllers.contains(self)) && bSave == false && source != 1 {
             self.save(UIButton())
         }
     }
@@ -135,7 +150,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
         if let tag = notification.object as? Int {
             if tag == 1 {
                 if let userInfo = notification.userInfo as? [String : String] {
-                    
+                    print(userInfo)
                 }
             }else if tag == 2 {
                 if let userInfo = notification.userInfo as? [String : String] {
@@ -218,7 +233,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     
     // 保存
     @IBAction func save(_ sender: Any) {
-        if source == 1 {
+        if source == 1 || unfinished {
             self.navigationController?.popViewController(animated: true)
             return
         }
@@ -258,12 +273,24 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                 if pathName == name {
                     let i = orderKeys.index(of: pathName) ?? 0
                     if i == 0 && orders.count == 0 {
-                        orders.append(["mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())])
+                        var order = [ "mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]
+                        if bSubmitSuccess && orderNo.characters.count > 0 {
+                            order["orderNo"] = orderNo
+                        }
+                        orders.append(order)
                     }else{
-                        orders[i] = ["mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]
+                        var order = [ "mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]
+                        if bSubmitSuccess && orderNo.characters.count > 0 {
+                            order["orderNo"] = orderNo
+                        }
+                        orders[i] = order
                     }
                 }else{
-                    orders.insert([ "mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())], at: 0)
+                    var order = [ "mark" : remark , "images" : str , "addtime" : formatter.string(from: Date())]
+                    if bSubmitSuccess && orderNo.characters.count > 0 {
+                        order["orderNo"] = orderNo
+                    }
+                    orders.insert(order, at: 0)
                 }
                 UserDefaults.standard.set(orders, forKey: "preorders")
                 UserDefaults.standard.set(orderKeys, forKey: "preorderKeys")
@@ -301,6 +328,13 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     
     // 提交预评估订单
     @IBAction func submit(_ sender: Any) {
+        
+        if unfinished {
+            NotificationCenter.default.post(name: Notification.Name("app"), object: 14 , userInfo: ["orderNo" : orderNo])
+            self.navigationController?.popViewController(animated: true)
+            return
+        }
+        
         tableView.endEditing(true) // 结束编辑
         bSubmit = true
         if !checkoutImage(companyNo: companyNo) {
@@ -316,13 +350,13 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
         if source == 1 {
             orderNo = json?["carBillId"].string ?? ""
             if orderNo.characters.count > 0 {
-                for (key , value) in self.images {
-                    upLoadCount = self.images.count
-                    let section = key / 1000
-                    let row = (key % 1000) % 100
-                    let right = key % 1000 >= 100
-                    self.uploadImage(imageClass: self.titlesImageClass[section][row * 2 + (right ? 1 : 0)], imageSeqNum: self.titlesImageSeqNum[section][row * 2 + (right ? 1 : 0)], data: value)
+                var arrPictureName : Set<String> = []
+                for key in self.images.keys {
+                    arrPictureName.insert("\(key)")
                 }
+                uploadDictpre[orderNo] = arrPictureName
+                
+                NotificationCenter.default.post(name: Notification.Name("app"), object: 15, userInfo: ["orderNo" : self.orderNo , "images" : self.images, "remark" : remark])
 
                 self.navigationController?.popViewController(animated: true)
             }
@@ -341,18 +375,33 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                 }else{
                     if let data = json , data["success"].boolValue {
                         self?.bSubmitSuccess = true
-                        Toast(text: "提交成功").show()
-                        self?.navigationController?.popViewController(animated: true)
                         self!.orderNo = "\(data["object"].int ?? 0)"
-                        if self!.orderNo != "0" {
-                            for (key , value) in self!.images {
-                                upLoadCount = self!.images.count
-                                let section = key / 1000
-                                let row = (key % 1000) % 100
-                                let right = key % 1000 >= 100
-                                self!.uploadImage(imageClass: self!.titlesImageClass[section][row * 2 + (right ? 1 : 0)], imageSeqNum: self!.titlesImageSeqNum[section][row * 2 + (right ? 1 : 0)], data: value)
-                            }
+                        var arrPictureName : Set<String> = []
+                        for key in self!.images.keys {
+                            arrPictureName.insert("\(key)")
                         }
+                        uploadDictpre[self!.orderNo] = arrPictureName
+                        
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: Notification.Name("app"), object: 15, userInfo: ["orderNo" : self!.orderNo , "images" : self!.images])
+                        }
+                        
+                        if self!.pathName.characters.count > 0 {
+                            var orderKeys = UserDefaults.standard.object(forKey: "preorderKeys") as! [String]
+                            var orders = UserDefaults.standard.object(forKey: "preorders") as! [[String : String]]
+                            let i = orderKeys.index(of: self!.pathName) ?? 0
+                            if i < orderKeys.count {
+                                orderKeys.remove(at: i)
+                                orders.remove(at: i)
+                            }
+                            
+                            UserDefaults.standard.set(orderKeys, forKey: "preorderKeys")
+                            UserDefaults.standard.set(orders, forKey: "preorders")
+                            UserDefaults.standard.synchronize()
+                            
+                        }
+                        self?.navigationController?.popViewController(animated: true)
+                        
                     }else{
                         if let message = json?["message"].string {
                             Toast(text: message).show()
@@ -361,32 +410,6 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                 }
             }
         }
-    }
-    
-    // 上传图片
-    func uploadImage(imageClass : String , imageSeqNum : Int , data : Data) {
-        print("上传图片：\(imageClass)---\(imageSeqNum)")
-        let username = UserDefaults.standard.string(forKey: "username")
-        var params = ["createUser" : username!]
-        params["clientName"] = "iOS"
-        params["carBillId"] = orderNo
-        params["imageClass"] = imageClass
-        params["imageSeqNum"] = "\(imageSeqNum)"
-        NetworkManager.sharedInstall.upload(url: uploadPre, params: params, data: data) {[weak self] (json, error) in
-            DispatchQueue.global().async {
-                if json?["success"].boolValue == true {
-                    upLoadCount -= 1
-                    if upLoadCount == 0 {
-                        
-                    }
-                }else{
-                    print("上传失败:\(imageClass)---\(imageSeqNum)")
-                    self?.uploadImage(imageClass: imageClass, imageSeqNum: imageSeqNum, data: data)
-                }
-            }
-        }
-        
-        
     }
     
     // 获取水印
@@ -464,7 +487,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
             cell.iv2.clipsToBounds = true
             cell.lbl11.layer.cornerRadius = 3.0
             cell.lbl22.layer.cornerRadius = 3.0
-            cell.indexPath = indexPath
+            cell.indexPath = source == 1 ? (IndexPath(row: indexPath.row, section: indexPath.section - 1)) : indexPath
             cell.delegate = self
             cell.source = source
             let c = titles[mSection].count
@@ -599,7 +622,9 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                     }
                 }
             }
-            
+            if unfinished {
+                cell.isUserInteractionEnabled = false
+            }
             return cell
         }else{
             if source == 1 && indexPath.section == 0 {
@@ -608,6 +633,9 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                 cell.delegate = self
                 cell.showWebView(htmlString: json?["applyAllOpinion"].string ?? "")
                 cell.contentView.layer.borderColor = UIColor.clear.cgColor
+                if unfinished {
+                    cell.isUserInteractionEnabled = false
+                }
                 return cell
             }
             
@@ -623,6 +651,9 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
                     cell.tvMark.text = remark
                 }
                 cell.contentView.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
+            }
+            if unfinished {
+                cell.isUserInteractionEnabled = false
             }
             return cell
         }

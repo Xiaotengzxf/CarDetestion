@@ -89,25 +89,14 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
         tableView1.mj_header.beginRefreshing()
         tableView2.mj_header.beginRefreshing()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(PreDetectionViewController.handleNotification(notification:)), name: Notification.Name("predetection"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(notification:)), name: Notification.Name("predetection"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.lt_setBackgroundColor(backgroundColor: UIColor(red: 55/255.0, green: 70/255.0, blue: 85/255.0, alpha: 1))
         
-        data.removeAll()
-        if let orders = UserDefaults.standard.object(forKey: "preorders") as? [[String : String]] {
-            if orders.count > 0 {
-                for dic in orders {
-                    data.append(JSON(dic))
-                }
-            }
-        }
-        if data.count == 0 {
-            nShowEmpty = 1
-        }
-        self.tableView0.reloadData()
+        reloadTableView0()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -123,6 +112,21 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
         NotificationCenter.default.removeObserver(self)
     }
     
+    func reloadTableView0() {
+        data.removeAll()
+        if let orders = UserDefaults.standard.object(forKey: "preorders") as? [[String : String]] {
+            if orders.count > 0 {
+                for dic in orders {
+                    data.append(JSON(dic))
+                }
+            }
+        }
+        if data.count == 0 {
+            nShowEmpty = 1
+        }
+        self.tableView0.reloadData()
+    }
+    
     // MARK: - private method
     
     @IBAction func segSelectedIndex(_ sender: Any) {
@@ -134,6 +138,13 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
             self?.view.layoutIfNeeded()
         }) { (finished) in
             
+        }
+        if index == 0 {
+            reloadTableView0()
+        }else if index == 1 {
+            self.tableView1.mj_header.beginRefreshing()
+        }else {
+            self.tableView2.mj_header.beginRefreshing()
         }
     }
     
@@ -234,7 +245,13 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func handleNotification(notification : Notification) {
-        tableView1.mj_header.beginRefreshing()
+        if segControl.selectedSegmentIndex == 0 {
+            reloadTableView0()
+        }else if segControl.selectedSegmentIndex == 1 {
+            tableView1.mj_header.beginRefreshing()
+        }else if segControl.selectedSegmentIndex == 2 {
+            tableView2.mj_header.beginRefreshing()
+        }
     }
     
     // MARK: - UITableView DataSource
@@ -255,15 +272,43 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
             cell.tag = indexPath.row
             cell.addLongTap()
             
+            let json = data[indexPath.row]
+            var bUnfinished = false
+            var strOrderNo = ""
+            if let orderNo = json["orderNo"].string, orderNo.characters.count > 0 {
+                if let unfinished = json["unfinished"].string, unfinished == "1" {
+                    bUnfinished = true
+                }else{
+                }
+                strOrderNo = orderNo
+            }
+            
             if let label = cell.contentView.viewWithTag(3) as? UILabel {
-                label.text = "暂无单号"
+                if strOrderNo.characters.count == 0 {
+                    label.text = "暂无单号"
+                }else{
+                    label.text = "单号：\(strOrderNo)"
+                }
             }
             if let label = cell.contentView.viewWithTag(4) as? UILabel {
                 label.text = "添加时间：\(data[indexPath.row]["addtime"].string ?? "") "
                 label.textColor = UIColor.rgbColorFromHex(rgb: 0xF86765)
             }
+            
+            if let label = cell.contentView.viewWithTag(4) as? UILabel {
+                label.text = "添加时间：\(data[indexPath.row]["addtime"].string ?? "") "
+                label.textColor = UIColor.rgbColorFromHex(rgb: 0xF86765)
+            }
             if let label = cell.contentView.viewWithTag(5) as? UILabel {
-                label.text = ""
+                if strOrderNo.characters.count > 0 {
+                    if bUnfinished {
+                        label.text = "提交状态：提交失败"
+                    }else{
+                        label.text = "提交状态：提交中"
+                    }
+                }else{
+                    label.text = ""
+                }
             }
             if let imageView = cell.contentView.viewWithTag(2) as? UIImageView {
                 let json = data[indexPath.row]
@@ -366,8 +411,20 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if  tableView == tableView0 {
+            let json = data[indexPath.row]
+            var bUnfinished = false
+            if let orderNo = json["orderNo"].string, orderNo.characters.count > 0 {
+                if let unfinished = json["unfinished"].string, unfinished == "1" {
+                    bUnfinished = true
+                }else{
+                    Toast(text: "评估单：\(orderNo)，正在提交中" ).show()
+                    return
+                    
+                }
+            }
+            
             if let controller = self.storyboard?.instantiateViewController(withIdentifier: "fastpredetection") as? FastPreDetectionViewController {
-                let json = data[indexPath.row]
+                
                 var orderKeys : [String] = []
                 if let keys = UserDefaults.standard.object(forKey: "preorderKeys") as? [String] {
                     orderKeys += keys
@@ -376,7 +433,12 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
                     controller.imagesPath = urls
                     controller.imagesFilePath = orderKeys[indexPath.row]
                 }
+                controller.remark = json["mark"].string ?? ""
                 controller.pathName = orderKeys[indexPath.row]
+                controller.unfinished = bUnfinished
+                if let orderNo = json["orderNo"].string, orderNo.characters.count > 0 {
+                    controller.orderNo = orderNo
+                }
                 self.navigationController?.pushViewController(controller, animated: true)
             }
         }else{

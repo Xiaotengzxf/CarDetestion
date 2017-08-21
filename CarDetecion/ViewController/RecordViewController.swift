@@ -97,7 +97,7 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
         tableView2.mj_header.beginRefreshing()
         tableView3.mj_header.beginRefreshing()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(RecordViewController.handleNotification(notification:)), name: Notification.Name("recordVC"), object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(notification:)), name: Notification.Name("recordVC"), object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -135,7 +135,15 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
     }
     
     func handleNotification(notification : Notification)  {
-        refreshTableView0()
+        if segmentedControl.selectedSegmentIndex == 0 {
+            refreshTableView0()
+        }else if segmentedControl.selectedSegmentIndex == 1 {
+            self.tableView1.mj_header.beginRefreshing()
+        }else if segmentedControl.selectedSegmentIndex == 2 {
+            self.tableView2.mj_header.beginRefreshing()
+        }else if segmentedControl.selectedSegmentIndex == 3 {
+            self.tableView3.mj_header.beginRefreshing()
+        }
     }
     
     func refreshTableView0() {
@@ -319,7 +327,12 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             }
             self.tableView0.reloadData()
             return
-        
+        case 1:
+            self.tableView1.mj_header.beginRefreshing()
+        case 2:
+            self.tableView2.mj_header.beginRefreshing()
+        case 3:
+            self.tableView3.mj_header.beginRefreshing()
         default:
             print(segmentedControl.selectedSegmentIndex)
         }
@@ -495,15 +508,6 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                 if let unfinished = json["unfinished"].string, unfinished == "1" {
                     bUnfinished = true
                 }else{
-//                    let alert = UIAlertController(title: "温馨提示", message: "评估单：\(orderNo)，正在提交中", preferredStyle: .alert)
-//                    alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: { (action) in
-//                        
-//                    }))
-//                    self.present(alert, animated: true) {
-//                        
-//                    }
-//                    return
-                    
                     Toast(text: "评估单：\(orderNo)，正在提交中" ).show()
                     return
                     

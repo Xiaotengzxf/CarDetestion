@@ -12,7 +12,8 @@ import IQKeyboardManagerSwift
 import Toaster
 
 var uploadDict : [String : Set<String>] = [:]
-var upLoadCount = 0
+var uploadDictpre : [String : Set<String>] = [:]
+var orderNos : [String] = []
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
@@ -22,6 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
     let createBill = "external/app/finishCreateAppCarBill.html"
     let upload = "external/app/uploadAppImage.html"
     let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "租赁期限(非残值租赁产品就选无租期)", "备注"]
+    let sectionTitlespre = ["基础照片" , "补充照片" , "备注"]
+    let titlesImageClass = [["登记证" , "车辆内饰" , "车身外观"] , ["行驶证" , "车体骨架"]]
+    let titlesImageSeqNum = [[0, 2, 0], [0, 5]]
+    let uploadPre = "external/app/addAppPreCarImage.html"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
@@ -36,7 +41,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                 }
                 
             }
-            
+        }
+        
+        if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first?.appending("/uploadpre.data") {
+            if FileManager.default.fileExists(atPath: path) {
+                let data = NSData(contentsOfFile: path)
+                let unachiver = NSKeyedUnarchiver(forReadingWith: data! as Data)
+                if let dict = unachiver.decodeObject(forKey: "uploadpre") as? NSDictionary {
+                    if let upload = dict as? [String : Set<String>] {
+                        uploadDictpre = upload
+                    }
+                }
+                
+            }
+        }
+        
+        isBadOrderAll()
+        
+        if let dicOrderInfo = UserDefaults.standard.object(forKey: "orderInfo") as? [String : [String : String]] {
+            orderInfo = dicOrderInfo
         }
         
         
@@ -57,7 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             window?.rootViewController = login
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(AppDelegate.handleNotification(notification:)), name: Notification.Name("app"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleNotification(notification:)), name: Notification.Name("app"), object: nil)
         
         let option = HOptions()
         option.appkey = "1112170506115622#kefuchannelapp41042"
@@ -163,6 +186,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             }
         }
         
+        if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first?.appending("/uploadpre.data") {
+            let dict = NSMutableDictionary(dictionary: uploadDictpre)
+            let data = NSMutableData()
+            let archiver = NSKeyedArchiver(forWritingWith: data)
+            archiver.encode(dict, forKey: "uploadpre")
+            archiver.finishEncoding()
+            let bValue = data.write(toFile: path, atomically: true)
+            if !bValue {
+                print("写入失败")
+            }
+        }
+        
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -236,21 +271,43 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             if tag == 1 {
                 if let userinfo = notification.userInfo as? [String : String] {
                     orderInfo[userinfo["orderNo"]!] = ["price" : userinfo["price"]! , "remark" : userinfo["remark"]!, "leaseTerm" : userinfo["leaseTerm"]!]
+                    UserDefaults.standard.set(orderInfo, forKey: "orderInfo")
+                    UserDefaults.standard.synchronize()
                     self.perform(#selector(AppDelegate.showAlertView(userinfo:)), with: userinfo, afterDelay: 0.1)
                 }
             }else if tag == 2 {
                 if let userinfo = notification.userInfo as? [String : String] {
                     submitBill(orderNo: userinfo["orderNo"] ?? "")
                 }
-            }else if tag == 3 {
-                if let userinfo = notification.userInfo as? [String : String] {
-                    isBadOrder(orderNo: userinfo["orderNo"] ?? "")
-                    
-                }
-                
             }else if tag == 4 {
                 if let userinfo = notification.userInfo as? [String : String] {
                     reuploadOrder(oldOrderNo: userinfo["orderNo"] ?? "")
+                    self.perform(#selector(AppDelegate.showAlertView(userinfo:)), with: userinfo, afterDelay: 0.1)
+                }
+                
+            }else if tag == 5 {
+                if let userinfo = notification.userInfo as? [String : Any] {
+                    if let orderNo = userinfo["orderNo"] as? String {
+                        if let images = userinfo["images"] as? [Int : Data] {
+                            let keys  = images.keys
+                            self.uploadImageQueue(i: 0, keys: keys, images: images, orderNo: orderNo)
+                        }
+                    }
+                }
+                
+            }else if tag == 15 {
+                if let userinfo = notification.userInfo as? [String : Any] {
+                    if let orderNo = userinfo["orderNo"] as? String {
+                        if let images = userinfo["images"] as? [Int : Data] {
+                            let keys  = images.keys
+                            self.uploadImageQueuepre(i: 0, keys: keys, images: images, orderNo: orderNo)
+                        }
+                    }
+                }
+                
+            }else if tag == 14 {
+                if let userinfo = notification.userInfo as? [String : String] {
+                    reuploadOrderpre(oldOrderNo: userinfo["orderNo"] ?? "")
                     self.perform(#selector(AppDelegate.showAlertView(userinfo:)), with: userinfo, afterDelay: 0.1)
                 }
                 
@@ -259,7 +316,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
     }
     
     func showAlertView(userinfo : [String : String]) {
-        self.showAlert(title: "温馨提示", message: "评估单：\(userinfo["orderNo"]!)，在后台提交中", button: "确认")
+        if let source = userinfo["source"], source == "1" {
+            Toast(text: "\(userinfo["orderNo"]!)正在上传中").show()
+        }else{
+            Toast(text: "\(userinfo["orderNo"]!)正在上传中，请在“未提交”中查看进度").show()
+        }
+        
     }
     
     // 标志订单提交失败
@@ -280,10 +342,64 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             }
             UserDefaults.standard.set(orders, forKey: "orders")
             UserDefaults.standard.synchronize()
-            
-            NotificationCenter.default.post(name: Notification.Name("recordVC"), object: nil)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Notification.Name("recordVC"), object: nil)
+            }
         }
     }
+    
+    // 标志预评估订单提交失败
+    func isBadOrderpre(orderNo : String) {
+        if orderNo.characters.count > 0 {
+            var preorders = UserDefaults.standard.object(forKey: "preorders") as! [[String : String]]
+            var i = 0
+            for (index , order) in preorders.enumerated() {
+                if order["orderNo"] == orderNo {
+                    i = index
+                    break
+                }
+            }
+            if i < preorders.count {
+                var order = preorders[i]
+                order["unfinished"] = "1"
+                preorders[i] = order
+            }
+            UserDefaults.standard.set(preorders, forKey: "preorders")
+            UserDefaults.standard.synchronize()
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: Notification.Name("predetection"), object: 1)
+            }
+        }
+    }
+    
+    func isBadOrderAll() {
+        if var orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
+            if orders.count > 0 {
+                for (index , order) in orders.enumerated() {
+                    var orderT = order
+                    orderT["unfinished"] = "1"
+                    orders[index] = orderT
+                }
+                
+                UserDefaults.standard.set(orders, forKey: "orders")
+                UserDefaults.standard.synchronize()
+            }
+        }
+        
+        if var orders = UserDefaults.standard.object(forKey: "preorders") as? [[String : String]] {
+            if orders.count > 0 {
+                for (index , order) in orders.enumerated() {
+                    var orderT = order
+                    orderT["unfinished"] = "1"
+                    orders[index] = orderT
+                }
+                
+                UserDefaults.standard.set(orders, forKey: "preorders")
+                UserDefaults.standard.synchronize()
+            }
+        }
+    }
+    
     
     // 提交订单
     func submitBill(orderNo : String)  {
@@ -294,7 +410,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                 var params = ["userName" : username!]
                 params["carBillId"] = orderNo
                 params["clientName"] = "iOS"
-                params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? ""
+                params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? "0"
                 params["mark"] = self?.orderInfo[orderNo]?["remark"] ?? ""
                 params["leaseTerm"] = self?.orderInfo[orderNo]?["leaseTerm"] ?? "0"
                 NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in
@@ -303,26 +419,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                         self?.showAlert(title: "温馨提示", message: "评估单：\(orderNo)，提交失败；原因：\(error!.localizedDescription)", button: "确认")
                     }else{
                         if let data = json , data["success"].boolValue {
-                            self?.showAlert(title: "温馨提示", message: "评估单：\(orderNo)，已提交成功！", button: "确认")
+                            self?.showAlert(title: "温馨提示", message: "评估单：\(orderNo)提交成功，请在“审核中“查看进度", button: "确认")
                             
-                            var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
-                            var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
-                            var i = 0
-                            for (index , order) in orders.enumerated() {
-                                if order["orderNo"] == orderNo {
-                                    i = index
-                                    break
+                            if var orders = UserDefaults.standard.object(forKey: "orders") as? [[String : String]] {
+                                var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
+                                
+                                var i = 0
+                                for (index , order) in orders.enumerated() {
+                                    if order["orderNo"] == orderNo {
+                                        i = index
+                                        break
+                                    }
                                 }
+                                if i < orders.count {
+                                    orderKeys.remove(at: i)
+                                    orders.remove(at: i)
+                                    print("已删除：\(orderNo)")
+                                }
+                                
+                                UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
+                                UserDefaults.standard.set(orders, forKey: "orders")
+                                UserDefaults.standard.synchronize()
                             }
-                            if i < orders.count {
-                                orderKeys.remove(at: i)
-                                orders.remove(at: i)
-                                print("已删除：\(orderNo)")
-                            }
-                            
-                            UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
-                            UserDefaults.standard.set(orders, forKey: "orders")
-                            UserDefaults.standard.synchronize()
                             
                             DispatchQueue.main.async {
                                 NotificationCenter.default.post(name: Notification.Name("recordVC"), object: nil)
@@ -341,18 +459,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
     
     // 显示提示框
     func showAlert(title : String?, message : String , button : String) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: button, style: .cancel, handler: { (action) in
-            
-        }))
-        window?.rootViewController?.present(alert, animated: true) {
-            
+        DispatchQueue.main.async {
+            Toast(text: message).show()
         }
+//        let deadlineTime = DispatchTime.now() + .seconds(1)
+//        DispatchQueue.main.asyncAfter(deadline: deadlineTime) {
+//            [weak self] in
+//            let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: button, style: .cancel, handler: { (action) in
+//                
+//            }))
+//            self?.window?.rootViewController?.present(alert, animated: true) {
+//                
+//            }
+//        }
     }
     
     // 上传图片
     func uploadImageQueue(i : Int, keys: LazyMapCollection<Dictionary<Int, Data>, Int>, orderNo: String, images : [Int : Data]){
         if i == images.count {
+            if orderNos.contains(orderNo) {
+                for (m , strOrderNo) in orderNos.enumerated() {
+                    if strOrderNo == orderNo {
+                        orderNos.remove(at: m)
+                        break
+                    }
+                }
+            }
             return
         }
         let key = keys[keys.index(keys.startIndex, offsetBy: i)]
@@ -383,9 +516,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                     }
                     self?.uploadImageQueue(i: i+1, keys: keys, orderNo: orderNo, images: images)
                 }else{
-                
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: Notification.Name("app"), object: 3 , userInfo: ["orderNo" : orderNo])
+                    if !orderNos.contains(orderNo) {
+                        orderNos.append(orderNo)
+                        self?.isBadOrder(orderNo: orderNo)
                     }
                     DispatchQueue.main.async {
                         Toast(text: "订单：\(orderNo)提交一张图片失败").show()
@@ -394,15 +527,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                 }
             }
         }
-    }
-    
-    
-    
-    // 上传图片
-    func uploadImage(imageClass : String , imageSeqNum : Int , data : Data, orderNo : String, key: Int) {
-        
-        
-        
     }
     
     func reuploadOrder(oldOrderNo: String) {
@@ -467,6 +591,208 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             }
         }
     }
+    
+    
+    func reuploadOrderpre(oldOrderNo: String) {
+        if oldOrderNo.characters.count > 0 {
+            if var orders = UserDefaults.standard.object(forKey: "preorders") as? [[String : String]] {
+                if orders.count > 0 {
+                    var dicTem : [String : String] = [:]
+                    var i = 0
+                    for (index, dic) in orders.enumerated() {
+                        if let orderNo = dic["orderNo"] {
+                            if oldOrderNo == orderNo {
+                                dicTem = dic
+                                i = index
+                                break
+                            }
+                        }
+                    }
+                    
+                    if dicTem.count > 0 {
+                        
+                        dicTem["unfinished"] = ""
+                        orders[i] = dicTem
+                        UserDefaults.standard.set(orders, forKey: "preorders")
+                        UserDefaults.standard.synchronize()
+                        
+                        if let urls = dicTem["images"] {
+                            
+                            let keys = UserDefaults.standard.object(forKey: "preorderKeys") as! [String]
+                            if keys.count > 0 {
+                                let imagesPath = keys[i]
+                                DispatchQueue.global().async {
+                                    [weak self] in
+                                    var images : [Int : Data] = [:]
+                                    let array = urls.components(separatedBy: ",")
+                                    var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first
+                                    path = path! + "/\(imagesPath)"
+                                    for item in array {
+                                        if let image = UIImage(contentsOfFile: path! + "/\(item).jpg") {
+                                            images[Int(item)!] = UIImageJPEGRepresentation(image, 1)
+                                        }
+                                    }
+                                    
+                                    if images.count > 0 {
+                                        let arr : Set<String> = uploadDictpre[oldOrderNo] ?? []
+                                        var images2 : [Int : Data] = [:]
+                                        for (key , value) in images {
+                                            if arr.contains("\(key)") == false {
+                                                continue
+                                            }else{
+                                                images2[key] = value
+                                            }
+                                        }
+                                        if images2.count > 0 {
+                                            self?.uploadImageQueuepre(i: 0, keys: images2.keys, images: images2, orderNo: oldOrderNo)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    // 上传图片
+    func uploadImageQueue(i : Int, keys: LazyMapCollection<Dictionary<Int, Data>, Int>, images: [Int : Data], orderNo: String){
+        if i == keys.count {
+            if orderNos.contains(orderNo) {
+                for (m , strOrderNo) in orderNos.enumerated() {
+                    if strOrderNo == orderNo {
+                        orderNos.remove(at: m)
+                        break
+                    }
+                }
+            }
+            return
+        }
+        let key = keys[keys.index(keys.startIndex, offsetBy: i)]
+        let value = images[key]!
+        let section = key / 1000
+        let row = (key % 1000) % 100
+        let right = key % 1000 >= 100
+        
+        print("上传图片")
+        let username = UserDefaults.standard.string(forKey: "username")
+        var params = ["createUser" : username!]
+        params["clientName"] = "iOS"
+        params["carBillId"] = orderNo
+        params["imageClass"] = self.sectionTitles[section]
+        params["imageSeqNum"] = "\(row * 2 + (right ? 1 : 0))"
+        NetworkManager.sharedInstall.upload(url: upload, params: params, data: value) {[weak self] (json, error) in
+            DispatchQueue.global().async {
+                if json?["success"].boolValue == true {
+                    
+                    var arr : Set<String> = uploadDict[orderNo] ?? []
+                    arr.remove("\(key)")
+                    uploadDict[orderNo] = arr
+                    print("还有\(arr.count)张没上传完")
+                    
+                    if arr.count == 0 {
+                        uploadDict.removeValue(forKey: orderNo)
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
+                        }
+                    }
+                    self?.uploadImageQueue(i: i + 1, keys: keys, images: images, orderNo: orderNo)
+                }else{
+                    
+                    DispatchQueue.main.async {
+                        Toast(text: "订单：\(orderNo)提交一张图片失败").show()
+                    }
+                    if !orderNos.contains(orderNo) {
+                        orderNos.append(orderNo)
+                        self?.isBadOrder(orderNo: orderNo)
+                    }
+                    self?.uploadImageQueue(i: i + 1, keys: keys, images: images, orderNo: orderNo)
+                }
+            }
+        }
+    }
+    
+    
+    // 上传预评估图片
+    func uploadImageQueuepre(i : Int, keys: LazyMapCollection<Dictionary<Int, Data>, Int>, images: [Int : Data], orderNo: String){
+        if i == keys.count {
+            if orderNos.contains(orderNo) {
+                for (m , strOrderNo) in orderNos.enumerated() {
+                    if strOrderNo == orderNo {
+                        orderNos.remove(at: m)
+                        break
+                    }
+                }
+            }
+            return
+        }
+        let key = keys[keys.index(keys.startIndex, offsetBy: i)]
+        let value = images[key]!
+        let section = key / 1000
+        let row = (key % 1000) % 100
+        let right = key % 1000 >= 100
+        
+        let username = UserDefaults.standard.string(forKey: "username")
+        var params = ["createUser" : username!]
+        params["clientName"] = "iOS"
+        params["carBillId"] = orderNo
+        params["imageClass"] = self.titlesImageClass[section][row * 2 + (right ? 1 : 0)]
+        params["imageSeqNum"] = "\(self.titlesImageSeqNum[section][row * 2 + (right ? 1 : 0)])"
+        NetworkManager.sharedInstall.upload(url: uploadPre, params: params, data: value) {[weak self] (json, error) in
+            DispatchQueue.global().async {
+                if json?["success"].boolValue == true {
+                    var arr : Set<String> = uploadDictpre[orderNo] ?? []
+                    arr.remove("\(key)")
+                    uploadDictpre[orderNo] = arr
+                    
+                    if arr.count == 0 {
+                        uploadDictpre.removeValue(forKey: orderNo)
+                        
+                        if var orders = UserDefaults.standard.object(forKey: "preorders") as? [[String : String]] {
+                            var orderKeys = UserDefaults.standard.object(forKey: "preorderKeys") as! [String]
+                            
+                            var i = 0
+                            for (index , order) in orders.enumerated() {
+                                if order["orderNo"] == orderNo {
+                                    i = index
+                                    break
+                                }
+                            }
+                            if i < orders.count {
+                                orderKeys.remove(at: i)
+                                orders.remove(at: i)
+                                print("已删除：\(orderNo)")
+                            }
+                            
+                            UserDefaults.standard.set(orderKeys, forKey: "preorderKeys")
+                            UserDefaults.standard.set(orders, forKey: "preorders")
+                            UserDefaults.standard.synchronize()
+                        }
+                        
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: Notification.Name("predetection"), object: 2)
+                        }
+                        
+                        self?.showAlert(title: nil, message: "评估单：\(orderNo)提交成功，请在“进度列表“查看进度", button: "")
+                    }
+                    
+                    self?.uploadImageQueuepre(i: i + 1, keys: keys, images: images, orderNo: orderNo)
+                }else{
+                    DispatchQueue.main.async {
+                        Toast(text: "订单：\(orderNo)提交一张图片失败").show()
+                    }
+                    if !orderNos.contains(orderNo) {
+                        orderNos.append(orderNo)
+                        self?.isBadOrderpre(orderNo: orderNo)
+                    }
+                    self?.uploadImageQueuepre(i: i + 1, keys: keys, images: images, orderNo: orderNo)
+                }
+            }
+        }
+    }
+
     
 }
 

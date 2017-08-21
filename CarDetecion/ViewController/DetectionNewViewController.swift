@@ -408,23 +408,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     arrPictureName.insert("\(key)")
                 }
                 uploadDict[orderNo] = arrPictureName
-                let keys  = self.images.keys
-                self.uploadImageQueue(i: 0, keys: keys)
-                NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self.orderNo , "price" : self.price , "remark" : self.remark, "leaseTerm" : "\(self.leaseTerm)"])
-//                if self.pathName.characters.count > 0 {
-//                    var orderKeys = UserDefaults.standard.object(forKey: "orderKeys") as! [String]
-//                    var orders = UserDefaults.standard.object(forKey: "orders") as! [[String : String]]
-//                    let i = orderKeys.index(of: self.pathName) ?? 0
-//                    if i < orderKeys.count {
-//                        orderKeys.remove(at: i)
-//                        orders.remove(at: i)
-//                    }
-//                    orderKeys.remove(at: i)
-//                    orders.remove(at: i)
-//                    UserDefaults.standard.set(orderKeys, forKey: "orderKeys")
-//                    UserDefaults.standard.set(orders, forKey: "orders")
-//                    UserDefaults.standard.synchronize()
-//                }
+                
+                NotificationCenter.default.post(name: Notification.Name("app"), object: 5, userInfo: ["orderNo" : self.orderNo , "images" : self.images])
+                NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self.orderNo , "price" : self.price , "remark" : self.remark, "leaseTerm" : "\(self.leaseTerm)", "source" : "1"])
                 self.navigationController?.popViewController(animated: true)
             }
         }else{
@@ -442,9 +428,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                             arrPictureName.insert("\(key)")
                         }
                         uploadDict[self!.orderNo] = arrPictureName
-                        let keys  = self!.images.keys
-                        self!.uploadImageQueue(i: 0, keys: keys)
+                        
                         DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: Notification.Name("app"), object: 5, userInfo: ["orderNo" : self!.orderNo , "images" : self!.images])
                             NotificationCenter.default.post(name: Notification.Name("app"), object: 1, userInfo: ["orderNo" : self!.orderNo , "price" : self!.price , "remark" : self!.remark, "leaseTerm" : "\(self!.leaseTerm)"])
                         }
                         if self!.pathName.characters.count > 0 {
@@ -463,55 +449,6 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                         }
                         self?.navigationController?.popViewController(animated: true)
                     }
-                }
-            }
-        }
-    }
-    
-    // 上传图片
-    func uploadImageQueue(i : Int, keys: LazyMapCollection<Dictionary<Int, Data>, Int>){
-        if i == keys.count {
-            return
-        }
-        let key = keys[keys.index(keys.startIndex, offsetBy: i)]
-        let value = self.images[key]!
-        let section = key / 1000
-        let row = (key % 1000) % 100
-        let right = key % 1000 >= 100
-        
-        print("上传图片")
-        let username = UserDefaults.standard.string(forKey: "username")
-        var params = ["createUser" : username!]
-        params["clientName"] = "iOS"
-        params["carBillId"] = orderNo
-        params["imageClass"] = self.sectionTitles[section]
-        params["imageSeqNum"] = "\(row * 2 + (right ? 1 : 0))"
-        NetworkManager.sharedInstall.upload(url: upload, params: params, data: value) {[weak self] (json, error) in
-            DispatchQueue.global().async {
-                if json?["success"].boolValue == true {
-                    
-                    var arr : Set<String> = uploadDict[self!.orderNo] ?? []
-                    arr.remove("\(key)")
-                    uploadDict[self!.orderNo] = arr
-                    print("还有\(arr.count)张没上传完")
-                    
-                    if arr.count == 0 {
-                        uploadDict.removeValue(forKey: self!.orderNo)
-                        DispatchQueue.main.async {
-                            NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
-                        }
-                    }
-                    self?.uploadImageQueue(i: i + 1, keys: keys)
-                }else{
-                    
-                    DispatchQueue.main.async {
-                        Toast(text: "订单：\(self!.orderNo)提交一张图片失败").show()
-                    }
-                    // TODO: - 图片上传失败
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: Notification.Name("app"), object: 3 , userInfo: ["orderNo" : self!.orderNo])
-                    }
-                    self?.uploadImageQueue(i: i + 1, keys: keys)
                 }
             }
         }
