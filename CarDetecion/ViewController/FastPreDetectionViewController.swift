@@ -209,6 +209,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
         camera.waterMarks = waterMarks
         camera.companyNeed = companyOtherNeed
         camera.titlesImageClass = titlesImageClass
+        camera.titlesImageSeqNum = titlesImageSeqNum
         //camera.transitioningDelegate = self
         self.present(camera, animated: true) {
             

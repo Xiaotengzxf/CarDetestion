@@ -57,6 +57,7 @@ public class CameraViewController: UIViewController {
     //var cameraType = 0
     var sectionTiltes : [String] = []
     var titlesImageClass : [[String]] = []
+    var titlesImageSeqNum: [[Int]] = []
     var titles : [[String]] = []
     var lcWidth : NSLayoutConstraint!
     var lcHeight : NSLayoutConstraint!
@@ -158,7 +159,7 @@ public class CameraViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("取消", for: .normal)
         button.setTitleColor(UIColor.rgbColorFromHex(rgb: 0xfafafa), for: .normal)
-        button.addTarget(self, action: #selector(CameraViewController.doNextOrCancel), for: .touchUpInside)
+        button.addTarget(self, action: #selector(CameraViewController.doNextOrCancel(button:)), for: .touchUpInside)
         return button
     }()
     
@@ -375,7 +376,7 @@ public class CameraViewController: UIViewController {
             lblName.text = titles[section][row * 2 + bright]
             lblCurrentPage.text = "\(index + 1)/\(titles[section].count)"
             for json in waterMarks {
-                let bTem = titlesImageClass.count > 0 ? (json["imageClass"].stringValue == titlesImageClass[section][index]) : (json["imageClass"].stringValue == sectionTiltes[section] && index == json["imageSeqNum"].intValue)
+                let bTem = titlesImageClass.count > 0 ? (json["imageClass"].stringValue == titlesImageClass[section][index] && titlesImageSeqNum[section][index] == json["imageSeqNum"].intValue) : (json["imageClass"].stringValue == sectionTiltes[section] && index == json["imageSeqNum"].intValue)
                 if bTem {
                     var imageUrl = "\(NetworkManager.sharedInstall.domain)\(json["imageDesc"].stringValue)"
                     var url = URL(string: imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)
