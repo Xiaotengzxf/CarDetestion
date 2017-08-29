@@ -659,6 +659,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
     
     // 上传图片
     func uploadImageQueue(i : Int, keys: LazyMapCollection<Dictionary<Int, Data>, Int>, images: [Int : Data], orderNo: String){
+        guard let _ = UserDefaults.standard.object(forKey: "userinfo") else {
+            return
+        }
         if i == keys.count {
             if orderNos.contains(orderNo) {
                 for (m , strOrderNo) in orderNos.enumerated() {
@@ -717,6 +720,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
     
     // 上传预评估图片
     func uploadImageQueuepre(i : Int, keys: LazyMapCollection<Dictionary<Int, Data>, Int>, images: [Int : Data], orderNo: String){
+        guard let _ = UserDefaults.standard.object(forKey: "userinfo") else {
+            return
+        }
         if i == keys.count {
             if orderNos.contains(orderNo) {
                 for (m , strOrderNo) in orderNos.enumerated() {

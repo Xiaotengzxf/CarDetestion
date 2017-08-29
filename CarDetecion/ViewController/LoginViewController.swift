@@ -56,6 +56,51 @@ class LoginViewController: UIViewController {
             Toast(text: "请输入用户名").show()
             return
         }
+        if let oldUserName = UserDefaults.standard.object(forKey: "username") as? String {
+            if oldUserName != username {
+                let alert = UIAlertController(title: "提示", message: "切换账号将清除上一个账号的所有本地数据，包括未提交，正在提交的单，已上传的不影响。", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (action) in
+                    
+                }))
+                alert.addAction(UIAlertAction(title: "确定", style: .default, handler: {[weak self] (action) in
+                    self?.loginWithUserName(username: username)
+                }))
+                self.present(alert, animated: true, completion: { 
+                    
+                })
+            }
+        }
+        
+    }
+    
+    func loginWithUserName(username: String) {
+        
+        UserDefaults.standard.removeObject(forKey: "orderInfo")
+        UserDefaults.standard.removeObject(forKey: "orders")
+        UserDefaults.standard.removeObject(forKey: "orderKeys")
+        UserDefaults.standard.removeObject(forKey: "preorders")
+        UserDefaults.standard.removeObject(forKey: "preorderKeys")
+        
+        if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first?.appending("/upload.data") {
+            if FileManager.default.fileExists(atPath: path) {
+                do{
+                    try FileManager.default.removeItem(atPath: path)
+                }catch{
+                    
+                }
+            }
+        }
+        
+        if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first?.appending("/uploadpre.data") {
+            if FileManager.default.fileExists(atPath: path) {
+                do{
+                    try FileManager.default.removeItem(atPath: path)
+                }catch{
+                    
+                }
+            }
+        }
+        
         guard let pwd = tfPwd.text?.trimmingCharacters(in: .whitespacesAndNewlines) , pwd.characters.count > 0 else {
             Toast(text: "请输入密码").show()
             return
@@ -84,7 +129,7 @@ class LoginViewController: UIViewController {
                     
                     if let controller = self?.storyboard?.instantiateViewController(withIdentifier: "default") as? DefaultViewController {
                         controller.modalTransitionStyle = .crossDissolve
-                        self?.present(controller, animated: true, completion: { 
+                        self?.present(controller, animated: true, completion: {
                             
                         })
                     }

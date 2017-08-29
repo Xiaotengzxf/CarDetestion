@@ -111,7 +111,7 @@ class MineTableViewController: UITableViewController {
                 }
             }
             UserDefaults.standard.removeObject(forKey: "userinfo")
-            UserDefaults.standard.removeObject(forKey: "username")
+            //UserDefaults.standard.removeObject(forKey: "username")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let login = storyboard.instantiateViewController(withIdentifier: "login")
             self?.view?.window?.rootViewController = login
