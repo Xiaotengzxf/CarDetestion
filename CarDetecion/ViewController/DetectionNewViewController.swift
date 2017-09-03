@@ -18,8 +18,8 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     @IBOutlet weak var btnSave: UIButton!
     @IBOutlet weak var vBottom: UIView!
     @IBOutlet weak var tableView: UITableView!
-    let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "估价" , "租赁期限(非残值租赁产品就选无租期)", "备注"]
-    let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门" , "右前门铰链"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"]]
+    let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "差异补充" , "原车保险" , "估价" , "租赁期限(非残值租赁产品就选无租期)", "备注"]
+    let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门" , "右前门铰链"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"], ["添加图片"], ["添加图片"]]
     var images : [Int : Data] = [:]
     var imagesPath = "" // 本地如果有缓冲图片，则读取图片
     var imagesFilePath = "" // 本地如果有缓冲图片，则读取图片
@@ -38,7 +38,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var nTag = 0 // 临时tag
     //var cameraType = 0 // 单拍，连拍
     var waterMarks : [JSON] = []
-    let companyOtherNeed : [Int] = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 4007 , 5000 , 5100 , 5001 , 5101]
+    let companyOtherNeed : [Int] = [0 , 100 , 2000 , 3000 , 3001 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4004 , 4104 , 4005 , 4105 , 4106 , 5000 , 5001 , 5101]
+    let companyOptional : [Int] = [1000, 3100, 3101, 4003, 4103, 4006, 4007, 5100]
+    // [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 4007 , 5000 , 5100 , 5001 , 5101]
     var source = 0  // 0 创建新的，1 未通过 ， 2 本地的
     var json : JSON? // 未通过时，获取的数据
     var arrImageInfo : [JSON] = []
@@ -513,7 +515,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let nMin = source == 1 ? 1 : 0
-        let nMax = source == 1 ? 7 : 6
+        let nMax = source == 1 ? 9 : 8
         if section < nMax && section >= nMin {
             let nSection = source==1 ? section - 1 : section
             var count = titles[nSection].count + 1
@@ -541,7 +543,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let nMin = source == 1 ? 1 : 0
-        let nMax = source == 1 ? 7 : 6
+        let nMax = source == 1 ? 9 : 8
         if indexPath.section < nMax && indexPath.section >= nMin {
             let nSection = source==1 ? indexPath.section - 1 : indexPath.section
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetectionTableViewCell
@@ -558,6 +560,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             cell.source = source
             let c = titles[nSection].count
             var count = titles[nSection].count + 1
+            if nSection == 6 || nSection == 7 {
+                count -= 1
+            }
             if images.count > 0 {
                 let array = images.keys.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
                 let array1 = companyOtherNeed.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
@@ -656,6 +661,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                     }
                 }
             }
+            if companyOptional.contains(nSection * 1000 + indexPath.row) {
+                cell.vCamera1.layer.borderColor = UIColor.green.cgColor
+            }
             if source == 1 {
                 var bTem = false
                 if images.count > 0 {
@@ -713,6 +721,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                         cell.vCamera2.layer.borderColor = UIColor(red: 230/255.0, green: 230/255.0, blue: 230/255.0, alpha: 1).cgColor
                     }
                 }
+            }
+            if companyOptional.contains(nSection * 1000 + indexPath.row + 100) {
+                cell.vCamera2.layer.borderColor = UIColor.green.cgColor
             }
             if unfinished {
                 cell.isUserInteractionEnabled = false
@@ -816,7 +827,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         let nMin = source == 1 ? 1 : 0
-        let nMax = source == 1 ? 7 : 6
+        let nMax = source == 1 ? 9 : 8
         if indexPath.section < nMax && indexPath.section >= nMin {
             return 10 + (WIDTH / 2 - 15) / 3 * 2.0
         }else if indexPath.section == nMax {
@@ -841,7 +852,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as! ReUseHeaderFooterView
         let nMin = source == 1 ? 1 : 0
-        let nMax = source == 1 ? 7 : 6
+        let nMax = source == 1 ? 9 : 8
         let nSection = source==1 ? section - 1 : section
         if section < nMax && section >= nMin {
             view.lblTitle.text = sectionTitles[nSection]
