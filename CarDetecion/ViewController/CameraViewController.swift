@@ -831,7 +831,7 @@ public class CameraViewController: UIViewController {
                         lblName.text = titles[section][row * 2 + bright]
                         lblCurrentPage.text = "\(index2 + 1)/\(titles[section].count)"
                         for json in waterMarks {
-                            let bTem = titlesImageClass.count > 0 ? (json["imageClass"].stringValue == titlesImageClass[section][index2]) : (json["imageClass"].stringValue == sectionTiltes[section] && index2 == json["imageSeqNum"].intValue)
+                            let bTem = titlesImageClass.count > 0 ? (json["imageClass"].stringValue == titlesImageClass[section][index2] && json["imageSeqNum"].intValue == titlesImageSeqNum[section][index2]) : (json["imageClass"].stringValue == sectionTiltes[section] && index2 == json["imageSeqNum"].intValue)
                             if bTem {
                                 var imageUrl = "\(NetworkManager.sharedInstall.domain)\(json["imageDesc"].stringValue)"
                                 var url = URL(string: imageUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)

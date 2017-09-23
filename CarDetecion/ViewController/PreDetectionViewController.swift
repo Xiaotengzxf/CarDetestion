@@ -339,8 +339,10 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
                 cell.btnChangeToNormal.isHidden = false
                 if status == "1" {
                     cell.btnChangeToNormal.setTitle("提交正式评估", for: .normal)
+                    cell.btnChangeToNormal.setTitleColor(UIColor.green, for: .normal)
                 }else{
                     cell.btnChangeToNormal.setTitle("查看正式评估", for: .normal)
+                    cell.btnChangeToNormal.setTitleColor(UIColor.rgbColorFromHex(rgb: 0xF86765), for: .normal)
                 }
             }else{
                 cell.btnChangeToNormal.isHidden = true
@@ -351,7 +353,7 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
             }
             if let label = cell.contentView.viewWithTag(5) as? UILabel {
                 label.text = "审核进度：\(statusInfo[status]!)"
-                label.textColor = UIColor.rgbColorFromHex(rgb: 0xF86765)
+                label.textColor = UIColor.rgbColorFromHex(rgb: 0x3B93EC)
                 
             }
             if let label = cell.contentView.viewWithTag(4) as? UILabel {
@@ -391,7 +393,7 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
             }
             if let label = cell.contentView.viewWithTag(4) as? UILabel {
                 label.text = "退回时间：\(data2[indexPath.row]["createTime"].string ?? "")"
-                label.textColor = UIColor.rgbColorFromHex(rgb: 0xF86765)
+                label.textColor = UIColor.rgbColorFromHex(rgb: 0x3B93EC)
                 
             }
             if let imageView = cell.contentView.viewWithTag(2) as? UIImageView {
@@ -631,7 +633,8 @@ class PreDetectionViewController: UIViewController, UITableViewDelegate, UITable
                 print(error!.localizedDescription)
             }else{
                 if let success = json?["carBillId"].string , success == carBillId {
-                    if status == "1" {
+                    let preStatus = json?["status"].int ?? 0
+                    if status == "1" || preStatus == 33 {
                         if let controller = self?.storyboard?.instantiateViewController(withIdentifier: "detectionnew") as? DetectionNewViewController {
                             controller.source = 1
                             controller.json = json!

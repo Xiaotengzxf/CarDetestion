@@ -33,6 +33,7 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     let operationDesc = "external/source/operation-desc.json" // 水印和接口说明
     let billImages = "external/app/getAppPreBillImageList.html"
     let submitPre = "external/app/addPreCarBill.html"
+
     var orderNo = ""
     var remark = ""
     var bSubmit = false // 是否点击了提交
@@ -343,22 +344,26 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
             showAlert(title: nil, message: "您还有内容尚未录入，是否返回继续编辑？" , button:"继续编辑")
             return
         }
-        if source == 1 && images.count == 0 {
-            showAlert(title: nil, message: "您没有做任何图片修改，无法提交！" , button:"确定")
-            return
-        }
+//        if source == 1 && images.count == 0 {
+//            showAlert(title: nil, message: "您没有做任何图片修改，无法提交！" , button:"确定")
+//            return
+//        }
 
         if source == 1 {
             orderNo = json?["carBillId"].string ?? ""
             if orderNo.characters.count > 0 {
-                var arrPictureName : Set<String> = []
-                for key in self.images.keys {
-                    arrPictureName.insert("\(key)")
+                if self.images.count > 0 {
+                    var arrPictureName : Set<String> = []
+                    for key in self.images.keys {
+                        arrPictureName.insert("\(key)")
+                    }
+                    uploadDictpre[orderNo] = arrPictureName
                 }
-                uploadDictpre[orderNo] = arrPictureName
                 
                 NotificationCenter.default.post(name: Notification.Name("app"), object: 15, userInfo: ["orderNo" : self.orderNo , "images" : self.images, "remark" : remark])
-
+                
+                Toast(text: "正在后台上传，稍后请到进度列表中查看").show()
+                
                 self.navigationController?.popViewController(animated: true)
             }
         }else{
@@ -713,6 +718,10 @@ class FastPreDetectionViewController: UIViewController , UITableViewDataSource ,
     func getWebViewContentHeight(height: Float) {
         fWebViewCellHeight = height
         tableView.reloadData()
+    }
+    
+    func lookForAttach() {
+        
     }
 
 }

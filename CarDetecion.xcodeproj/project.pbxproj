@@ -12,6 +12,7 @@
 		891034E71EC4480D00EDBD23 /* HDLeaveMsgViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 891034E61EC4480D00EDBD23 /* HDLeaveMsgViewController.m */; };
 		8920A31D1EB84B1B005DC01B /* PreDetectionListTVController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */; };
 		8920A31F1EB8964E005DC01B /* CarModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8920A31E1EB8964E005DC01B /* CarModelController.swift */; };
+		89217BEE1F6E7D1700E98D13 /* FileAttachViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89217BED1F6E7D1700E98D13 /* FileAttachViewController.swift */; };
 		892D10311EF7B7510045D8A3 /* FastPreDetectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892D10301EF7B7510045D8A3 /* FastPreDetectionViewController.swift */; };
 		893100F31F04A8A200B65426 /* FastPreDetectionDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893100F21F04A8A200B65426 /* FastPreDetectionDetailViewController.swift */; };
 		893CDB2A1EB6D10E00AEB5D7 /* TabCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */; };
@@ -255,6 +256,7 @@
 		891034E61EC4480D00EDBD23 /* HDLeaveMsgViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDLeaveMsgViewController.m; sourceTree = "<group>"; };
 		8920A31C1EB84B1B005DC01B /* PreDetectionListTVController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreDetectionListTVController.swift; sourceTree = "<group>"; };
 		8920A31E1EB8964E005DC01B /* CarModelController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarModelController.swift; sourceTree = "<group>"; };
+		89217BED1F6E7D1700E98D13 /* FileAttachViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileAttachViewController.swift; sourceTree = "<group>"; };
 		892D10301EF7B7510045D8A3 /* FastPreDetectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FastPreDetectionViewController.swift; sourceTree = "<group>"; };
 		893100F21F04A8A200B65426 /* FastPreDetectionDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FastPreDetectionDetailViewController.swift; sourceTree = "<group>"; };
 		893CDB231EB6D10E00AEB5D7 /* TabCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabCollectionCell.swift; sourceTree = "<group>"; };
@@ -738,6 +740,7 @@
 				896837B51EF560B000029010 /* PreDetectionViewController.swift */,
 				892D10301EF7B7510045D8A3 /* FastPreDetectionViewController.swift */,
 				893100F21F04A8A200B65426 /* FastPreDetectionDetailViewController.swift */,
+				89217BED1F6E7D1700E98D13 /* FileAttachViewController.swift */,
 			);
 			name = PreDetection;
 			sourceTree = "<group>";
@@ -1920,6 +1923,7 @@
 				893CDB2C1EB6D10E00AEB5D7 /* TabPageViewController.swift in Sources */,
 				897C6DE51EBF578F00B22203 /* PSTGridLayoutInfo.m in Sources */,
 				897C6DD31EBF578F00B22203 /* MKAnnotationView+EMWebCache.m in Sources */,
+				89217BEE1F6E7D1700E98D13 /* FileAttachViewController.swift in Sources */,
 				8985C79F1E72E63A0075B6F8 /* MineTableViewController.swift in Sources */,
 				897C6DAF1EBF578F00B22203 /* MBProgressHUD.m in Sources */,
 				897C6DBD1EBF578F00B22203 /* MJRefreshStateHeader.m in Sources */,

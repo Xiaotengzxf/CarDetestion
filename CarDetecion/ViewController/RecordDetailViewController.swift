@@ -8,9 +8,11 @@
 
 import UIKit
 import SwiftyJSON
+import WebKit
 
-class RecordDetailViewController: UIViewController {
+class RecordDetailViewController: UIViewController, WKNavigationDelegate {
 
+    @IBOutlet weak var lcSuggestionHieght: NSLayoutConstraint!
     @IBOutlet weak var lcTop: NSLayoutConstraint!
     @IBOutlet weak var lblPriceTip: UILabel!
     @IBOutlet weak var lblBillNo: UILabel!
@@ -20,14 +22,15 @@ class RecordDetailViewController: UIViewController {
     @IBOutlet weak var lblRemark: UILabel!
     @IBOutlet weak var vAllSuggestion: UIView!
     @IBOutlet weak var vContent: UIView!
-    @IBOutlet weak var lblOpinion: UILabel!
     @IBOutlet weak var vZuLin: UIView!
     @IBOutlet weak var lblLeaseTerm: UILabel!
     @IBOutlet weak var lblLeasePrice: UILabel!
     @IBOutlet weak var lcPriceTop: NSLayoutConstraint!
+    @IBOutlet weak var lcPriceTipTop: NSLayoutConstraint!
     var json : JSON!
     var statusInfo : [String : String]!
     var flag = 0
+    var webView: WKWebView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,13 +45,7 @@ class RecordDetailViewController: UIViewController {
         lblPrice.text = "\(json["evaluatePrice"].int ?? 0)"
         lblTime.text = json["createTime"].string
         lblRemark.text = json["mark"].string
-        do {
-            var strOpinion = json["applyAllOpinion"].stringValue
-            strOpinion = htmlStringToHtml5(htmlString: strOpinion)
-            lblOpinion.attributedText = try NSAttributedString(data: strOpinion.data(using: .unicode)!, options: [NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType], documentAttributes: nil)
-        }catch{
-            
-        }
+        showWebView(htmlString: json["applyAllOpinion"].stringValue)
         if flag == 1 {
             lblPrice.isHidden = true
             lblPriceTip.isHidden = true
@@ -71,6 +68,48 @@ class RecordDetailViewController: UIViewController {
             }else{
                 lblLeaseTerm.text = "\(leaseTerm)月"
                 lblLeasePrice.text = "\(residualPrice)元"
+            }
+        }
+        
+        if let userinfo = UserDefaults.standard.object(forKey: "userinfo") as? [String : Any] {
+            let userSuperCompany = userinfo["userSuperCompany"] as? Int ?? 0
+            let userCompany = userinfo["userCompany"] as? Int ?? 0
+            if userSuperCompany == 803 || userCompany == 803 { // 日产金融机器子公司
+                lcPriceTipTop.constant = 0
+                lblPriceTip.isHidden = true
+                lblPrice.isHidden = true
+            }
+        }
+        
+    }
+    
+    func showWebView(htmlString : String) {
+        if webView == nil {
+            webView = WKWebView()
+            webView.navigationDelegate = self
+            webView.scrollView.isScrollEnabled = false
+            webView.translatesAutoresizingMaskIntoConstraints = false
+            vAllSuggestion.addSubview(webView!)
+            vAllSuggestion.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-10-[webView]-10-|", options: .directionLeadingToTrailing, metrics: nil, views: ["webView" : webView]))
+            vAllSuggestion.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-10-[webView]-10-|", options: .directionLeadingToTrailing, metrics: nil, views: ["webView" : webView]))
+            webView.loadHTMLString(htmlStringToHtml5(htmlString: htmlString), baseURL: nil)
+        }
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        
+        let js = "var script = document.createElement('script');script.type = 'text/javascript';script.text = \"function ResizeImages() { var myimg,oldwidth;for(i=0;i <document.images.length;i++){myimg = document.images[i];myimg.setAttribute('style','max-width:\(UIScreen.main.bounds.size.width - 60);height:auto')}}\";document.getElementsByTagName('head')[0].appendChild(script);"
+        webView.evaluateJavaScript(js) { (height, error) in
+            
+        }
+        
+        webView.evaluateJavaScript("ResizeImages();") { (height, error) in
+            
+        }
+        
+        webView.evaluateJavaScript("document.body.offsetHeight;") {[weak self] (height, error) in
+            if let fHeight = height as? CGFloat {
+                self?.lcSuggestionHieght.constant = fHeight + 40
             }
         }
         

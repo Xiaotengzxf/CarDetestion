@@ -299,8 +299,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                 if let userinfo = notification.userInfo as? [String : Any] {
                     if let orderNo = userinfo["orderNo"] as? String {
                         if let images = userinfo["images"] as? [Int : Data] {
-                            let keys  = images.keys
-                            self.uploadImageQueuepre(i: 0, keys: keys, images: images, orderNo: orderNo)
+                            if images.count > 0 {
+                                let keys  = images.keys
+                                self.uploadImageQueuepre(i: 0, keys: keys, images: images, orderNo: orderNo)
+                            }else{
+                                self.perform(#selector(self.showToast(orderNo:)), with: orderNo, afterDelay: 1)
+                            }
                         }
                     }
                 }
@@ -313,6 +317,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                 
             }
         }
+    }
+    
+    func showToast(orderNo: String) {
+        Toast(text: "\(orderNo)上传成功").show()
     }
     
     func showAlertView(userinfo : [String : String]) {
@@ -688,7 +696,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         params["imageSeqNum"] = "\(row * 2 + (right ? 1 : 0))"
         NetworkManager.sharedInstall.upload(url: upload, params: params, data: value) {[weak self] (json, error) in
             DispatchQueue.global().async {
-                if json?["success"].boolValue == true {
+                if json != nil && json?["success"].boolValue == true {
                     
                     var arr : Set<String> = uploadDict[orderNo] ?? []
                     arr.remove("\(key)")
@@ -748,7 +756,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         params["imageSeqNum"] = "\(self.titlesImageSeqNum[section][row * 2 + (right ? 1 : 0)])"
         NetworkManager.sharedInstall.upload(url: uploadPre, params: params, data: value) {[weak self] (json, error) in
             DispatchQueue.global().async {
-                if json?["success"].boolValue == true {
+                if json != nil && json?["success"].boolValue == true {
                     var arr : Set<String> = uploadDictpre[orderNo] ?? []
                     arr.remove("\(key)")
                     uploadDictpre[orderNo] = arr

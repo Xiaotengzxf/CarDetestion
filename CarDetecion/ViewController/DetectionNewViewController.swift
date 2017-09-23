@@ -19,7 +19,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     @IBOutlet weak var vBottom: UIView!
     @IBOutlet weak var tableView: UITableView!
     let sectionTitles = ["登记证" , "行驶证" , "铭牌" , "车身外观" , "车体骨架" , "车辆内饰" , "差异补充" , "原车保险" , "估价" , "租赁期限(非残值租赁产品就选无租期)", "备注"]
-    let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃" , "车右后45度" , "后档风玻璃"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链" , "左后门" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门" , "右前门" , "右前门铰链"] ,["方向盘及仪表" , "中央控制面板" , "中控台含挡位杆" , "后出风口"], ["添加图片"], ["添加图片"]]
+    let titles = [["登记证首页" , "登记证\n车辆信息记录"] , ["行驶证-正本\n副本同照\n[选拍]"] , ["车辆铭牌"] , ["车左前45度" , "前档风玻璃\n[选拍]" , "车右后45度" , "后档风玻璃\n[选拍]"] , ["发动机盖" , "右侧内轨" , "右侧水箱支架" , "左侧内轨" , "左侧水箱支架" , "左前门" , "左前门铰链\n[选拍]" , "左后门\n[选拍]" , "行李箱左侧" , "行李箱右侧" , "行李箱左后底板" , "行李箱右后底板" , "右后门\n[选拍]" , "右前门" , "右前门铰链\n[选拍]"] ,["方向盘及仪表" , "中央控制面板\n[选拍]" , "中控台含挡位杆" , "后出风口"], ["添加图片"], ["添加图片"]]
     var images : [Int : Data] = [:]
     var imagesPath = "" // 本地如果有缓冲图片，则读取图片
     var imagesFilePath = "" // 本地如果有缓冲图片，则读取图片
@@ -29,6 +29,7 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     let upload = "external/app/uploadAppImage.html"
     let operationDesc = "external/source/operation-desc.json" // 水印和接口说明
     let billImages = "external/app/getAppBillImageList.html"
+    let getAttachFiles = "external/app/getAttachFiles.html"
     var orderNo = ""
     var price = ""
     var remark = ""
@@ -663,6 +664,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }
             if companyOptional.contains(nSection * 1000 + indexPath.row) {
                 cell.vCamera1.layer.borderColor = UIColor.green.cgColor
+                cell.lbl1.textColor = UIColor.green
+            }else{
+                cell.lbl1.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
             }
             if source == 1 {
                 var bTem = false
@@ -724,6 +728,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             }
             if companyOptional.contains(nSection * 1000 + indexPath.row + 100) {
                 cell.vCamera2.layer.borderColor = UIColor.green.cgColor
+                cell.lbl2.textColor = UIColor.green
+            }else{
+                cell.lbl2.textColor = UIColor(red: 107/255.0, green: 107/255.0, blue: 107/255.0, alpha: 1)
             }
             if unfinished {
                 cell.isUserInteractionEnabled = false
@@ -916,4 +923,13 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
         fWebViewCellHeight = height
         tableView.reloadData()
     }
+    
+    func lookForAttach() {
+        if let controller = self.storyboard?.instantiateViewController(withIdentifier: "FileAttachViewController") as? FileAttachViewController {
+            controller.carId = json!["carBillId"].stringValue
+            controller.status = "23,33,43,53"
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
 }

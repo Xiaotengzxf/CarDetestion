@@ -486,6 +486,13 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
             if let label = cell.contentView.viewWithTag(4) as? UILabel {
                 label.text = "评估价格：\(data3[indexPath.row]["evaluatePrice"].int ?? 0) "
                 label.textColor = UIColor.rgbColorFromHex(rgb: 0x2e8b57)
+                if let userinfo = UserDefaults.standard.object(forKey: "userinfo") as? [String : Any] {
+                    let userSuperCompany = userinfo["userSuperCompany"] as? Int ?? 0
+                    let userCompany = userinfo["userCompany"] as? Int ?? 0
+                    if userSuperCompany == 803 || userCompany == 803 { // 日产金融机器子公司
+                        label.isHidden = true
+                    }
+                }
             }
             if let imageView = cell.contentView.viewWithTag(2) as? UIImageView {
                 let imagePath = data3[indexPath.row]["imageThumbPath"].string ?? ""

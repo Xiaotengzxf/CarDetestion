@@ -68,7 +68,11 @@ class LoginViewController: UIViewController {
                 self.present(alert, animated: true, completion: { 
                     
                 })
+            }else{
+                loginWithUserName(username: username)
             }
+        }else{
+            loginWithUserName(username: username)
         }
         
     }
