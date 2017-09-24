@@ -11,6 +11,7 @@ import CoreData
 import IQKeyboardManagerSwift
 import Toaster
 
+var uploadDictCount : [String: Int] = [:]
 var uploadDict : [String : Set<String>] = [:]
 var uploadDictpre : [String : Set<String>] = [:]
 var orderNos : [String] = []
@@ -62,6 +63,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             orderInfo = dicOrderInfo
         }
         
+        if let uploadDicCount = UserDefaults.standard.object(forKey: "uploadDictCount") as? [String : Int] {
+            uploadDictCount = uploadDicCount
+        }
         
         Bugly.start(withAppId: "2304f83592") // 腾讯Bugly接入
         
@@ -113,7 +117,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
         /*
         
         */
-        
+        UIToolbar.appearance().alpha = 1
+        UIToolbar.appearance().tintColor = UIColor.black
         
         return true
     }
@@ -290,6 +295,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                     if let orderNo = userinfo["orderNo"] as? String {
                         if let images = userinfo["images"] as? [Int : Data] {
                             let keys  = images.keys
+                            uploadDictCount[orderNo] = keys.count
+                            UserDefaults.standard.set(uploadDictCount, forKey: "uploadDictCount")
+                            UserDefaults.standard.synchronize()
                             self.uploadImageQueue(i: 0, keys: keys, images: images, orderNo: orderNo)
                         }
                     }
@@ -496,6 +504,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             }
             return
         }
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Notification.Name("recordVC"), object: nil)
+        }
+        
         let key = keys[keys.index(keys.startIndex, offsetBy: i)]
         let value = images[key]!
         
@@ -588,6 +601,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                                             }
                                         }
                                         if images2.count > 0 {
+                                            //uploadDictCount[oldOrderNo] = images2.keys.count
                                             self?.uploadImageQueue(i: 0, keys: images2.keys, orderNo: oldOrderNo, images: images2)
                                         }
                                     }
@@ -681,6 +695,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             }
             return
         }
+        
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: Notification.Name("recordVC"), object: nil)
+        }
+        
         let key = keys[keys.index(keys.startIndex, offsetBy: i)]
         let value = images[key]!
         let section = key / 1000

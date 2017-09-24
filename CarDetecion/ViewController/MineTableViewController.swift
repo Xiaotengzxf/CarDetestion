@@ -29,6 +29,9 @@ class MineTableViewController: UITableViewController {
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "V\(version)", style: .plain, target: nil, action: nil)
         
+        if #available(iOS 11.0, *) {
+            tableView.contentInset = UIEdgeInsetsMake(-64, 0, 0, 0)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

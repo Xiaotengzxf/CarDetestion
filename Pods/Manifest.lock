@@ -3,7 +3,7 @@ PODS:
   - Bugly (2.4.7)
   - DatePickerDialog (1.1.7)
   - DZNEmptyDataSet (1.8.1)
-  - IQKeyboardManagerSwift (4.0.8)
+  - IQKeyboardManagerSwift (4.0.10)
   - JCore (1.1.1)
   - JPush (3.0.2):
     - JCore (~> 1.1.1)
@@ -23,7 +23,7 @@ DEPENDENCIES:
   - Bugly
   - DatePickerDialog
   - DZNEmptyDataSet
-  - IQKeyboardManagerSwift
+  - IQKeyboardManagerSwift (= 4.0.10)
   - JPush
   - MBProgressHUD
   - MJRefresh
@@ -37,7 +37,7 @@ SPEC CHECKSUMS:
   Bugly: 2c256069145f550171907c5cb1c0f84ad291f6c1
   DatePickerDialog: bd5e7e92e4da2c6a8966b28d5f5d8f335d6c2c63
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
-  IQKeyboardManagerSwift: c04bc9f68473823f825eb44d958fce98d921bead
+  IQKeyboardManagerSwift: 75ba21a23794a1e6b6fe6d9a267ea17f80e06771
   JCore: 2210a789c8efb7dc2a46b1c24d2209b995b18ad2
   JPush: 01a693fafe51b93eafc2e368bbc7a7cc07e12ce4
   MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
@@ -48,6 +48,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
   Toaster: 77c0b03d78e680bbbab0071c9c7ee392b0034010
 
-PODFILE CHECKSUM: 9ecde5a2d4cf8f1d9ee895644fd5ed03ef29e061
+PODFILE CHECKSUM: 9136058ba763ea5bae85df85a45eda172aadc8dc
 
 COCOAPODS: 1.2.1.beta.1

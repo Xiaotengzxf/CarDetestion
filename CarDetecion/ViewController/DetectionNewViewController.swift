@@ -39,9 +39,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
     var nTag = 0 // 临时tag
     //var cameraType = 0 // 单拍，连拍
     var waterMarks : [JSON] = []
-    let companyOtherNeed : [Int] = [0 , 100 , 2000 , 3000 , 3001 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4004 , 4104 , 4005 , 4105 , 4106 , 5000 , 5001 , 5101]
+    let companyOtherNeed : [Int] = [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 4007 , 5000 , 5100 , 5001 , 5101]
     let companyOptional : [Int] = [1000, 3100, 3101, 4003, 4103, 4006, 4007, 5100]
-    // [0 , 100 , 1000 , 2000 , 3000 , 3100 , 3001 , 3101 , 4000 , 4100 , 4001 , 4101 , 4002 , 4102 , 4003 , 4103 , 4004 , 4104 , 4005 , 4105 , 4006 , 4106 , 4007 , 5000 , 5100 , 5001 , 5101]
+    //
     var source = 0  // 0 创建新的，1 未通过 ， 2 本地的
     var json : JSON? // 未通过时，获取的数据
     var arrImageInfo : [JSON] = []
@@ -486,7 +486,8 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
             if images.count > 0 {
                 if companyNo == 0 {
                     let keys = Set<Int>(images.keys)
-                    if Set(companyOtherNeed).isSubset(of: keys) {
+                    let array = Set(companyOtherNeed).subtracting(Set(companyOptional))
+                    if array.isSubset(of: keys) {
                         return true
                     }else{
                         return false
@@ -524,11 +525,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 let array = images.keys.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
                 let array1 = companyOtherNeed.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
                 var n = 0
-                if array.count > 0 {
-                    for key in array {
-                        if !array1.contains(key) {
-                            n += 1
-                        }
+                for key in array {
+                    if !array1.contains(key) {
+                        n += 1
                     }
                 }
                 if n > 0 {
@@ -568,11 +567,9 @@ class DetectionNewViewController: UIViewController , UITableViewDataSource , UIT
                 let array = images.keys.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
                 let array1 = companyOtherNeed.filter{$0 >= nSection * 1000 && $0 < (nSection + 1) * 1000}
                 var n = 0
-                if array.count > 0 {
-                    for key in array {
-                        if !array1.contains(key) {
-                            n += 1
-                        }
+                for key in array {
+                    if !array1.contains(key) {
+                        n += 1
                     }
                 }
                 if n > 0 {

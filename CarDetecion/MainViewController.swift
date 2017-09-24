@@ -34,6 +34,10 @@ class MainViewController: UIViewController , UITableViewDataSource , UITableView
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(MainViewController.handleTap(recognizer:)))
         vNewsMore.addGestureRecognizer(tap)
+        
+        if #available(iOS 11.0, *) {
+            tableView.contentInset = UIEdgeInsetsMake(-44, 0, 0, 0)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

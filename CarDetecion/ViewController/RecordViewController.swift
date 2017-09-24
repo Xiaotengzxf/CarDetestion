@@ -389,7 +389,10 @@ class RecordViewController: UIViewController , DZNEmptyDataSetDelegate , DZNEmpt
                     if bUnfinished {
                         label.text = "提交状态：提交失败"
                     }else{
-                        label.text = "提交状态：提交中"
+                        let normal = uploadDict[strOrderNo]?.count ?? 0
+                        let total = uploadDictCount[strOrderNo] ?? 0
+                        let percent = Int(Float((total - normal) * 100) / Float(total))
+                        label.text = "提交状态：提交中 \(percent)%"
                     }
                 }else{
                     label.text = ""
