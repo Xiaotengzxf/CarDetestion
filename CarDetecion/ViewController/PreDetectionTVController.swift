@@ -94,7 +94,7 @@ class PreDetectionTVController: UITableViewController {
         fomatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         params["createTime"] = fomatter.string(from: Date())
         params["runNum"] = gongli
-        params["mark"] = remark
+        params["mark"] = remark.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         params["clientName"] = "iOS"
         let hud = self.showHUD(text: "提交中...")
         NetworkManager.sharedInstall.request(url: submitPre, params: params) {[weak self] (json, error) in

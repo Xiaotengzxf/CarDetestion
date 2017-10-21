@@ -427,7 +427,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                 params["carBillId"] = orderNo
                 params["clientName"] = "iOS"
                 params["preSalePrice"] = self?.orderInfo[orderNo]?["price"] ?? "0"
-                params["mark"] = self?.orderInfo[orderNo]?["remark"] ?? ""
+                var mark = self?.orderInfo[orderNo]?["remark"] ?? ""
+                mark = mark.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+                params["mark"] = mark
                 params["leaseTerm"] = self?.orderInfo[orderNo]?["leaseTerm"] ?? "0"
                 NetworkManager.sharedInstall.request(url: self!.createBill, params: params) {(json, error) in
                     if error != nil {
@@ -493,15 +495,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
     
     // 上传图片
     func uploadImageQueue(i : Int, keys: LazyMapCollection<Dictionary<Int, Data>, Int>, orderNo: String, images : [Int : Data]){
-        if i == images.count {
-            if orderNos.contains(orderNo) {
-                for (m , strOrderNo) in orderNos.enumerated() {
-                    if strOrderNo == orderNo {
-                        orderNos.remove(at: m)
-                        break
-                    }
-                }
-            }
+        guard let _ = UserDefaults.standard.object(forKey: "userinfo") else {
+            return
+        }
+        if i == keys.count {
             return
         }
         
@@ -534,8 +531,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
                         }
+                        if orderNos.contains(orderNo) {
+                            for (m , strOrderNo) in orderNos.enumerated() {
+                                if strOrderNo == orderNo {
+                                    orderNos.remove(at: m)
+                                    break
+                                }
+                            }
+                        }
+                    }else{
+                        self?.uploadImageQueue(i: i+1, keys: keys, orderNo: orderNo, images: images)
                     }
-                    self?.uploadImageQueue(i: i+1, keys: keys, orderNo: orderNo, images: images)
+                    
                 }else{
                     if !orderNos.contains(orderNo) {
                         orderNos.append(orderNo)
@@ -685,14 +692,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
             return
         }
         if i == keys.count {
-            if orderNos.contains(orderNo) {
-                for (m , strOrderNo) in orderNos.enumerated() {
-                    if strOrderNo == orderNo {
-                        orderNos.remove(at: m)
-                        break
-                    }
-                }
-            }
             return
         }
         
@@ -727,8 +726,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate , JPUSHRegisterDelegate {
                         DispatchQueue.main.async {
                             NotificationCenter.default.post(name: Notification.Name("app"), object: 2 , userInfo: ["orderNo" : params["carBillId"]!])
                         }
+                        if orderNos.contains(orderNo) {
+                            for (m , strOrderNo) in orderNos.enumerated() {
+                                if strOrderNo == orderNo {
+                                    orderNos.remove(at: m)
+                                    break
+                                }
+                            }
+                        }
+                    }else{
+                        self?.uploadImageQueue(i: i + 1, keys: keys, images: images, orderNo: orderNo)
                     }
-                    self?.uploadImageQueue(i: i + 1, keys: keys, images: images, orderNo: orderNo)
+                    
                 }else{
                     
                     DispatchQueue.main.async {

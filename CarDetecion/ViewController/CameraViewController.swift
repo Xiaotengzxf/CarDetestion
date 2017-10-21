@@ -595,10 +595,18 @@ public class CameraViewController: UIViewController {
      */
     private func checkPermissions() {
         if AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo) != .authorized {
-            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { granted in
+            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) {[weak self] granted in
                 DispatchQueue.main.async() {
                     if !granted {
-                        self.showNoPermissionsView()
+                        let alert = UIAlertController(title: "", message: "请在设置里，先授权至信评使用相机权限", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "确定", style: .default, handler: {[weak self] (action) in
+                            self?.dismiss(animated: true, completion: {
+                                
+                            })
+                        }))
+                        self?.present(alert, animated: true, completion: {
+                            
+                        })
                     }
                 }
             }
@@ -688,7 +696,7 @@ public class CameraViewController: UIViewController {
             
             let status = ALAssetsLibrary.authorizationStatus()
             if status == ALAuthorizationStatus.restricted || status == ALAuthorizationStatus.denied {
-                let alert = UIAlertController(title: "提示", message: "请至设置里开启相册功能", preferredStyle: .alert)
+                let alert = UIAlertController(title: "", message: "请至设置里开启相册功能", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "确定", style: .cancel, handler: { (action) in
                     
                 }))
@@ -867,5 +875,11 @@ public class CameraViewController: UIViewController {
     
     public override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         return .landscapeRight
+    }
+}
+
+extension UIAlertController {
+    open override var shouldAutorotate: Bool {
+        return false
     }
 }

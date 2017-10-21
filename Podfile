@@ -6,7 +6,7 @@ target 'CarDetecion' do
     pod 'Alamofire'
     pod 'SwiftyJSON'
     pod 'Toaster'
-    pod 'IQKeyboardManagerSwift', '4.0.10'
+    pod 'IQKeyboardManagerSwift', '4.0.13'
     pod 'MJRefresh'
     pod 'MBProgressHUD'
     pod 'SKPhotoBrowser'

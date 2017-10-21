@@ -210,7 +210,7 @@ class DetectionViewController: UIViewController {
         
         if authStatus == .restricted || authStatus == .denied {
             
-            let alert = UIAlertController(title: nil, message: "相机不可用，请到系统设置里更改", preferredStyle: .alert)
+            let alert = UIAlertController(title: nil, message: "请在设置里，先授权至信评使用相机权限", preferredStyle: .alert)
             
             alert.addAction(UIAlertAction(title: "确定", style: .default, handler: { (action) in
                 
